@@ -67,3 +67,23 @@ class CardInputChecks(unittest.TestCase):
         for p in self.inputs.encoder.parameters():
             self.assertGreater(p.grad.abs().sum().item(), 0)
         self.assertEqual(self.inputs.hand(dict(hand=[]))[0].shape, (0, 64))
+
+    def test_unseen_mechanic_keeps_text_and_glossary(self):
+        base = dict(type="ATTACK", cost=1, upgrades=0, damage=6)
+        a = dict(base, description="造成 !D! 点伤害。获得2层蓝印。")
+        b = dict(base, description="造成 !D! 点伤害。获得2层红印。")
+        c = dict(a, glossary={"蓝印": "回合开始时抽牌。"})
+        d = dict(a, glossary={"蓝印": "回合开始时失去生命。"})
+        vectors, readings = self.inputs.hand(dict(hand=[a, b, c, d]))
+        self.assertEqual(readings[0].effects, readings[1].effects)
+        self.assertEqual([e.operation for e in readings[0].effects], ["damage", "unknown"])
+        encoder = self.inputs.encoder
+        with unittest.mock.patch.object(encoder, "use_text", False):
+            baseline, _ = self.inputs.hand(dict(hand=[a, b, c, d]))
+        self.assertTrue(torch.equal(baseline[0], baseline[1]))
+        self.assertTrue(torch.equal(baseline[2], baseline[3]))
+        for left, right in [(0, 1), (2, 3)]:
+            self.assertFalse(torch.allclose(vectors[left], vectors[right]))
+        loss = (vectors[2] - vectors[3]).square().sum()
+        gradients = torch.autograd.grad(loss, encoder.byte_embedding.weight)[0]
+        self.assertGreater(gradients.abs().sum().item(), 0)

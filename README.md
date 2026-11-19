@@ -19,6 +19,12 @@ The translator fits a linear classifier on labeled English and Simplified Chines
 
 The test holds out the whole Shrug It Off description while including block and draw clauses in training. Run `python -m unittest discover -s tests -v`. Run `python audit_cards.py path/to/desktop-1.0.jar --show-unknown` to inspect the game's base descriptions. The audit measures how much text the parser accepts. Correctness on arbitrary unseen mechanics needs independent labels. Unrecognized clauses retain their text for review and produce an unknown effect. Older recordings lack descriptions.
 
+### 18 Nov 2026 — What happens to a word I haven't taught it?
+
+Two cards can both say “deal 6 damage” and grant different modded powers. Their parsed effects used to coincide. I kept the shared damage input and added a trainable UTF-8 byte encoder for the description and available keyword definitions. A new word fits the input immediately. Learning what it does still needs evidence. The bridge records definitions for keywords exposed through the game's card keyword list and dictionary. Custom tooltip renderers may need their own adapter.
+
+I can turn off the text branch with `CardEncoder(use_text=False)`. The regression test varies only the unfamiliar word, then only the definition. To measure transfer in play, I would compare an Ironclad checkpoint with random initialization on the same held-out character or mod, using matched seeds and interaction budgets. I would measure initial win rate and the learning curve separately. Repeating that comparison with the text branch disabled would help isolate its contribution.
+
 ## Read a recording
 
 The game writes one UTF-8 JSONL file per session in `%USERPROFILE%/SpireCombatAI/recordings`. From the project directory in PowerShell:

@@ -45,3 +45,9 @@ FIELDS = {
 }
 CARD_TYPES = ("UNKNOWN", "ATTACK", "SKILL", "POWER", "STATUS", "CURSE")
 
+def visible_description(card):
+    text = card.get("description") or ""
+    for token, field in (("!D!", "damage"), ("!B!", "block"), ("!M!", "magic")):
+        if field in card:
+            text = text.replace(token, str(card[field]))
+    return text

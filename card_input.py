@@ -41,4 +41,5 @@ def inspect(path):
                 print(json.dumps(dict(turn=state["turn"], slot=slot,
                                       name=state["hand"][slot]["name"], effects=effects,
                                       referenced_rules=rules, unknown=reading.unknown,
+                                      glossary=state["hand"][slot].get("glossary", {}),
                                       vector_width=vectors.shape[1]), ensure_ascii=True))

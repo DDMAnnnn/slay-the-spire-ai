@@ -6,6 +6,7 @@ import com.megacrit.cardcrawl.cards.*;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.GameDictionary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.potions.*;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
@@ -43,6 +44,12 @@ final class CombatFrame {
         obj.addProperty("name", c.name);
         obj.addProperty("upgrades", c.timesUpgraded);
         obj.addProperty("description", c.rawDescription);
+        JsonObject glossary = new JsonObject();
+        for (String keyword : c.keywords) {
+            String definition = GameDictionary.keywords.get(keyword);
+            if (definition != null) glossary.addProperty(keyword, definition);
+        }
+        obj.add("glossary", glossary);
         obj.addProperty("type", c.type.name());
         obj.addProperty("cost", c.costForTurn);
         obj.addProperty("damage", c.damage);

@@ -6,7 +6,7 @@ import unicodedata
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
-from card_rules import Effect, Reading
+from card_rules import Effect, Reading, visible_description
 
 # Supervision is at the clause level. A number in a training sentence is a
 # variable copied from the query. The effect's other fields are its label.
@@ -91,11 +91,7 @@ class Translator:
         return self.classes[label]
 
     def read(self, card):
-        text = card.get("description") or ""
-        for token, field in (("!D!", "damage"), ("!B!", "block"), ("!M!", "magic")):
-            if field in card:
-                text = text.replace(token, str(card[field]))
-        return self.translate(text)
+        return self.translate(visible_description(card))
 
     @lru_cache(maxsize=2048)
     def translate(self, text):
