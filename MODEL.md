@@ -21,3 +21,9 @@ The two ideas that started this discussion came from the project author: give ea
 A third option to consider is one row per live enemy and the same small encoder for every row. Keep the species as a feature. That lets both enemies borrow what the model has learned about HP and incoming damage while keeping track of which one a card would hit. A combat policy still needs to compare them in light of the hand and the whole fight. A species-specific model might make more sense if the job were predicting that species' next move.
 
 An inexpensive check would be to compare a fixed-slot model with the shared encoder on fights with duplicate enemies and unfamiliar combinations. Do scores follow the intended targets when we reorder equivalent input rows? Does enemy targeting actually improve at the same training budget? Attention over the enemies is another option if interactions turn out to be hard to learn. These are suggestions from the discussion; we haven't picked or tested one yet.
+
+## 18 Nov 2026 — What would a monster predictor actually learn?
+
+The project author pointed out that enemy moves follow game rules. If an intent is visible, the player already has it. If the rules force the next move given the visible history, the rule itself can supply it. If several moves are still possible, knowing their probabilities doesn't tell us which one the game will draw.
+
+That changes the question about a small model per monster. For choosing a target, a monster encoder could describe the threat posed by this enemy in this fight. The player policy would then use that description to choose an action. We don't need to train it to guess a hidden random draw. One design choice is still open: start with visible intents and past moves alone, or also supply public move rules explicitly?
