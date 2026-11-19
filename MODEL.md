@@ -13,3 +13,11 @@ The old MathCard model gives us a simpler option to try alongside this: one outp
 The part I'm least sure about is the hand summary. Sometimes the whole reason to play one card is what it lets you do with the next one. How much of that survives the summary? If we try this design, I'd compare it with the fixed-slot version on the same fights and training budget, looking at both outcomes and time per move. We haven't run either version yet.
 
 Still open for discussion: should picking up a card after combat use anything learned from playing that card in combat? For Strike, “can this kill something now?” and “do I want to draw another copy for the rest of the run?” can have very different answers.
+
+## 18 Nov 2026 — Does each monster need its own model?
+
+The two ideas that started this discussion came from the project author: give each monster a block in one big input, or give each monster its own little model. One detail to pin down is what "each monster" means. A slot for every species in the game and a row for every enemy in this fight are quite different inputs. Two enemies of the same species still need separate HP, intent, and target IDs.
+
+A third option to consider is one row per live enemy and the same small encoder for every row. Keep the species as a feature. That lets both enemies borrow what the model has learned about HP and incoming damage while keeping track of which one a card would hit. A combat policy still needs to compare them in light of the hand and the whole fight. A species-specific model might make more sense if the job were predicting that species' next move.
+
+An inexpensive check would be to compare a fixed-slot model with the shared encoder on fights with duplicate enemies and unfamiliar combinations. Do scores follow the intended targets when we reorder equivalent input rows? Does enemy targeting actually improve at the same training budget? Attention over the enemies is another option if interactions turn out to be hard to learn. These are suggestions from the discussion; we haven't picked or tested one yet.
