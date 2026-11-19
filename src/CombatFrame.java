@@ -41,6 +41,8 @@ final class CombatFrame {
         obj.addProperty("id", c.cardID);
         obj.addProperty("name", c.name);
         obj.addProperty("upgrades", c.timesUpgraded);
+        obj.addProperty("description", c.rawDescription);
+        obj.addProperty("type", c.type.name());
         obj.addProperty("cost", c.costForTurn);
         obj.addProperty("damage", c.damage);
         obj.addProperty("block", c.block);

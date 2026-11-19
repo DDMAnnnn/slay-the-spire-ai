@@ -1,5 +1,11 @@
 # Model notes
 
+## 18 Nov 2026 — What can two cards share?
+
+I want one set of weights to read damage wherever it appears. A hit from a card and a Lightning discharge share a quantity, but the source, target and timing can change the decision. I keep a mechanic's definition attached to the effect that references it. Adding 3 and 8 to Zap's immediate damage would teach the wrong lesson. I keep the printed order because applying Vulnerable before a hit can change its outcome.
+
+I chose a shared effect layer followed by a recurrent card encoder. A card can have another effect without needing another set of weights. I keep the current cost and an explicit incomplete-reading flag. I still need combat experience to learn the weights that make a card useful in context.
+
 ## 18 Nov 2026 — What does the model actually choose?
 
 When I asked about architecture, I meant the model itself. Suppose it can already read the game and I can record a run. How does it go from seeing the hand and the enemies to picking a move?
