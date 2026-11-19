@@ -11,6 +11,8 @@ A first-party combat adapter for the original Slay the Spire and a Python policy
 
 ## Inspect model inputs
 
+The [original card table](CARD_TABLE.md) records the hand-authored rules, default parameters, and upgrade changes for the installed game's registered cards. Run `python check_card_table.py path/to/desktop-1.0.jar` with a JDK available to check IDs, English names, rule syntax and numeric parameter references. This table supplies reference translations. The current neural encoder still uses the clause translator described below.
+
 Use Python 3.10 or newer. Install the model dependencies with `python -m pip install -r requirements-model.txt`. With a fresh recording from the rebuilt bridge, run `python agent.py encode path/to/fight.jsonl`. The same command reads a live `decision.json` snapshot without sending game actions. On the development machine the verified CPU dependencies are also available by setting `$env:PYTHONPATH = (Resolve-Path build/python-deps).Path` in the project directory.
 
 In Python, `CardInput().hand(state)` returns a tensor with one 64-component vector per hand slot and a separate inspectable reading per card. Keep one CardInput instance for a training run and include its encoder parameters in the policy optimizer. The weights start randomly initialized. The wired first-legal-action policy is still the live default.
