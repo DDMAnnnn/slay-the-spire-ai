@@ -9,6 +9,16 @@ A first-party combat adapter for the original Slay the Spire and a Python policy
 3. Double-click **Start combat agent.cmd** or run `py -3 agent.py play`. Choose the character, Ascension, route, and encounter in the game yourself. At a player turn, press **F8**. The sample policy can spend a Fire Potion and play cards. F8 again releases control. Avoid manual actions during automated combat.
 4. The agent stops controlling the game at the end of the fight or on an unsupported selection screen. The Python process can wait for another F8 session. Close it with Ctrl+C.
 
+## Inspect model inputs
+
+Use Python 3.10 or newer. Install the model dependencies with `python -m pip install -r requirements-model.txt`. With a fresh recording from the rebuilt bridge, run `python agent.py encode path/to/fight.jsonl`. The same command reads a live `decision.json` snapshot without sending game actions. On the development machine the verified CPU dependencies are also available by setting `$env:PYTHONPATH = (Resolve-Path build/python-deps).Path` in the project directory.
+
+In Python, `CardInput().hand(state)` returns a tensor with one 64-component vector per hand slot and a separate inspectable reading per card. Keep one CardInput instance for a training run and include its encoder parameters in the policy optimizer. The weights start randomly initialized. The wired first-legal-action policy is still the live default.
+
+The translator fits a linear classifier on labeled English and Simplified Chinese effect clauses when constructed. It copies numbers from the observed card, retains clause order and checks token transitions and classifier confidence before accepting a label. Referenced keyword definitions use default public rules. Live orb values, stance and powers are recorded separately. Displayed card numbers may already include combat modifiers. The encoder describes observations and does not simulate their resolution.
+
+The test holds out the whole Shrug It Off description while including block and draw clauses in training. Run `python -m unittest discover -s tests -v`. Run `python audit_cards.py path/to/desktop-1.0.jar --show-unknown` to inspect the game's base descriptions. The audit measures how much text the parser accepts. Correctness on arbitrary unseen mechanics needs independent labels. Unrecognized clauses retain their text for review and produce an unknown effect. Older recordings lack descriptions.
+
 ## Read a recording
 
 The game writes one UTF-8 JSONL file per session in `%USERPROFILE%/SpireCombatAI/recordings`. From the project directory in PowerShell:

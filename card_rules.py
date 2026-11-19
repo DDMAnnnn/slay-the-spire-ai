@@ -36,7 +36,7 @@ FIELDS = {
     "operation": ("unknown", "damage", "block", "draw", "apply", "channel",
                   "enter", "multiply_attack", "gain_strength", "exhaust_self",
                   "unplayable", "ethereal", "permanent", "copy_to_discard"),
-    "target": ("self", "enemy", "random_enemy", "incoming", "outgoing"),
+    "target": ("self", "enemy", "random_enemy", "incoming", "outgoing", "all_enemies"),
     "subject": ("none", "lightning", "vulnerable", "wrath"),
     "trigger": ("play", "on_card_exhausted", "end_turn", "evoke", "while_active",
                 "in_hand", "in_deck"),

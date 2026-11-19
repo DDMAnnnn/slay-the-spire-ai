@@ -8,6 +8,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.potions.*;
+import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 import com.megacrit.cardcrawl.ui.panels.EnergyPanel;
@@ -63,6 +64,16 @@ final class CombatFrame {
         inv.addProperty("ascension", AbstractDungeon.ascensionLevel);
         inv.addProperty("floor", AbstractDungeon.floorNum);
         inv.addProperty("gold", p.gold);
+        inv.addProperty("stance", p.stance.ID);
+        JsonArray orbs = new JsonArray();
+        for (AbstractOrb orb : p.orbs) {
+            JsonObject slot = new JsonObject();
+            slot.addProperty("id", orb.ID);
+            slot.addProperty("passive", orb.passiveAmount);
+            slot.addProperty("evoke", orb.evokeAmount);
+            orbs.add(slot);
+        }
+        inv.add("orb_slots", orbs);
         inv.add("deck", pile(p.masterDeck));
         JsonArray potions = new JsonArray();
         for (AbstractPotion potion : p.potions) potions.add(potion.ID);
