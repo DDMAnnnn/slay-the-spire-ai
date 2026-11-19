@@ -35,3 +35,16 @@ By *intent* I mean the monster's whole behavior pattern: moves, effects, cycles,
 I'd start with Ironclad, a fixed starting deck, one enemy species, shuffled draws and an empty potion belt. The first milestone is a complete fight on held-out seeds. Then compare two player policies with the same inputs, capacity and training budget, except that one always gets the unknown forecast. Check prediction quality against the per-type move frequencies as well as combat outcomes. A predictor could learn the cycle perfectly and still never change the best card to play in a particular fight.
 
 If two species share a pattern, their histories may eventually be pooled. For that to justify treating them alike in combat, other relevant mechanics such as passive powers must also match or be represented in the inputs. For the prototype I can keep records separate until there is evidence for pooling.
+
+
+## 18 Nov 2026 — A small prototype with a full-run design in mind
+
+I want to start with the Ironclad on A20. The prototype can be one fight. The design has to leave room for the decisions I care about across a whole run. One change from the earlier sketch: using a potion belongs in the combat model from the start.
+
+I see two timescales. In combat I choose a card and target, use a potion (with a target if needed), or end the turn. Outside combat I build the deck, choose rewards and potions, spend gold, decide whether to rest or upgrade, and choose a path through events, campfires, and elites. These choices draw on the same HP, deck, inventory, gold, and visible map. I haven't decided that each one needs its own network.
+
+One interface suggested in the discussion is to evaluate what a fight leaves me with. The combat outcome should retain survival, remaining HP, remaining potions, and any other persistent changes. A later run-level model could estimate how valuable that resulting state is given the deck and visible path ahead. This matters for potions: keeping one can be valuable, but the cost of spending it changes with the run. Rest versus upgrade and route choice should likewise be evaluated in the context of the same run.
+
+For a first test I could use one enemy, the starter deck, varied draws, and a single targeted potion type. Offer the legal potion action alongside the cards. Compare fights with and without a potion available, recording use, survival, and HP remaining. A one-fight test tells me whether the agent can make tactical use of a potion. To test whether it learns when to save one, I need a consequence after this fight, such as carrying the potion into a second encounter. The monster intent memory and its no-forecast comparison from the earlier sketch still fit here.
+
+Once the A20 Ironclad policy works, I want to see what happens if I lower the Ascension. A change in win rate would reflect both the change in difficulty and any change in enemy behavior. I could freeze the policy for the first test and compare encounters with changed patterns against those with unchanged patterns. Other characters are a separate extension. The full-run victory condition (Act 3 or the Heart) is still open.
