@@ -1,0 +1,10 @@
+{
+  "modid": "spirecombatbridge",
+  "name": "Spire Combat AI",
+  "author_list": ["Slay the Spire AI project"],
+  "description": "F8 starts or stops one combat with a local policy and JSONL recording.",
+  "version": "0.1.0",
+  "sts_version": "12-18-2022",
+  "mts_version": "3.30.0",
+  "dependencies": ["basemod"]
+}
