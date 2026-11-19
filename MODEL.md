@@ -1,13 +1,24 @@
-# 第一版模型架构提案
+# Combat policy architecture proposal
 
-2026-11-18。上一份架构记录定义了游戏接口；这里讨论决策模型。以下是供讨论的设计假设，尚无训练或验证结果。
+18 November 2026. This proposal assumes the decision interface in [ARCHITECTURE.md](ARCHITECTURE.md). Training and validation are pending.
 
-**任务。** 给定玩家可见的局面和合法候选动作，输出每个候选的偏好分数。第一版只讨论战斗，相同动作的定义同时包含牌和目标。分数的训练含义留到选定学习目标时再定义。
+## What the model predicts
 
-**候选结构。** 手牌使用共享的牌编码器，敌人使用共享的敌人编码器。汇总手牌与敌人表示，再和玩家生命、能量、格挡等全局特征组成局面向量。对每个候选，将局面向量、动作类型、对应的牌表示、目标表示送入同一个小型前馈网络，得到一个标量。结束回合只有动作类型和局面，牌或目标缺失用显式标志表示。位置或顺序在影响规则时作为显式特征保留。
+Given a player-visible combat state and a list of legal actions, assign a preference score to each action. A targeted card play specifies both the card and its target. The training objective will determine how to interpret the score.
 
-**取舍。** 固定槽位的前馈网络是最简单的对照。共享打分器允许相同的出牌逻辑用于不同手牌位置和目标，代价是逐候选计算；简单汇总还可能丢失特定牌与牌之间的配合。若对局分析暴露这种不足，再比较能显式建模交互的结构。全局汇总初版保留实体数量；对有序区域单独编码。
+## How to score a candidate
 
-**范围。** 先用一套战斗评分结构；选牌、路线是否共享表示或拥有独立评分头保持开放。旧 MathCard 的合法动作掩码提供设计参照，未复用其模型权重。
+1. Encode each card in hand with a shared card encoder. Encode each enemy with a shared enemy encoder.
+2. Aggregate the card and enemy representations. Combine them with player health, energy, and block to form a state vector. Retain entity counts and explicitly encode position or order wherever it affects the rules.
+3. For each candidate, pass the state vector, action type, card representation, and target representation through the same small feedforward network. It returns one scalar. For actions such as ending the turn, mark the card and target as absent.
 
-**将来如何验证。** 在规则上等价的牌和目标重排后，偏好应随对应动作一起移动。另用相同可见信息、数据和训练预算与固定槽位模型比较，检查战斗结果与推理开销；前一项验证结构性质，后一项检验它是否值得保留。
+## Why try this architecture?
+
+A feedforward network with a fixed output slot per action is the simplest baseline. A shared scorer lets the model apply the same decision rule across hand positions and enemy targets, at the cost of evaluating each candidate. A simple aggregation may also lose information about combinations of cards. If gameplay analysis reveals that weakness, compare an architecture that explicitly models interactions. Encode ordered zones separately from unordered collections.
+
+The first proposal covers combat. Whether reward selection and routing should share representations or use separate scoring heads remains open. MathCard's legal-action mask informed this design. It assumes fresh model weights.
+
+## How to test the design
+
+- Reorder cards or targets whose positions are equivalent under the game rules. Each action's score should follow the corresponding card and target through the reordering.
+- Compare the shared scorer with the fixed-slot baseline using the same visible information, data, and training budget. Measure combat outcomes and inference cost. The reordering check tests a structural property. The baseline comparison tests whether that property is worth its cost in play.

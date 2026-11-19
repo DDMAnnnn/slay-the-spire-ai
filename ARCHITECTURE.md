@@ -1,32 +1,34 @@
-# 《杀戮尖塔》AI 的第一版架构
+# Slay the Spire AI: game interface and evaluation
 
-设计草案 · 2026-11-18。本文记录第一次实现前的判断，尚无游戏运行结果。
+Design draft, 18 November 2026. The first gameplay test is pending.
 
-目标是在玩家可见信息下尽量赢，失败时也尽量走远。建议第一版固定游戏版本、铁甲战士和进阶 0，以击败第三幕 Boss 计胜。角色、难度和胜利条件写入每次评测配置。
+The goal is to win as often as possible using player-visible information and to get as far as possible on losing runs. For the first evaluation, use a fixed game version, play the Ironclad at Ascension 0, and count defeating the Act 3 boss as a win. Record the character, difficulty, and win condition in each evaluation configuration.
 
-## 一局游戏里的三个角色
+## Responsibilities during a run
 
-| 部分 | 负责什么 | 第一版接口 |
+| Component | Responsibility | Proposed interface |
 |---|---|---|
-| 游戏适配层 | 等到玩家需要决定时，从游戏读取可见局面，列出此刻合法的选择，把选定的动作送回游戏。动画和敌人自动行动期间不向策略索要动作。 | 输出带编号的决策点，包括场景类型、可见局面、候选动作。接收该决策点的一个候选动作。局面过期时重新读取，避免重复出牌。 |
-| 决策策略 | 根据局面、候选动作以及本局已见过的信息做选择。规则、搜索和学习模型均可实现这一职责。 | 输入一个决策点，输出一个候选动作。新开局时清空本局记忆。 |
-| 对局运行器 | 启动一局，串起读取、选择、执行，记下每个决定，直到胜利、失败或中断。 | 保存对局配置、可见局面、合法选项、实际选择和终局结果。中断单列原因，统计评测时报告中断数。 |
+| Game adapter | Wait until the game needs player input, read the visible state, list legal choices, and execute the selected action. Wait through animations and automatic enemy actions. | Emit a decision ID, scene type, observation, and candidate actions. Accept a candidate for that decision ID. If the decision has expired, read the state again to avoid playing a card twice. |
+| Policy | Choose an action using the observation, the candidates, and information already observed during this run. Rules, search, or a learned model can implement the policy. | Receive a decision and return one candidate. Reset run-specific memory at the start of each run. |
+| Run controller | Start the run, request decisions, execute actions through the adapter, and log each choice until victory, defeat, or interruption. | Record the configuration, observations, legal choices, actions taken, and outcome. Record why a run was interrupted and report the interruption count in evaluations. |
 
-游戏种子由运行器管理。策略可查看玩家已知的牌堆组成；当游戏没有揭示顺序时，不传入内部顺序。候选动作也只携带玩家可知的信息，例如“选择当前节点”，不能附带未揭示的事件结果。
+The run controller manages the seed. The policy may see the known contents of the draw pile and any ordering the game has revealed to the player. The same visibility rule applies to candidate actions. A map choice can identify a selectable node, but its metadata must exclude the hidden outcome of an event there.
 
-## 局外的两个用途
+## Evaluation and training
 
-- **评测**读取对局记录，按同一批种子比较不同策略，报告胜局数、总局数和到达楼层。调试用种子与最终评测种子分开。记录游戏版本、策略版本及配置，便于重跑。
-- **训练**若采用学习策略，就消费交互数据并产出带版本的策略。运行器也要能单独测试一套手写策略。现阶段不选网络结构，不为每个游戏场景单建模型。
+- **Evaluation.** Compare policies on the same seeds. Report wins, total runs, and floors reached. Reserve separate seeds for debugging and final evaluation. Save the game version, policy version, and configuration so the comparison can be repeated.
+- **Training.** A learner can consume interaction data and produce a versioned policy. The controller must also run a hand-written policy independently. The game interface leaves the choice of network architecture and scene-specific models open.
 
-## 第一次设计取舍
+## Decision: represent each choice as a list of legal actions
 
-**问题。** 战斗、选牌和路线的动作长得很不一样，但玩家需要在同一局里连续处理它们。
+Combat, card rewards, and route selection present different kinds of choices in the same run. We considered assigning a fixed ID to every possible action and generating candidates at each decision. We propose the candidate list for the game-policy interface.
 
-**候选方案。** 一是给全游戏每种动作预先分配固定编号；二是每次只列出当前合法动作。先选第二种作为游戏与策略之间的接口。举例而言，战斗中的“手牌第 2 张打左侧敌人”和“手牌第 2 张打右侧敌人”是两个选择；奖励画面给出具体奖励和跳过。策略收到的输入形式相同。代价是动作列表随局面变化，后续模型需要为候选动作打分，或自行编码为固定槽位。
+In combat, playing the second card against the left enemy and playing it against the right enemy are two candidates. At a reward screen, the candidates are the cards on offer and the option to skip. The controller follows the same loop in both cases. The tradeoff is a variable number of candidates. A model can score them individually or map them into fixed slots internally.
 
-**旧项目的启发。** MathCard 的环境已经把动作合法性从模型中抽出，并能在战斗和奖励状态间切换。本次沿用这个想法；旧项目的 37 个动作编号、DQN 及其权重均未作为依赖。
+MathCard inspired the separation of action legality from action evaluation and already handled both combat and rewards. This design stands independently of its 37 action IDs, DQN implementation, and trained weights.
 
-**待验证。** 用一次战斗出牌和一次战后选牌走通同一个读取和执行流程。预期只需替换候选列表，运行器无需为战斗和奖励分别编写循环。如果真实游戏需要分步选择或允许取消，记录具体决策点，再决定保留分步动作还是合并。这个检查只验证接口能否表达选择；策略强弱留到单独的对局评测。
+## First interface check
 
-下一次提交应说明实际使用的游戏接入方式、这两个场景各自暴露了什么，以及本稿哪些假设成立或需要修改。
+Use the same decision loop to play one targeted card and make one post-combat reward choice. We expect only the candidate list to change. If the game exposes card selection, targeting, or cancellation as separate decisions, record the actual sequence before deciding which steps to combine. Evaluate playing strength separately.
+
+The follow-up implementation commit should identify the integration used, show what each scene exposed, and record which assumptions held or needed revision.
