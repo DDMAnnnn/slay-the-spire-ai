@@ -1,24 +1,15 @@
-# Combat policy architecture proposal
+# Model notes
 
-18 November 2026. This proposal assumes the decision interface in [ARCHITECTURE.md](ARCHITECTURE.md). Training and validation are pending.
+## 18 Nov 2026 — What does the model actually choose?
 
-## What the model predicts
+The first sketch went straight to reading the game and recording runs. The question we meant to start with was one step later. Suppose we already have the hand and the enemies on screen. How do we get from that to a move?
 
-Given a player-visible combat state and a list of legal actions, assign a preference score to each action. A targeted card play specifies both the card and its target. The training objective will determine how to interpret the score.
+Take a hand with Strike and Defend against two enemies. There are four choices here if both cards are playable: Strike the left enemy, Strike the right one, play Defend, or end the turn. That example helped pin down what needs a score. A Strike can be a great play against the enemy it kills and a terrible play against the one next to it.
 
-## How to score a candidate
+One idea from today's discussion is to run the same little network over each choice. It would see the whole fight, the card being played, and the target. We'd use the same card encoder wherever Strike shows up in the hand, and the same enemy encoder for either target. End Turn would get a score too, with the card and target marked absent. For the whole-fight input, a first pass could summarize the hand and enemies, keep their counts, and add HP, energy, and block. We'd keep order wherever the rules make it matter.
 
-1. Encode each card in hand with a shared card encoder. Encode each enemy with a shared enemy encoder.
-2. Aggregate the card and enemy representations. Combine them with player health, energy, and block to form a state vector. Retain entity counts and explicitly encode position or order wherever it affects the rules.
-3. For each candidate, pass the state vector, action type, card representation, and target representation through the same small feedforward network. It returns one scalar. For actions such as ending the turn, mark the card and target as absent.
+The old MathCard model gives us a simpler option to try alongside this: one output per action slot. The shared scorer takes more work per decision. What it might buy us is that learning when to play Strike from slot one also helps when it turns up in slot four. There's an easy sanity check there. Swap two cards whose order makes no difference to the game and see whether the scores follow the cards.
 
-## Why try this architecture?
+The part I'm least sure about is the hand summary. Sometimes the whole reason to play one card is what it lets you do with the next one. How much of that survives the summary? If we try this design, I'd compare it with the fixed-slot version on the same fights and training budget, looking at both outcomes and time per move. We haven't run either version yet.
 
-A feedforward network with a fixed output slot per action is the simplest baseline. A shared scorer lets the model apply the same decision rule across hand positions and enemy targets, at the cost of evaluating each candidate. A simple aggregation may also lose information about combinations of cards. If gameplay analysis reveals that weakness, compare an architecture that explicitly models interactions. Encode ordered zones separately from unordered collections.
-
-The first proposal covers combat. Whether reward selection and routing should share representations or use separate scoring heads remains open. MathCard's legal-action mask informed this design. It assumes fresh model weights.
-
-## How to test the design
-
-- Reorder cards or targets whose positions are equivalent under the game rules. Each action's score should follow the corresponding card and target through the reordering.
-- Compare the shared scorer with the fixed-slot baseline using the same visible information, data, and training budget. Measure combat outcomes and inference cost. The reordering check tests a structural property. The baseline comparison tests whether that property is worth its cost in play.
+Still open for discussion: should picking up a card after combat use anything learned from playing that card in combat? For Strike, “can this kill something now?” and “do I want to draw another copy for the rest of the run?” can have very different answers.
