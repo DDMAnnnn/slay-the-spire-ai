@@ -32,6 +32,8 @@ The [reader dataset and evaluation](data/reader/README.md) include the original 
 
 ## What the measurements mean
 
+The [starter-deck and Pommel Strike experiment](../experiments/memory/README.md) trains an episodic interpreter from public action outcomes, measures transfer on fresh A20 simulator fights, and explains how to attach its saved memory to this scorer.
+
 The text reader has eleven supervised program templates, shared across card, potion, enemy, relic and power clauses. It reads short English clauses and some combinations. Its confidence threshold is a heuristic. Unknown concepts, localization, novel control flow and wording made entirely from familiar words can still defeat it. Known enemy attack intents already arrive structured and go straight into a rule. A potion or power with an unseen ID can use its supplied description. Older recordings often have only the ID. A reference entry uses its canonical rule even if a mod reuses the same vanilla ID and overrides its behavior.
 
 Catalog parameters describe fresh cards. Schema 2 additionally provides the card instance's base values, its display values and target kind, and potion descriptions and current potency. Display values are snapshot features. The encoder does no damage simulation. Full deck construction, hidden pile order and enemy future moves have no inputs here.

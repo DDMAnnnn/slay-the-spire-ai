@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import torch
 
-from battle.memory import MemoryBank, MemoryInterpreter, cue_for, load_memory, observe, save_memory
+from battle.memory import Cue, Experience, MemoryBank, MemoryInterpreter, cue_for, load_memory, observe, save_memory
 from battle.memory_training import remember_through
 from battle.policy import CombatPolicy
 
@@ -61,6 +61,15 @@ class MemoryTests(unittest.TestCase):
                 scores,_=policy(self.before,["play 0 0","end"])
             self.assertEqual(scores.shape,(2,))
             self.assertTrue(scores.isfinite().all())
+
+    def test_direct_examples_keep_their_weight_when_the_related_pool_grows(self):
+        cue = self.item.cue
+        other = Cue(("card", "other", 0), cue.text, cue.context)
+        related = [Experience(other, {}, "other-fight", i) for i in range(12)]
+        direct = [Experience(cue, {"hand.arrivals": 1}, "direct-fight", i) for i in range(4)]
+        for size in (1, 12):
+            predicted, _ = self.model.interpret(cue, MemoryBank(related[:size] + direct))
+            self.assertAlmostEqual(predicted["hand.arrivals"], 0.8, places=5)
 
     def test_only_learn_through_confirmed_observation(self):
         fight="00000000-0000-4000-8000-000000000001"

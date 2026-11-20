@@ -21,7 +21,7 @@ DISPLAY = {
     "Slimed": ("STATUS", "Exhaust."),
 }
 SPLITS = {"train": (1000,96,0), "starter-memory": (2000,16,0), "adapt": (3000,40,1),
-          "starter-test": (4000,40,0), "pommel-test": (5000,60,1)}
+          "starter-test": (6000,40,0), "pommel-test": (7000,60,1)}
 POMMEL = "Pommel Strike"
 METRICS = ("target.current_hp", "player.block", "target.power.Vulnerable", "hand.arrivals")
 

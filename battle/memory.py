@@ -168,20 +168,32 @@ def scale(field):
 
 class MemoryInterpreter(nn.Module):
     """Cross-attend to observed outcomes and transfer residuals between contexts."""
-    def __init__(self, fields):
+    def __init__(self, fields, retrieval="grouped"):
         super().__init__()
         self.fields = tuple(fields)
+        self.retrieval = retrieval
         self.embed = nn.Sequential(nn.Linear(TEXT_DIM + CONTEXT_DIM, WIDTH), nn.Tanh())
         self.query = nn.Linear(WIDTH, 24)
         self.key = nn.Linear(WIDTH, 24)
         self.prior = nn.Linear(WIDTH, len(fields))
-        self.identity_weight = nn.Parameter(torch.tensor(2.))
+        if retrieval == "pooled":
+            self.identity_weight = nn.Parameter(torch.tensor(2.))
 
     def forward(self, inputs, memories, effects, match, valid):
         q, k = self.embed(inputs), self.embed(memories)
         scores = (F.normalize(self.query(q), dim=-1).unsqueeze(1) *
-                  F.normalize(self.key(k), dim=-1)).sum(-1) * 6 + self.identity_weight * match
-        weights = scores.masked_fill(~valid, -1e6).softmax(-1) * valid
+                  F.normalize(self.key(k), dim=-1)).sum(-1) * 6
+        exact = valid & match.bool()
+        related = valid & ~exact
+        def attend(mask):
+            return scores.masked_fill(~mask, -1e6).softmax(-1) * mask
+        # Treat the entire related pool as one prior observation. Its influence
+        # decays with direct evidence regardless of how many old cards we own.
+        count = exact.sum(-1, keepdim=True)
+        prior_count = related.any(-1, keepdim=True).to(scores)
+        weights = (count * attend(exact) + prior_count * attend(related)) / (count + prior_count).clamp_min(1)
+        if self.retrieval == "pooled":
+            weights = (scores + self.identity_weight * match).masked_fill(~valid,-1e6).softmax(-1) * valid
         residual = ((effects - self.prior(k)) * weights.unsqueeze(-1)).sum(1)
         prediction = self.prior(q) + residual
         # Predictive embedding, in the same width as a combat object row.
@@ -227,7 +239,7 @@ def save_memory(path, model, bank):
     from tempfile import NamedTemporaryFile
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = dict(version=1, fields=model.fields, weights=model.state_dict(),
+    data = dict(version=2, retrieval=model.retrieval, fields=model.fields, weights=model.state_dict(),
                 episodes=[asdict(e) for e in bank.episodes()])
     with NamedTemporaryFile(dir=path.parent, delete=False) as tmp:
         tmp_path = Path(tmp.name)
@@ -240,9 +252,9 @@ def save_memory(path, model, bank):
 
 def load_memory(path):
     data = torch.load(path, map_location="cpu", weights_only=True)
-    if data["version"] != 1:
+    if data["version"] not in (1,2):
         raise ValueError("Unsupported memory version")
-    model = MemoryInterpreter(data["fields"])
+    model = MemoryInterpreter(data["fields"], data.get("retrieval","pooled"))
     model.load_state_dict(data["weights"])
     episodes = [Experience(Cue(**row["cue"]), row["changes"], row["fight"], row["step"])
                 for row in data["episodes"]]
