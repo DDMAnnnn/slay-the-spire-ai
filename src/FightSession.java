@@ -25,7 +25,7 @@ final class FightSession implements Closeable {
         log = Files.newBufferedWriter(folder.resolve("recordings").resolve(id + ".jsonl"),
                 StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
         JsonObject start = new JsonObject();
-        start.addProperty("schema", 1);
+        start.addProperty("schema", 2);
         start.addProperty("fight", id);
         start.add("initial", initial);
         record("start", start);

@@ -32,6 +32,7 @@ final class CombatFrame {
             JsonObject power = new JsonObject();
             power.addProperty("id", p.ID);
             power.addProperty("amount", p.amount);
+            power.addProperty("description", p.description);
             powers.add(power);
         }
         obj.add("powers", powers);
@@ -51,6 +52,10 @@ final class CombatFrame {
         }
         obj.add("glossary", glossary);
         obj.addProperty("type", c.type.name());
+        obj.addProperty("target", c.target.name());
+        obj.addProperty("base_damage", c.baseDamage);
+        obj.addProperty("base_block", c.baseBlock);
+        obj.addProperty("base_magic", c.baseMagicNumber);
         obj.addProperty("cost", c.costForTurn);
         obj.addProperty("damage", c.damage);
         obj.addProperty("block", c.block);
@@ -83,13 +88,24 @@ final class CombatFrame {
         inv.add("orb_slots", orbs);
         inv.add("deck", pile(p.masterDeck));
         JsonArray potions = new JsonArray();
-        for (AbstractPotion potion : p.potions) potions.add(potion.ID);
+        JsonArray potionDetails = new JsonArray();
+        for (AbstractPotion potion : p.potions) {
+            potions.add(potion.ID);
+            JsonObject detail = new JsonObject();
+            detail.addProperty("id", potion.ID);
+            detail.addProperty("description", potion.description);
+            if (!(potion instanceof PotionSlot))
+                detail.addProperty("potency", ReflectionHacks.<Integer>getPrivate(potion, AbstractPotion.class, "potency"));
+            potionDetails.add(detail);
+        }
         inv.add("potions", potions);
+        inv.add("potion_details", potionDetails);
         JsonArray relics = new JsonArray();
         for (AbstractRelic r : p.relics) {
             JsonObject relic = new JsonObject();
             relic.addProperty("id", r.relicId);
             relic.addProperty("counter", r.counter);
+            relic.addProperty("description", r.description);
             relics.add(relic);
         }
         inv.add("relics", relics);
@@ -111,6 +127,7 @@ final class CombatFrame {
         for (AbstractMonster m : enemies) {
             JsonObject obj = creature(m);
             obj.addProperty("id", m.id);
+            obj.addProperty("targetable", !m.isDeadOrEscaped() && !m.halfDead);
             if (!p.hasRelic("Runic Dome")) {
                 obj.addProperty("intent", m.intent.name());
                 if (m.intent.name().startsWith("ATTACK")) {

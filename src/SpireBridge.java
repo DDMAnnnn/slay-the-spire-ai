@@ -16,6 +16,7 @@ import java.nio.file.*;
 @SpireInitializer
 public class SpireBridge implements PostDungeonUpdateSubscriber {
     private FightSession fight;
+    private final CombatHealthTrace healthTrace = new CombatHealthTrace();
     private AbstractRoom originalRoom;
     private long nextPoll;
     private static final Path HOME = Paths.get(System.getProperty("user.home"), "SpireCombatAI");
@@ -35,6 +36,7 @@ public class SpireBridge implements PostDungeonUpdateSubscriber {
         if (fight == null) return;
         FightSession ended = fight;
         fight = null;
+        healthTrace.stop();
         AbstractPlayer p = AbstractDungeon.player;
         ended.closeWith(outcome, p == null ? null : CombatFrame.inventory(p));
         System.out.println("[SpireCombatAI] " + outcome + " — " + ended.id);
@@ -48,6 +50,7 @@ public class SpireBridge implements PostDungeonUpdateSubscriber {
         if (fight != null) {
             if (toggle) { stop("stopped by player"); return; }
             if (room != originalRoom || p == null) { stop("room changed"); return; }
+            healthTrace.observe(fight, p, room.monsters.monsters);
             if (p.isDead) { stop("defeat"); return; }
             if (room.isBattleOver || room.phase == AbstractRoom.RoomPhase.COMPLETE) {
                 stop("combat ended"); return;
@@ -79,6 +82,7 @@ public class SpireBridge implements PostDungeonUpdateSubscriber {
         snapshot.add("state", frame.state);
         snapshot.add("options", FightSession.JSON.toJsonTree(frame.moves.keySet()));
         if (!snapshot.toString().equals(fight.published)) {
+            healthTrace.stop();
             fight.publish(snapshot);
             return;
         }
@@ -90,6 +94,7 @@ public class SpireBridge implements PostDungeonUpdateSubscriber {
         chosen.addProperty("ticket", fight.ticket);
         chosen.addProperty("action", action);
         fight.record("action_requested", chosen);
+        healthTrace.begin(fight.ticket, p, room.monsters.monsters);
         fight.published = null;
         execute.run();
     }
