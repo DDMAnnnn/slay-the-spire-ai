@@ -136,6 +136,12 @@ def evaluate(model, fights):
     groups = {"all":indices}
     for group in {f.group for f in fights}:
         groups[group] = [i for i,f in enumerate(fights) if f.group==group]
+    if "tradeoff" in groups:
+        for strength in (0,4):
+            groups[f"tradeoff_strength_{strength}"] = [
+                i for i in groups["tradeoff"]
+                if sum(p["amount"] for p in fights[i].state["player"]["powers"]) == strength
+            ]
     return {g:{"wins":int(correct[ix].sum()),"fights":len(ix)} for g,ix in groups.items()}
 
 

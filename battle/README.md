@@ -13,6 +13,8 @@ I started with two choices, playing the same Twin Strike on the left enemy or on
 
 ## Run it
 
+Direct card encodings can be initialized with `python -m battle init CHECKPOINT --card-input id` or `--card-input id_text`. In these modes the combat policy learns the action scores without a catalogue reader. The [held-out card experiment](../experiments/card_text/README.md) compares the two encodings with the same feedback.
+
 From the repository root in PowerShell with Python 3.10+ and PyTorch:
 
 ```powershell

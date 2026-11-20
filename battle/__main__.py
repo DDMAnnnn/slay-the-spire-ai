@@ -129,7 +129,9 @@ def main():
         return
     model = load(args.checkpoint)
     if getattr(args, "memory", None):
-        from .memory import load_memory
+        from .memory import WIDTH, load_memory
+        if model.tokens.embedding_dim != WIDTH:
+            parser.error(f"The episodic memory requires a width-{WIDTH} policy.")
         model.memory_runtime = load_memory(args.memory)
     if args.command == "read":
         if model.reader is None:
