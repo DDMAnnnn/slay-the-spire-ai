@@ -29,9 +29,11 @@ class ObjectRow:
     predicted_clauses: list = field(default_factory=list)
 
 
-def observation_rows(state, reader, use_catalog=True):
+def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
     rows, addresses = [], {}
     player = state["player"]
+    direct = card_input in ("id", "id_text")
+    use_catalog = use_catalog and not direct
 
     def add(role, obj, address=None):
         row = ObjectRow(role, [role], dict(obj))
@@ -41,6 +43,19 @@ def observation_rows(state, reader, use_catalog=True):
         return row
 
     def describe(row, kind, obj):
+        if direct and kind == "card":
+            # One identity token even when the ID itself contains English words or digits.
+            identifier = hashlib.blake2s(obj["id"].encode(), digest_size=8).hexdigest()
+            row.words.extend([kind, "id_" + identifier])
+            if card_input == "id_text":
+                description = obj.get("description") or ""
+                for marker, field_name in (("!D!", "damage"), ("!B!", "block"), ("!M!", "magic")):
+                    if field_name in obj:
+                        description = description.replace(marker, str(obj[field_name]))
+                row.words.append(description)
+                for key, definition in sorted(obj.get("glossary", {}).items()):
+                    row.words.extend([key, definition])
+            return
         if not use_catalog:
             row.words.extend([kind, obj.get("description") or obj.get("id", "")])
             for keyword, definition in sorted(obj.get("glossary", {}).items()):
@@ -74,6 +89,12 @@ def observation_rows(state, reader, use_catalog=True):
             row = add(zone, card, (zone, slot))
             row.words.extend([card.get("type", ""), card.get("target", "")])
             describe(row, "card", card)
+            if direct:
+                # Cost and upgrade count remain public in both arms. A second
+                # numeric damage channel would reveal part of the withheld text.
+                for field_name in ("damage", "block", "magic", "D", "B", "M"):
+                    row.numbers.pop(field_name, None)
+                continue
             if use_catalog and card["id"] in card_catalog():
                 defaults = card_catalog()[card["id"]][2]
                 for name, pair in defaults.items():
@@ -140,18 +161,22 @@ def action_indices(option, addresses):
 
 
 class CombatPolicy(nn.Module):
-    def __init__(self, width=64, heads=4, reader=None):
+    def __init__(self, width=64, heads=4, reader=None, card_input="catalog"):
         super().__init__()
-        if reader is None:
+        if card_input not in ("catalog", "id", "id_text"):
+            raise ValueError(f"Unknown card input: {card_input}")
+        if reader is None and card_input == "catalog":
             from .reader_training import new_reader
             reader = new_reader()
         self.reader = reader
+        self.card_input = card_input
+        self.heads = heads
         self.memory_runtime = None
         self.tokens = nn.Embedding(8192, width)
         self.literal = nn.Linear(1, width, bias=False)
         self.program = nn.GRU(width, width, batch_first=True)
         self.numeric = nn.Linear(2 * len(SCALARS), width)
-        self.belief = nn.Linear(len(self.reader.templates), width, bias=False)
+        self.belief = nn.Linear(len(reader.templates), width, bias=False) if reader is not None else None
         self.input_norm = nn.LayerNorm(width)
         layer = nn.TransformerEncoderLayer(width, heads, 2 * width, dropout=0.,
                                            batch_first=True, activation="gelu")
@@ -162,7 +187,7 @@ class CombatPolicy(nn.Module):
         self.score = nn.Linear(2 * width, 1)
         self.outcomes = nn.Linear(2 * width, 3)
 
-    def encode(self, rows):
+    def embed_rows(self, rows):
         device = self.tokens.weight.device
         tokens = [lexical_tokens(r) for r in rows]
         sequences = [torch.tensor([token_id("#number" if t.isdecimal() else t) for t in row],
@@ -175,6 +200,8 @@ class CombatPolicy(nn.Module):
                                       [len(s) for s in sequences], batch_first=True, enforce_sorted=False)
         _, hidden = self.program(packed)
         numeric = self.tokens.weight.new_tensor([scalars(r) for r in rows])
+        if self.belief is None:
+            return self.input_norm(hidden[0] + self.numeric(numeric))
         # Keep the discrete program inspectable. The uncertainty over candidate
         # rules also gives outcome prediction a gradient path into the reader.
         beliefs = []
@@ -183,11 +210,22 @@ class CombatPolicy(nn.Module):
                        for k, w in row.predicted_clauses]
             beliefs.append(torch.stack(guesses).mean(0) if guesses
                            else numeric.new_zeros(len(self.reader.templates)))
-        objects = self.input_norm(hidden[0] + self.numeric(numeric) + self.belief(torch.stack(beliefs)))
-        return self.battle(objects.unsqueeze(0)).squeeze(0)
+        return self.input_norm(hidden[0] + self.numeric(numeric) + self.belief(torch.stack(beliefs)))
+
+    def encode(self, rows):
+        return self.battle(self.embed_rows(rows).unsqueeze(0)).squeeze(0)
+
+    def read_state(self, state):
+        return observation_rows(state, self.reader, use_catalog=self.reader is not None and
+                                self.memory_runtime is None, card_input=self.card_input)
+
+    def score_rows(self, players, sources, targets, kinds):
+        fused = torch.cat([players, sources, targets, self.kind(kinds)], dim=-1)
+        actions = self.action(fused)
+        return self.score(actions).squeeze(-1), self.outcomes(actions)
 
     def forward(self, state, options):
-        rows, addresses = observation_rows(state, self.reader, use_catalog=self.memory_runtime is None)
+        rows, addresses = self.read_state(state)
         context = self.encode(rows)
         indices = [action_indices(option, addresses) for option in options]
         kind, src, tgt = torch.tensor(indices, device=context.device).T
@@ -206,10 +244,7 @@ class CombatPolicy(nn.Module):
                 else:
                     meanings.append(context.new_zeros(context.shape[-1]))
             sources = sources + torch.stack(meanings)
-        fused = torch.cat([context[0].expand(len(options), -1), sources, lookup[tgt],
-                           self.kind(kind)], dim=-1)
-        actions = self.action(fused)
-        return self.score(actions).squeeze(-1), self.outcomes(actions)
+        return self.score_rows(context[0].expand(len(options), -1), sources, lookup[tgt], kind)
 
     @torch.no_grad()
     def choose(self, state, options):

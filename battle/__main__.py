@@ -10,7 +10,7 @@ from torch.nn import functional as F
 
 from agent import HOME, respond
 from .experience import records, transitions
-from .policy import CombatPolicy, observation_rows
+from .policy import CombatPolicy
 from .reader import RuleReader
 from .reader_training import DATA, fit_reader, training_batch
 
@@ -21,7 +21,9 @@ def save(model, path):
     with NamedTemporaryFile(dir=path.parent, delete=False) as f:
         tmp = Path(f.name)
     try:
-        torch.save({"format": 2, "reader": model.reader.schema(), "weights": model.state_dict()}, tmp)
+        torch.save({"format": 3, "reader": model.reader.schema() if model.reader is not None else None,
+                    "card_input": model.card_input, "width": model.tokens.embedding_dim,
+                    "heads": model.heads, "weights": model.state_dict()}, tmp)
         os.replace(tmp, path)
     finally:
         tmp.unlink(missing_ok=True)
@@ -31,11 +33,13 @@ def load(path):
     data = torch.load(path, map_location="cpu", weights_only=True)
     if data["format"] == 1:
         schema = json.loads((DATA / "legacy_schema.json").read_text(encoding="utf8"))
-    elif data["format"] == 2:
+    elif data["format"] in (2, 3):
         schema = data["reader"]
     else:
         raise ValueError("Unsupported battle checkpoint")
-    model = CombatPolicy(reader=RuleReader(**schema))
+    model = CombatPolicy(reader=RuleReader(**schema) if schema is not None else None,
+                         card_input=data.get("card_input","catalog"), width=data.get("width",64),
+                         heads=data.get("heads",4))
     model.load_state_dict(data["weights"])
     return model.eval()
 
@@ -47,7 +51,8 @@ def learn(model, traces, epochs):
     if not samples:
         raise ValueError("No recorded decision with a matching requested action")
     model.train()
-    examples, labels = training_batch(model.reader)
+    if model.reader is not None:
+        examples, labels = training_batch(model.reader)
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003)
     for _ in range(epochs):
         for index in torch.randperm(len(samples)).tolist():
@@ -59,7 +64,8 @@ def learn(model, traces, epochs):
                 if change is not None:
                     loss = loss + F.smooth_l1_loss(predictions[chosen, j], scores.new_tensor(change))
             # Retain the supervised language signal when outcomes are sparse.
-            loss = loss + F.cross_entropy(model.reader.linear(examples), labels)
+            if model.reader is not None:
+                loss = loss + F.cross_entropy(model.reader.linear(examples), labels)
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
@@ -76,7 +82,7 @@ def inspect(model, trace, ordinal):
         if i != ordinal:
             continue
         state, options = row["state"], row["options"]
-        objects, _ = observation_rows(state, model.reader, use_catalog=model.memory_runtime is None)
+        objects, _ = model.read_state(state)
         scores, _ = model(state, options)
         print(f"{len(objects)} objects x {model.tokens.embedding_dim} -> {len(scores)} legal-action logits")
         for obj in objects:
@@ -96,7 +102,9 @@ def main():
         cmd.add_argument("checkpoint", type=Path)
         if name in ("inspect", "train", "play"):
             cmd.add_argument("--memory", type=Path, help="Use a separately trained episodic interpreter")
-        if name == "read":
+        if name == "init":
+            cmd.add_argument("--card-input", choices=("catalog","id","id_text"), default="catalog")
+        elif name == "read":
             cmd.add_argument("kind", choices=("card", "power", "potion", "enemy", "relic"))
             cmd.add_argument("text")
         elif name == "inspect":
@@ -113,16 +121,19 @@ def main():
     torch.set_num_threads(1)
     torch.manual_seed(19)
     if args.command == "init":
-        model = CombatPolicy()
-        fit_reader(model.reader)
+        model = CombatPolicy(card_input=args.card_input)
+        if model.reader is not None:
+            fit_reader(model.reader)
         save(model, args.checkpoint)
-        print("Saved the supervised reader and a randomly initialized combat policy.")
+        print("Saved combat policy with card input:", args.card_input)
         return
     model = load(args.checkpoint)
     if getattr(args, "memory", None):
         from .memory import load_memory
         model.memory_runtime = load_memory(args.memory)
     if args.command == "read":
+        if model.reader is None:
+            parser.error("Direct card input encodes text inside the policy; read requires a catalogue reader.")
         print(model.reader.read_text(args.kind, args.text))
     elif args.command == "inspect":
         inspect(model, args.recording, args.decision)
