@@ -12,6 +12,8 @@ class Transition:
     after_monsters: list | None
     hp_events: tuple = ()
     window_complete: bool = False
+    after_state: dict | None = None
+    ticket: str = ""
 
     def target_hp_drops(self):
         parts = self.action.split()
@@ -50,7 +52,8 @@ def transitions(rows):
                     player = after if "current_hp" in after else None
                 complete = schema >= 2 and player is not None
                 yield Transition(decision["state"], decision["options"], action, player, enemies,
-                                 tuple(hp_events), complete)
+                                 tuple(hp_events), complete, after if event == "decision" else None,
+                                 decision["ticket"])
             if event == "start":
                 schema = row.get("schema", 1)
             hp_events = []

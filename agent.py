@@ -18,7 +18,7 @@ def choose(state, options):
     return next((move for move in options if move.startswith("play ")), "end")
 
 
-def respond(folder, previous=None, policy=choose):
+def respond(folder, previous=None, policy=choose, before_choose=None):
     try:
         decision = json.loads((folder / "decision.json").read_text(encoding="utf-8"))
     except FileNotFoundError:
@@ -26,6 +26,8 @@ def respond(folder, previous=None, policy=choose):
     ticket = decision["ticket"]
     if ticket == previous:
         return previous
+    if before_choose is not None:
+        before_choose(ticket)
     options = tuple(decision["options"])
     action = policy(decision["state"], options)
     if action not in options:

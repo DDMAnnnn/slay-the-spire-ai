@@ -76,7 +76,7 @@ def inspect(model, trace, ordinal):
         if i != ordinal:
             continue
         state, options = row["state"], row["options"]
-        objects, _ = observation_rows(state, model.reader)
+        objects, _ = observation_rows(state, model.reader, use_catalog=model.memory_runtime is None)
         scores, _ = model(state, options)
         print(f"{len(objects)} objects x {model.tokens.embedding_dim} -> {len(scores)} legal-action logits")
         for obj in objects:
@@ -94,6 +94,8 @@ def main():
     for name in ("init", "read", "inspect", "train", "play"):
         cmd = sub.add_parser(name)
         cmd.add_argument("checkpoint", type=Path)
+        if name in ("inspect", "train", "play"):
+            cmd.add_argument("--memory", type=Path, help="Use a separately trained episodic interpreter")
         if name == "read":
             cmd.add_argument("kind", choices=("card", "power", "potion", "enemy", "relic"))
             cmd.add_argument("text")
@@ -106,6 +108,7 @@ def main():
             cmd.add_argument("--epochs", type=int, default=1)
         elif name == "play":
             cmd.add_argument("--folder", type=Path, default=HOME)
+            cmd.add_argument("--save-memory", type=Path, help="Persist newly observed episodes here")
     args = parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(19)
@@ -116,6 +119,9 @@ def main():
         print("Saved the supervised reader and a randomly initialized combat policy.")
         return
     model = load(args.checkpoint)
+    if getattr(args, "memory", None):
+        from .memory import load_memory
+        model.memory_runtime = load_memory(args.memory)
     if args.command == "read":
         print(model.reader.read_text(args.kind, args.text))
     elif args.command == "inspect":
@@ -124,11 +130,19 @@ def main():
         learn(model, args.recordings, args.epochs)
         save(model, args.output)
     elif args.command == "play":
+        before_choose = None
+        if args.save_memory and not args.memory:
+            parser.error("--save-memory requires --memory")
+        if args.memory:
+            from .memory_training import remember_through
+            output = args.save_memory or args.memory.with_suffix(".live.pt")
+            def before_choose(ticket):
+                remember_through(args.folder, ticket, model.memory_runtime, output)
         print("Waiting for F8 in combat. Ctrl+C stops the policy.", flush=True)
         ticket = None
         try:
             while True:
-                ticket = respond(args.folder, ticket, model.choose)
+                ticket = respond(args.folder, ticket, model.choose, before_choose)
                 time.sleep(0.1)
         except KeyboardInterrupt:
             pass

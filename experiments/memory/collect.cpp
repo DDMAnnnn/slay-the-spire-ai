@@ -1,0 +1,92 @@
+// Seeded public observations using gamerpuppy/sts_lightspeed at 7476a819.
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <string>
+#include <vector>
+#include "game/GameContext.h"
+#include "combat/BattleContext.h"
+#include "sim/search/Action.h"
+#include "nlohmann/json.hpp"
+
+using namespace sts;
+using json = nlohmann::json;
+using Move = sts::search::Action;
+using Kind = sts::search::ActionType;
+
+json card(const CardInstance& c) {
+    return {{"id", getCardStringId(c.id)}, {"upgrades", c.getUpgradeCount()}, {"cost", int(c.costForTurn)}};
+}
+
+template<class Pile>
+json bag(const Pile& pile) {
+    std::vector<json> cards;
+    for (const auto& c : pile) cards.push_back(card(c));
+    std::sort(cards.begin(), cards.end());
+    return cards;
+}
+
+void power(json& owner, const char* id, int amount) {
+    if (amount) owner["powers"].push_back({{"id", id}, {"amount", amount}});
+}
+
+json snapshot(const BattleContext& b) {
+    auto empty = json::array();
+    json p = {{"current_hp", b.player.curHp}, {"max_hp", b.player.maxHp}, {"block", b.player.block},
+              {"class", "IRONCLAD"}, {"ascension", 20}, {"powers", empty}, {"potions", empty}};
+    power(p, "Weak", b.player.getStatus<PlayerStatus::WEAK>());
+    power(p, "Frail", b.player.getStatus<PlayerStatus::FRAIL>());
+    power(p, "Strength", b.player.strength);
+    json s = {{"player",p}, {"energy", b.player.energy}, {"turn", b.turn}, {"hand",empty},
+              {"draw",bag(b.cards.drawPile)}, {"discard",bag(b.cards.discardPile)},
+              {"exhaust",bag(b.cards.exhaustPile)}, {"monsters",empty}};
+    for (int i=0; i<b.cards.cardsInHand; ++i) s["hand"].push_back(card(b.cards.hand[i]));
+    for (int i=0; i<b.monsters.monsterCount; ++i) {
+        const auto& e = b.monsters.arr[i];
+        json m = {{"id",e.getName()}, {"current_hp",std::max(0,e.curHp)}, {"max_hp",e.maxHp},
+                  {"block",e.block}, {"powers",empty}};
+        power(m,"Vulnerable",e.vulnerable);
+        power(m,"Curl Up",e.getStatus<MonsterStatus::CURL_UP>());
+        s["monsters"].push_back(m);
+    }
+    return s;
+}
+
+int main(int argc, char** argv) {
+    if (argc != 4) return 2;
+    const int start = std::stoi(argv[1]), count = std::stoi(argv[2]), addPommel = std::stoi(argv[3]);
+    const MonsterEncounter enemies[] = {MonsterEncounter::CULTIST, MonsterEncounter::JAW_WORM,
+                                        MonsterEncounter::TWO_LOUSE, MonsterEncounter::SMALL_SLIMES};
+    for (int seed=start; seed<start+count; ++seed) {
+        GameContext g(CharacterClass::IRONCLAD, seed, 20);
+        g.floorNum = 1;
+        if (addPommel) g.obtainCard(CardId::POMMEL_STRIKE);
+        BattleContext b;
+        b.init(g, enemies[seed%4]);
+        b.executeActions();
+        std::mt19937 rng(seed ^ 0x7bec9);
+        for (int step=0; b.outcome==Outcome::UNDECIDED; ++step) {
+            if (step >= 500 || b.inputState!=InputState::PLAYER_NORMAL) return 3;
+            std::vector<Move> legal;
+            for (int i=0; i<b.cards.cardsInHand; ++i) {
+                int targets = b.cards.hand[i].requiresTarget() ? b.monsters.monsterCount : 1;
+                for (int j=0; j<targets; ++j) {
+                    Move play(Kind::CARD,i,j);
+                    if (play.isValidAction(b)) legal.push_back(play);
+                }
+            }
+            Move move(Kind::END_TURN);
+            if (!legal.empty()) move=legal[std::uniform_int_distribution<int>(0,legal.size()-1)(rng)];
+            auto state = snapshot(b);
+            std::string action = "end";
+            if (move.getActionType()==Kind::CARD) {
+                const int slot=move.getSourceIdx();
+                action="play "+std::to_string(slot);
+                if (b.cards.hand[slot].requiresTarget()) action+=" "+std::to_string(move.getTargetIdx());
+            }
+            move.execute(b);
+            std::cout << json({{"fight",seed},{"step",step},{"state",state},{"action",action},
+                               {"after",snapshot(b)},{"terminal",b.outcome!=Outcome::UNDECIDED}}).dump() << '\n';
+        }
+    }
+}

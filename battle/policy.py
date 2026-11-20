@@ -29,7 +29,7 @@ class ObjectRow:
     predicted_clauses: list = field(default_factory=list)
 
 
-def observation_rows(state, reader):
+def observation_rows(state, reader, use_catalog=True):
     rows, addresses = [], {}
     player = state["player"]
 
@@ -41,6 +41,11 @@ def observation_rows(state, reader):
         return row
 
     def describe(row, kind, obj):
+        if not use_catalog:
+            row.words.extend([kind, obj.get("description") or obj.get("id", "")])
+            for keyword, definition in sorted(obj.get("glossary", {}).items()):
+                row.words.extend([keyword, definition])
+            return
         meaning = reader.interpret(kind, obj)
         row.words.extend([kind, meaning.source, meaning.program])
         if meaning.source == "predicted":
@@ -69,7 +74,7 @@ def observation_rows(state, reader):
             row = add(zone, card, (zone, slot))
             row.words.extend([card.get("type", ""), card.get("target", "")])
             describe(row, "card", card)
-            if card["id"] in card_catalog():
+            if use_catalog and card["id"] in card_catalog():
                 defaults = card_catalog()[card["id"]][2]
                 for name, pair in defaults.items():
                     row.numbers[name] = pair[int(bool(card.get("upgrades")))]
@@ -141,6 +146,7 @@ class CombatPolicy(nn.Module):
             from .reader_training import new_reader
             reader = new_reader()
         self.reader = reader
+        self.memory_runtime = None
         self.tokens = nn.Embedding(8192, width)
         self.literal = nn.Linear(1, width, bias=False)
         self.program = nn.GRU(width, width, batch_first=True)
@@ -181,12 +187,26 @@ class CombatPolicy(nn.Module):
         return self.battle(objects.unsqueeze(0)).squeeze(0)
 
     def forward(self, state, options):
-        rows, addresses = observation_rows(state, self.reader)
+        rows, addresses = observation_rows(state, self.reader, use_catalog=self.memory_runtime is None)
         context = self.encode(rows)
         indices = [action_indices(option, addresses) for option in options]
         kind, src, tgt = torch.tensor(indices, device=context.device).T
         lookup = torch.cat([context, self.absent])
-        fused = torch.cat([context[0].expand(len(options), -1), lookup[src], lookup[tgt],
+        sources = lookup[src]
+        if self.memory_runtime is not None:
+            from .memory import cue_for, source
+            interpreter, bank = self.memory_runtime
+            meanings = []
+            for action in options:
+                played = source(state, action)
+                if played:
+                    kind_name, obj, target = played
+                    _, meaning = interpreter.interpret(cue_for(kind_name, obj, state, target), bank)
+                    meanings.append(meaning.to(context))
+                else:
+                    meanings.append(context.new_zeros(context.shape[-1]))
+            sources = sources + torch.stack(meanings)
+        fused = torch.cat([context[0].expand(len(options), -1), sources, lookup[tgt],
                            self.kind(kind)], dim=-1)
         actions = self.action(fused)
         return self.score(actions).squeeze(-1), self.outcomes(actions)
