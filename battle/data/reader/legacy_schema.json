@@ -1,0 +1,237 @@
+{
+  "templates": [
+    {
+      "id": "hit",
+      "kinds": [
+        "card"
+      ],
+      "program": "Attack(Target,$0)"
+    },
+    {
+      "id": "twice",
+      "kinds": [
+        "card"
+      ],
+      "program": "Repeat(2,Attack(Target,$0))"
+    },
+    {
+      "id": "multi",
+      "kinds": [
+        "card"
+      ],
+      "program": "Repeat($1,Attack(Target,$0))"
+    },
+    {
+      "id": "damage",
+      "kinds": [
+        "potion"
+      ],
+      "program": "Damage(Target,$0)"
+    },
+    {
+      "id": "block",
+      "kinds": [
+        "card",
+        "potion"
+      ],
+      "program": "Block($0)"
+    },
+    {
+      "id": "draw",
+      "kinds": [
+        "card",
+        "potion"
+      ],
+      "program": "Draw($0)"
+    },
+    {
+      "id": "strength",
+      "kinds": [
+        "card",
+        "potion"
+      ],
+      "program": "Apply(Player,Strength,$0)"
+    },
+    {
+      "id": "vulnerable",
+      "kinds": [
+        "card",
+        "potion"
+      ],
+      "program": "Apply(Target,Vulnerable,$0)"
+    },
+    {
+      "id": "heal",
+      "kinds": [
+        "relic"
+      ],
+      "program": "On(CombatEnd,Heal($0))"
+    },
+    {
+      "id": "power",
+      "kinds": [
+        "power"
+      ],
+      "program": "Modify(OwnerAttackDamage,Add($0))"
+    },
+    {
+      "id": "enemy",
+      "kinds": [
+        "enemy"
+      ],
+      "program": "Repeat($1,Attack(Player,$0))"
+    }
+  ],
+  "vocabulary": [
+    "#",
+    "# >",
+    "# block",
+    "# card",
+    "# cards",
+    "# damage",
+    "# hp",
+    "# points",
+    "# stacks",
+    "# strength",
+    "# times",
+    "# vulnerable",
+    "< apply",
+    "< at",
+    "< attack",
+    "< deal",
+    "< draw",
+    "< gain",
+    "< heal",
+    "< increase",
+    "< increases",
+    "an",
+    "an enemy",
+    "apply",
+    "apply #",
+    "at",
+    "at the",
+    "attack",
+    "attack damage",
+    "attack for",
+    "attack twice",
+    "block",
+    "block >",
+    "by",
+    "by #",
+    "card",
+    "card >",
+    "card/#",
+    "card/an",
+    "card/apply",
+    "card/attack",
+    "card/block",
+    "card/card",
+    "card/cards",
+    "card/damage",
+    "card/deal",
+    "card/draw",
+    "card/enemy",
+    "card/for",
+    "card/gain",
+    "card/of",
+    "card/points",
+    "card/stacks",
+    "card/strength",
+    "card/times",
+    "card/to",
+    "card/twice",
+    "card/vulnerable",
+    "cards",
+    "cards >",
+    "combat",
+    "combat >",
+    "combat heal",
+    "damage",
+    "damage #",
+    "damage >",
+    "damage by",
+    "damage to",
+    "damage twice",
+    "deal",
+    "deal #",
+    "draw",
+    "draw #",
+    "end",
+    "end of",
+    "enemy",
+    "enemy #",
+    "enemy >",
+    "enemy/#",
+    "enemy/attack",
+    "enemy/damage",
+    "enemy/deal",
+    "enemy/for",
+    "enemy/times",
+    "for",
+    "for #",
+    "gain",
+    "gain #",
+    "heal",
+    "heal #",
+    "hp",
+    "hp >",
+    "hp at",
+    "increase",
+    "increase attack",
+    "increases",
+    "increases attack",
+    "of",
+    "of block",
+    "of combat",
+    "of strength",
+    "of vulnerable",
+    "points",
+    "points of",
+    "potion/#",
+    "potion/an",
+    "potion/apply",
+    "potion/block",
+    "potion/card",
+    "potion/cards",
+    "potion/damage",
+    "potion/deal",
+    "potion/draw",
+    "potion/enemy",
+    "potion/gain",
+    "potion/of",
+    "potion/points",
+    "potion/stacks",
+    "potion/strength",
+    "potion/to",
+    "potion/vulnerable",
+    "power/#",
+    "power/attack",
+    "power/by",
+    "power/damage",
+    "power/increase",
+    "power/increases",
+    "relic/#",
+    "relic/at",
+    "relic/combat",
+    "relic/end",
+    "relic/heal",
+    "relic/hp",
+    "relic/of",
+    "relic/the",
+    "stacks",
+    "stacks of",
+    "strength",
+    "strength >",
+    "the",
+    "the end",
+    "times",
+    "times >",
+    "to",
+    "to an",
+    "twice",
+    "twice >",
+    "twice for",
+    "vulnerable",
+    "vulnerable >"
+  ]
+}

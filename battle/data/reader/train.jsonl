@@ -1,0 +1,150 @@
+{"kind":"card","text":"deal 5 damage","label":"hit","origin":"original"}
+{"kind":"card","text":"attack for 5 damage","label":"hit","origin":"original"}
+{"kind":"card","text":"deal 5 damage to an enemy","label":"hit","origin":"expanded"}
+{"kind":"card","text":"hit for 7 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"strike for 6 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"attack a target for 8 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"hit an enemy for 5 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"deal an enemy 5 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"deal 5 attack damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"attack the target for 4 damage","label":"hit","origin":"expanded"}
+{"kind":"card","text":"deal 5 damage twice","label":"twice","origin":"original"}
+{"kind":"card","text":"attack twice for 5 damage","label":"twice","origin":"original"}
+{"kind":"card","text":"deal 3 damage twice to an enemy","label":"twice","origin":"expanded"}
+{"kind":"card","text":"strike twice for 3 damage","label":"twice","origin":"expanded"}
+{"kind":"card","text":"hit an enemy twice for 7 damage","label":"twice","origin":"expanded"}
+{"kind":"card","text":"hit for 8 damage twice","label":"twice","origin":"expanded"}
+{"kind":"card","text":"attack for 6 damage twice","label":"twice","origin":"expanded"}
+{"kind":"card","text":"deal two hits of 5 damage","label":"twice","origin":"expanded"}
+{"kind":"card","text":"attack a target twice for 8 damage","label":"twice","origin":"expanded"}
+{"kind":"card","text":"deal 5 damage on each of two hits","label":"twice","origin":"expanded"}
+{"kind":"card","text":"deal 5 damage 3 times","label":"multi","origin":"original"}
+{"kind":"card","text":"deal 5 damage to an enemy 3 times","label":"multi","origin":"original"}
+{"kind":"card","text":"hit for 5 damage 3 times","label":"multi","origin":"expanded"}
+{"kind":"card","text":"attack for 3 damage over 4 hits","label":"multi","origin":"expanded"}
+{"kind":"card","text":"strike for 7 damage 2 times","label":"multi","origin":"expanded"}
+{"kind":"card","text":"deal 3 damage per hit across 5 hits","label":"multi","origin":"expanded"}
+{"kind":"card","text":"hit an enemy for 4 damage 3 times","label":"multi","origin":"expanded"}
+{"kind":"card","text":"attack for 6 damage on each of 3 hits","label":"multi","origin":"expanded"}
+{"kind":"card","text":"deal 3 damage with each of 4 hits","label":"multi","origin":"expanded"}
+{"kind":"card","text":"hit for 5 damage a total of 3 times","label":"multi","origin":"expanded"}
+{"kind":"potion","text":"deal 20 damage","label":"damage","origin":"original"}
+{"kind":"potion","text":"deal 20 damage to an enemy","label":"damage","origin":"original"}
+{"kind":"potion","text":"inflict 8 damage","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"deal 7 damage to a target","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"an enemy takes 6 damage","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"deal 12 damage to one foe","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"inflict 3 damage on a target","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"deal 5 damage to the target","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"a selected enemy takes 5 damage","label":"damage","origin":"expanded"}
+{"kind":"potion","text":"deal a target 4 damage","label":"damage","origin":"expanded"}
+{"kind":"card","text":"gain 5 block","label":"block","origin":"original"}
+{"kind":"card","text":"gain 5 points of block","label":"block","origin":"original"}
+{"kind":"card","text":"receive 4 block","label":"block","origin":"expanded"}
+{"kind":"card","text":"grant yourself 4 block","label":"block","origin":"expanded"}
+{"kind":"card","text":"gain 6 block points","label":"block","origin":"expanded"}
+{"kind":"card","text":"give yourself 5 points of block","label":"block","origin":"expanded"}
+{"kind":"card","text":"get 6 block","label":"block","origin":"expanded"}
+{"kind":"card","text":"add 5 to your block","label":"block","origin":"expanded"}
+{"kind":"card","text":"you gain 7 block","label":"block","origin":"expanded"}
+{"kind":"card","text":"raise your block by 4","label":"block","origin":"expanded"}
+{"kind":"potion","text":"gain 5 block","label":"block","origin":"original"}
+{"kind":"potion","text":"gain 5 points of block","label":"block","origin":"original"}
+{"kind":"potion","text":"receive 4 block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"grant yourself 4 block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"gain 6 block points","label":"block","origin":"expanded"}
+{"kind":"potion","text":"give yourself 5 points of block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"get 6 block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"add 5 to your block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"you gain 7 block","label":"block","origin":"expanded"}
+{"kind":"potion","text":"raise your block by 4","label":"block","origin":"expanded"}
+{"kind":"card","text":"draw 2 cards","label":"draw","origin":"original"}
+{"kind":"card","text":"draw 1 card","label":"draw","origin":"original"}
+{"kind":"card","text":"draw 3 cards into your hand","label":"draw","origin":"expanded"}
+{"kind":"card","text":"draw 2 cards from your draw pile","label":"draw","origin":"expanded"}
+{"kind":"card","text":"you draw 3 cards","label":"draw","origin":"expanded"}
+{"kind":"card","text":"draw a further 2 cards","label":"draw","origin":"expanded"}
+{"kind":"card","text":"immediately draw 4 cards","label":"draw","origin":"expanded"}
+{"kind":"card","text":"draw 3 more cards","label":"draw","origin":"expanded"}
+{"kind":"card","text":"draw 3 cards now","label":"draw","origin":"expanded"}
+{"kind":"card","text":"draw another 2 cards","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw 2 cards","label":"draw","origin":"original"}
+{"kind":"potion","text":"draw 1 card","label":"draw","origin":"original"}
+{"kind":"potion","text":"draw 3 cards into your hand","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw 2 cards from your draw pile","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"you draw 3 cards","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw a further 2 cards","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"immediately draw 4 cards","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw 3 more cards","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw 3 cards now","label":"draw","origin":"expanded"}
+{"kind":"potion","text":"draw another 2 cards","label":"draw","origin":"expanded"}
+{"kind":"card","text":"gain 2 strength","label":"strength","origin":"original"}
+{"kind":"card","text":"gain 2 stacks of strength","label":"strength","origin":"original"}
+{"kind":"card","text":"give yourself 3 strength","label":"strength","origin":"expanded"}
+{"kind":"card","text":"you gain 2 strength","label":"strength","origin":"expanded"}
+{"kind":"card","text":"increase your strength by 4","label":"strength","origin":"expanded"}
+{"kind":"card","text":"gain 4 strength stacks","label":"strength","origin":"expanded"}
+{"kind":"card","text":"add 2 to your strength","label":"strength","origin":"expanded"}
+{"kind":"card","text":"get 2 strength","label":"strength","origin":"expanded"}
+{"kind":"card","text":"grant yourself 2 stacks of strength","label":"strength","origin":"expanded"}
+{"kind":"card","text":"raise strength by 3","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"gain 2 strength","label":"strength","origin":"original"}
+{"kind":"potion","text":"gain 2 stacks of strength","label":"strength","origin":"original"}
+{"kind":"potion","text":"give yourself 3 strength","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"you gain 2 strength","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"increase your strength by 4","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"gain 4 strength stacks","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"add 2 to your strength","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"get 2 strength","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"grant yourself 2 stacks of strength","label":"strength","origin":"expanded"}
+{"kind":"potion","text":"raise strength by 3","label":"strength","origin":"expanded"}
+{"kind":"card","text":"apply 2 vulnerable","label":"vulnerable","origin":"original"}
+{"kind":"card","text":"apply 2 stacks of vulnerable","label":"vulnerable","origin":"original"}
+{"kind":"card","text":"apply 3 vulnerable to an enemy","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"give an enemy 2 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"add 4 stacks of vulnerable to the target","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"inflict 2 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"give the enemy 2 stacks of vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"the target gains 3 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"apply 4 vulnerable stacks","label":"vulnerable","origin":"expanded"}
+{"kind":"card","text":"inflict 3 vulnerable on a target","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"apply 2 vulnerable","label":"vulnerable","origin":"original"}
+{"kind":"potion","text":"apply 2 stacks of vulnerable","label":"vulnerable","origin":"original"}
+{"kind":"potion","text":"apply 3 vulnerable to an enemy","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"give an enemy 2 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"add 4 stacks of vulnerable to the target","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"inflict 2 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"give the enemy 2 stacks of vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"the target gains 3 vulnerable","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"apply 4 vulnerable stacks","label":"vulnerable","origin":"expanded"}
+{"kind":"potion","text":"inflict 3 vulnerable on a target","label":"vulnerable","origin":"expanded"}
+{"kind":"relic","text":"at the end of combat heal 6 hp","label":"heal","origin":"original"}
+{"kind":"relic","text":"heal 6 hp at the end of combat","label":"heal","origin":"original"}
+{"kind":"relic","text":"when combat ends recover 5 hp","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"restore 4 hp after combat","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"heal 6 hp after the fight","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"at combat end restore 7 health","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"after the fight ends heal 4 hp","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"recover 6 hp when the battle ends","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"regain 3 hp at the end of a fight","label":"heal","origin":"expanded"}
+{"kind":"relic","text":"heal for 5 hp at combat end","label":"heal","origin":"expanded"}
+{"kind":"power","text":"increase attack damage by 2","label":"power","origin":"original"}
+{"kind":"power","text":"increases attack damage by 2","label":"power","origin":"original"}
+{"kind":"power","text":"attacks deal 3 additional damage","label":"power","origin":"expanded"}
+{"kind":"power","text":"add 4 to your attack damage","label":"power","origin":"expanded"}
+{"kind":"power","text":"each attack hit deals 2 extra damage","label":"power","origin":"expanded"}
+{"kind":"power","text":"attack damage increases by 3","label":"power","origin":"expanded"}
+{"kind":"power","text":"your attacks gain 5 damage","label":"power","origin":"expanded"}
+{"kind":"power","text":"boost attack damage by 4","label":"power","origin":"expanded"}
+{"kind":"power","text":"add 3 damage to attacks","label":"power","origin":"expanded"}
+{"kind":"power","text":"attacks inflict 2 more damage","label":"power","origin":"expanded"}
+{"kind":"enemy","text":"attack for 6 damage 2 times","label":"enemy","origin":"original"}
+{"kind":"enemy","text":"deal 6 damage 2 times","label":"enemy","origin":"original"}
+{"kind":"enemy","text":"hit the player for 7 damage across 3 hits","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"deal 4 damage per hit over 3 hits","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"attack the player for 6 damage 3 times","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"hit for 3 damage 4 times","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"strike the player for 5 damage 2 times","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"attack for 3 damage on each of 4 hits","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"deal the player 4 damage 3 times","label":"enemy","origin":"expanded"}
+{"kind":"enemy","text":"deal 3 damage with each of 4 hits","label":"enemy","origin":"expanded"}

@@ -1,0 +1,51 @@
+{"group":"numbers","kind":"card","text":"Deal 91 damage.","expected":"Attack(Target,91)"}
+{"group":"numbers","kind":"card","text":"Deal 29 damage twice.","expected":"Repeat(2,Attack(Target,29))"}
+{"group":"numbers","kind":"card","text":"Deal 14 damage 6 times.","expected":"Repeat(6,Attack(Target,14))"}
+{"group":"numbers","kind":"potion","text":"Deal 43 damage.","expected":"Damage(Target,43)"}
+{"group":"numbers","kind":"card","text":"Gain 17 block.","expected":"Block(17)"}
+{"group":"numbers","kind":"potion","text":"Draw 7 cards.","expected":"Draw(7)"}
+{"group":"numbers","kind":"card","text":"Gain 19 strength.","expected":"Apply(Player,Strength,19)"}
+{"group":"numbers","kind":"potion","text":"Apply 11 vulnerable.","expected":"Apply(Target,Vulnerable,11)"}
+{"group":"numbers","kind":"relic","text":"At the end of combat heal 23 HP.","expected":"On(CombatEnd,Heal(23))"}
+{"group":"numbers","kind":"power","text":"Increases attack damage by 12.","expected":"Modify(OwnerAttackDamage,Add(12))"}
+{"group":"numbers","kind":"enemy","text":"Attack for 14 damage 5 times.","expected":"Repeat(5,Attack(Player,14))"}
+{"group":"wording","kind":"card","text":"Hit the selected enemy for 9 damage.","expected":"Attack(Target,9)"}
+{"group":"wording","kind":"card","text":"Deal 9 damage to your target.","expected":"Attack(Target,9)"}
+{"group":"wording","kind":"card","text":"Attack the chosen target twice for 4 damage.","expected":"Repeat(2,Attack(Target,4))"}
+{"group":"wording","kind":"card","text":"Deal 6 damage to the enemy twice.","expected":"Repeat(2,Attack(Target,6))"}
+{"group":"wording","kind":"card","text":"Deal 4 damage per hit for 3 hits.","expected":"Repeat(3,Attack(Target,4))"}
+{"group":"wording","kind":"card","text":"Strike for 8 damage a total of 3 times.","expected":"Repeat(3,Attack(Target,8))"}
+{"group":"wording","kind":"potion","text":"Deal 15 damage to the chosen foe.","expected":"Damage(Target,15)"}
+{"group":"wording","kind":"potion","text":"The target takes 15 damage.","expected":"Damage(Target,15)"}
+{"group":"wording","kind":"potion","text":"Gain a total of 8 Block.","expected":"Block(8)"}
+{"group":"wording","kind":"card","text":"Receive 7 Block points.","expected":"Block(7)"}
+{"group":"wording","kind":"potion","text":"Draw a total of 3 cards.","expected":"Draw(3)"}
+{"group":"wording","kind":"card","text":"Draw 2 cards from the top of your draw pile.","expected":"Draw(2)"}
+{"group":"wording","kind":"potion","text":"Gain a total of 4 Strength.","expected":"Apply(Player,Strength,4)"}
+{"group":"wording","kind":"card","text":"Increase your Strength by 2 stacks.","expected":"Apply(Player,Strength,2)"}
+{"group":"wording","kind":"card","text":"Apply 3 Vulnerable to the selected foe.","expected":"Apply(Target,Vulnerable,3)"}
+{"group":"wording","kind":"potion","text":"The enemy gains 4 stacks of Vulnerable.","expected":"Apply(Target,Vulnerable,4)"}
+{"group":"wording","kind":"relic","text":"Once the fight ends, recover 7 HP.","expected":"On(CombatEnd,Heal(7))"}
+{"group":"wording","kind":"relic","text":"Heal for 7 HP when combat ends.","expected":"On(CombatEnd,Heal(7))"}
+{"group":"wording","kind":"power","text":"Each attack deals 4 additional damage.","expected":"Modify(OwnerAttackDamage,Add(4))"}
+{"group":"wording","kind":"power","text":"Adds 4 damage to each attack hit.","expected":"Modify(OwnerAttackDamage,Add(4))"}
+{"group":"wording","kind":"enemy","text":"Attack the player for 3 damage per hit for 4 hits.","expected":"Repeat(4,Attack(Player,3))"}
+{"group":"wording","kind":"enemy","text":"Deal 7 damage to the player 2 times.","expected":"Repeat(2,Attack(Player,7))"}
+{"group":"composition","kind":"card","text":"Draw 2 cards. Deal 7 damage twice.","expected":"Draw(2);Repeat(2,Attack(Target,7))"}
+{"group":"composition","kind":"card","text":"Gain 8 block. Apply 2 vulnerable.","expected":"Block(8);Apply(Target,Vulnerable,2)"}
+{"group":"composition","kind":"card","text":"Apply 1 vulnerable. Deal 3 damage 4 times.","expected":"Apply(Target,Vulnerable,1);Repeat(4,Attack(Target,3))"}
+{"group":"composition","kind":"potion","text":"Draw 3 cards. Gain 2 strength.","expected":"Draw(3);Apply(Player,Strength,2)"}
+{"group":"composition","kind":"card","text":"Gain 3 strength. Gain 4 block. Draw 1 card.","expected":"Apply(Player,Strength,3);Block(4);Draw(1)"}
+{"group":"composition","kind":"potion","text":"Deal 9 damage. Gain 4 block.","expected":"Damage(Target,9);Block(4)"}
+{"group":"unsupported","kind":"card","text":"Gain 4 block 2 times.","expected":null}
+{"group":"unsupported","kind":"card","text":"Draw 1 card twice.","expected":null}
+{"group":"unsupported","kind":"card","text":"Deal 5 damage to yourself.","expected":null}
+{"group":"unsupported","kind":"card","text":"Deal 5 damage at the end of combat.","expected":null}
+{"group":"unsupported","kind":"potion","text":"Gain 3 vulnerable.","expected":null}
+{"group":"unsupported","kind":"potion","text":"Apply 3 strength to an enemy.","expected":null}
+{"group":"unsupported","kind":"relic","text":"At the end of combat deal 6 damage.","expected":null}
+{"group":"unsupported","kind":"power","text":"Increase block by 3.","expected":null}
+{"group":"unsupported","kind":"enemy","text":"Attack a random enemy for 4 damage 2 times.","expected":null}
+{"group":"unsupported","kind":"card","text":"Gain 8 Flux.","expected":null}
+{"group":"unsupported","kind":"card","text":"Deal 8 damage. Channel 1 Lightning.","expected":null}
+{"group":"unsupported","kind":"potion","text":"Choose 1 card from your discard pile.","expected":null}

@@ -1,0 +1,22 @@
+{"group":"wording","kind":"card","text":"Deal 8 damage to the enemy.","expected":"Attack(Target,8)"}
+{"group":"wording","kind":"card","text":"Strike the enemy twice for 8 damage.","expected":"Repeat(2,Attack(Target,8))"}
+{"group":"wording","kind":"card","text":"Deal 3 damage to your target 5 times.","expected":"Repeat(5,Attack(Target,3))"}
+{"group":"wording","kind":"potion","text":"Inflict 18 damage on the enemy.","expected":"Damage(Target,18)"}
+{"group":"wording","kind":"card","text":"Give yourself 9 Block.","expected":"Block(9)"}
+{"group":"wording","kind":"potion","text":"Draw 3 cards from your deck.","expected":"Draw(3)"}
+{"group":"wording","kind":"potion","text":"Grant yourself 3 Strength.","expected":"Apply(Player,Strength,3)"}
+{"group":"wording","kind":"card","text":"Give the target 3 stacks of Vulnerable.","expected":"Apply(Target,Vulnerable,3)"}
+{"group":"wording","kind":"relic","text":"After combat ends, restore 8 HP.","expected":"On(CombatEnd,Heal(8))"}
+{"group":"wording","kind":"power","text":"Raise your attack damage by 3.","expected":"Modify(OwnerAttackDamage,Add(3))"}
+{"group":"wording","kind":"enemy","text":"Hit the player for 5 damage 3 times.","expected":"Repeat(3,Attack(Player,5))"}
+{"group":"composition","kind":"card","text":"Gain 4 block. Draw 2 cards.","expected":"Block(4);Draw(2)"}
+{"group":"composition","kind":"potion","text":"Gain 2 strength. Deal 7 damage.","expected":"Apply(Player,Strength,2);Damage(Target,7)"}
+{"group":"composition","kind":"card","text":"Deal 5 damage twice. Apply 2 vulnerable.","expected":"Repeat(2,Attack(Target,5));Apply(Target,Vulnerable,2)"}
+{"group":"unsupported","kind":"card","text":"Lose 6 block.","expected":null}
+{"group":"unsupported","kind":"card","text":"Gain 6 block twice.","expected":null}
+{"group":"unsupported","kind":"card","text":"Draw 2 cards next turn.","expected":null}
+{"group":"unsupported","kind":"potion","text":"Deal 10 damage to all enemies.","expected":null}
+{"group":"unsupported","kind":"relic","text":"At the start of combat heal 4 HP.","expected":null}
+{"group":"unsupported","kind":"card","text":"Channel 1 Frost.","expected":null}
+{"group":"unsupported","kind":"power","text":"Decrease attack damage by 2.","expected":null}
+{"group":"unsupported","kind":"enemy","text":"Deal 3 damage to itself 4 times.","expected":null}

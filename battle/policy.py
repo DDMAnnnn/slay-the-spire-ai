@@ -9,7 +9,7 @@ import torch
 from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence, pad_sequence
 
-from .reader import BASE_POTENCY, LESSONS, RuleReader, card_catalog, clauses, tokenize_description
+from .reader import BASE_POTENCY, card_catalog, clauses, tokenize_description
 
 
 # Each field has a value and a presence bit. A hidden intent differs from zero damage.
@@ -135,14 +135,17 @@ def action_indices(option, addresses):
 
 
 class CombatPolicy(nn.Module):
-    def __init__(self, width=64, heads=4):
+    def __init__(self, width=64, heads=4, reader=None):
         super().__init__()
-        self.reader = RuleReader()
+        if reader is None:
+            from .reader_training import new_reader
+            reader = new_reader()
+        self.reader = reader
         self.tokens = nn.Embedding(8192, width)
         self.literal = nn.Linear(1, width, bias=False)
         self.program = nn.GRU(width, width, batch_first=True)
         self.numeric = nn.Linear(2 * len(SCALARS), width)
-        self.belief = nn.Linear(len(LESSONS), width, bias=False)
+        self.belief = nn.Linear(len(self.reader.templates), width, bias=False)
         self.input_norm = nn.LayerNorm(width)
         layer = nn.TransformerEncoderLayer(width, heads, 2 * width, dropout=0.,
                                            batch_first=True, activation="gelu")
@@ -173,7 +176,7 @@ class CombatPolicy(nn.Module):
             guesses = [self.reader.linear(self.reader.vector(k, w)).softmax(0)
                        for k, w in row.predicted_clauses]
             beliefs.append(torch.stack(guesses).mean(0) if guesses
-                           else numeric.new_zeros(len(LESSONS)))
+                           else numeric.new_zeros(len(self.reader.templates)))
         objects = self.input_norm(hidden[0] + self.numeric(numeric) + self.belief(torch.stack(beliefs)))
         return self.battle(objects.unsqueeze(0)).squeeze(0)
 

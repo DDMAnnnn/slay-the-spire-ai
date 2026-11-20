@@ -9,6 +9,7 @@ import torch
 from battle.experience import transitions
 from battle.policy import CombatPolicy, observation_rows
 from battle.reader import card_catalog
+from battle.reader_training import fit_reader
 from agent import respond
 
 
@@ -28,7 +29,7 @@ class BattleTests(unittest.TestCase):
         torch.set_num_threads(1)
         torch.manual_seed(19)
         cls.model = CombatPolicy().eval()
-        cls.model.reader.fit_lessons()
+        fit_reader(cls.model.reader)
 
     def test_semantics(self):
         reader = self.model.reader

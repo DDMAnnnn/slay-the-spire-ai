@@ -1,0 +1,13 @@
+[
+  {"id":"hit","kinds":["card"],"program":"Attack(Target,$0)"},
+  {"id":"twice","kinds":["card"],"program":"Repeat(2,Attack(Target,$0))"},
+  {"id":"multi","kinds":["card"],"program":"Repeat($1,Attack(Target,$0))"},
+  {"id":"damage","kinds":["potion"],"program":"Damage(Target,$0)"},
+  {"id":"block","kinds":["card","potion"],"program":"Block($0)"},
+  {"id":"draw","kinds":["card","potion"],"program":"Draw($0)"},
+  {"id":"strength","kinds":["card","potion"],"program":"Apply(Player,Strength,$0)"},
+  {"id":"vulnerable","kinds":["card","potion"],"program":"Apply(Target,Vulnerable,$0)"},
+  {"id":"heal","kinds":["relic"],"program":"On(CombatEnd,Heal($0))"},
+  {"id":"power","kinds":["power"],"program":"Modify(OwnerAttackDamage,Add($0))"},
+  {"id":"enemy","kinds":["enemy"],"program":"Repeat($1,Attack(Player,$0))"}
+]

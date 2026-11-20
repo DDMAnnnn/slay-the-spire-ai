@@ -17,16 +17,18 @@ From the repository root in PowerShell with Python 3.10+ and PyTorch:
 
 ```powershell
 $python = '.\.venv\Scripts\python.exe'
-$ckpt = 'build/battle-v1/reader-and-policy.pt'
+$ckpt = 'build/battle-v2/reader-and-policy.pt'
 & $python -m battle init $ckpt
 & $python -m battle read $ckpt card 'Deal 13 damage 4 times.'
 $traces = @(Get-ChildItem "$env:USERPROFILE/SpireCombatAI/recordings/*.jsonl" | ForEach-Object FullName)
 & $python -m battle inspect $ckpt $traces[0]
-& $python -m battle train $ckpt build/battle-v1/imitation.pt $traces
-& $python -m unittest discover -s tests -p test_battle.py -v
+& $python -m battle train $ckpt build/battle-v2/imitation.pt $traces
+& $python -m unittest discover -s tests -v
 ```
 
-To select this policy in the existing F8 game session, run `.\.venv\Scripts\python.exe -m battle play build/battle-v1/imitation.pt` from the repository root. The bridge accepts the same atomic play-slot-target commands as before. New schema-2 recordings require the rebuilt mod jar. Older traces work with the fields they contain.
+To select this policy in the existing F8 game session, run `.\.venv\Scripts\python.exe -m battle play build/battle-v2/imitation.pt` from the repository root. The bridge accepts the same atomic play-slot-target commands as before. New schema-2 recordings require the rebuilt mod jar. Older traces work with the fields they contain.
+
+The [reader dataset and evaluation](data/reader/README.md) include the original comparison, split definitions, failure examples and commands to reproduce the scores.
 
 ## What the measurements mean
 

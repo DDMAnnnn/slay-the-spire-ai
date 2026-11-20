@@ -1,5 +1,6 @@
 """Run the interpreter, inspect action scores, or learn from recorded decisions."""
 import argparse
+import json
 import os
 from pathlib import Path
 import time
@@ -10,6 +11,8 @@ from torch.nn import functional as F
 from agent import HOME, respond
 from .experience import records, transitions
 from .policy import CombatPolicy, observation_rows
+from .reader import RuleReader
+from .reader_training import DATA, fit_reader, training_batch
 
 
 def save(model, path):
@@ -18,7 +21,7 @@ def save(model, path):
     with NamedTemporaryFile(dir=path.parent, delete=False) as f:
         tmp = Path(f.name)
     try:
-        torch.save({"format": 1, "weights": model.state_dict()}, tmp)
+        torch.save({"format": 2, "reader": model.reader.schema(), "weights": model.state_dict()}, tmp)
         os.replace(tmp, path)
     finally:
         tmp.unlink(missing_ok=True)
@@ -26,9 +29,13 @@ def save(model, path):
 
 def load(path):
     data = torch.load(path, map_location="cpu", weights_only=True)
-    if data["format"] != 1:
+    if data["format"] == 1:
+        schema = json.loads((DATA / "legacy_schema.json").read_text(encoding="utf8"))
+    elif data["format"] == 2:
+        schema = data["reader"]
+    else:
         raise ValueError("Unsupported battle checkpoint")
-    model = CombatPolicy()
+    model = CombatPolicy(reader=RuleReader(**schema))
     model.load_state_dict(data["weights"])
     return model.eval()
 
@@ -40,6 +47,7 @@ def learn(model, traces, epochs):
     if not samples:
         raise ValueError("No recorded decision with a matching requested action")
     model.train()
+    examples, labels = training_batch(model.reader)
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003)
     for _ in range(epochs):
         for index in torch.randperm(len(samples)).tolist():
@@ -51,7 +59,7 @@ def learn(model, traces, epochs):
                 if change is not None:
                     loss = loss + F.smooth_l1_loss(predictions[chosen, j], scores.new_tensor(change))
             # Retain the supervised language signal when outcomes are sparse.
-            loss = loss + model.reader.lesson_loss()
+            loss = loss + F.cross_entropy(model.reader.linear(examples), labels)
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
@@ -103,7 +111,7 @@ def main():
     torch.manual_seed(19)
     if args.command == "init":
         model = CombatPolicy()
-        model.reader.fit_lessons()
+        fit_reader(model.reader)
         save(model, args.checkpoint)
         print("Saved the supervised reader and a randomly initialized combat policy.")
         return
