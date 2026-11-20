@@ -37,6 +37,7 @@ json snapshot(const BattleContext& b) {
     power(p, "Weak", b.player.getStatus<PlayerStatus::WEAK>());
     power(p, "Frail", b.player.getStatus<PlayerStatus::FRAIL>());
     power(p, "Strength", b.player.strength);
+    power(p, "No Draw", b.player.hasStatus<PlayerStatus::NO_DRAW>() ? 1 : 0);
     json s = {{"player",p}, {"energy", b.player.energy}, {"turn", b.turn}, {"hand",empty},
               {"draw",bag(b.cards.drawPile)}, {"discard",bag(b.cards.discardPile)},
               {"exhaust",bag(b.cards.exhaustPile)}, {"monsters",empty}};
@@ -53,7 +54,8 @@ json snapshot(const BattleContext& b) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 4) return 2;
+    const bool paired = argc == 5 && std::string(argv[4]) == "--paired-draw";
+    if (argc != 4 && !paired) return 2;
     const int start = std::stoi(argv[1]), count = std::stoi(argv[2]), addPommel = std::stoi(argv[3]);
     const MonsterEncounter enemies[] = {MonsterEncounter::CULTIST, MonsterEncounter::JAW_WORM,
                                         MonsterEncounter::TWO_LOUSE, MonsterEncounter::SMALL_SLIMES};
@@ -83,8 +85,25 @@ int main(int argc, char** argv) {
                 const int slot=move.getSourceIdx();
                 action="play "+std::to_string(slot);
                 if (b.cards.hand[slot].requiresTarget()) action+=" "+std::to_string(move.getTargetIdx());
+                if (paired && b.cards.hand[slot].id == CardId::POMMEL_STRIKE &&
+                    !b.player.hasStatus<PlayerStatus::NO_DRAW>() &&
+                    b.cards.drawPile.size() + b.cards.discardPile.size() > 0) {
+                    auto blocked = b;
+                    blocked.player.setHasStatus<PlayerStatus::NO_DRAW>(true);
+                    auto blockedState = snapshot(blocked);
+                    move.execute(blocked);
+                    move.execute(b);
+                    if (b.outcome == Outcome::UNDECIDED && blocked.outcome == Outcome::UNDECIDED) {
+                        std::cout << json({{"fight",seed},{"step",step},{"action",action},
+                            {"allowed",{{"state",state},{"after",snapshot(b)}}},
+                            {"blocked",{{"state",blockedState},{"after",snapshot(blocked)}}}}).dump() << '\n';
+                        break; // at most one matched pair per fight
+                    }
+                    continue;
+                }
             }
             move.execute(b);
+            if (paired) continue;
             std::cout << json({{"fight",seed},{"step",step},{"state",state},{"action",action},
                                {"after",snapshot(b)},{"terminal",b.outcome!=Outcome::UNDECIDED}}).dump() << '\n';
         }
