@@ -1,5 +1,6 @@
 """Does paired practice teach the text policy to use Strength on unseen attacks?"""
 import argparse
+from dataclasses import dataclass
 import itertools
 import json
 from pathlib import Path
@@ -18,16 +19,22 @@ def damage(rule, strength):
     return (amount + strength) * hits
 
 
+@dataclass
+class DamageFight(Fight):
+    # Evaluator targets. Batch reads only state when constructing model inputs.
+    damage_by_action: tuple[int, int, int]
+
+
 def decision(cards, rules, strength):
-    totals = [damage(rule, strength) for rule in rules]
-    assert totals[0] != totals[1]
+    totals = tuple(damage(rule, strength) for rule in rules)
     powers = [{"id": "Strength", "amount": strength}] if strength else []
     enemy = {"id": "practice", "current_hp": 100, "max_hp": 100, "block": 0,
              "powers": [], "intent": "ATTACK", "damage": 8, "hits": 1}
     state = {"player": {"current_hp": 5, "max_hp": 80, "block": 0, "powers": powers, "potions": []},
              "turn": 1, "energy": 1, "hand": cards, "draw": [], "discard": [],
              "exhaust": [], "monsters": [enemy]}
-    return Fight(state, totals.index(max(totals)), "damage")
+    winner = totals.index(max(totals)) if totals[0] != totals[1] else -1
+    return DamageFight(state, winner, "damage", (*totals, 0))
 
 
 def training_data(schedule):

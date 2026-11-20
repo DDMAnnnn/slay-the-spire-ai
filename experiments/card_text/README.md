@@ -50,3 +50,20 @@ The table counts a pair only if the frozen policy chose correctly at **both** st
 | Familiar six twice vs. twenty-two once, single hit always better, 0 and 4 | 96/96 | 96/96 |
 
 The 1-and-3 follow-up used the same saved weights. At 1 Strength the totals are 22 vs. 23. At 3 they are 26 vs. 25. All six models chose correctly at 3. At 1, the per-seed counts out of 32 were 13, 0, 0 for random practice and 0, 25, 0 for paired practice. Clamping Strength to the lower value makes each reversal pair identical at the input and takes the both-correct count to zero. The observed decisions provide evidence of transfer at practiced stack counts and weak interpolation to new counts. No exact damage predictions were requested or measured.
+
+## Training on exact damage
+
+Run `python -m experiments.card_text.exact_damage build/exact-damage` to reproduce the twelve fitted models and their per-seed JSON reports. Each checkpoint uses the combat model's target HP loss output in HP units. The experiment trains this output by mean squared error. For ranking at evaluation it chooses the action with the greatest predicted HP loss. The network's separate policy score receives no training signal in this experiment.
+
+The inputs, hands, random action logs, optimizer settings, minibatches and initialization seeds match the Strength ranking experiment. “Played” supplies the HP loss for the action actually logged, including zero for ending the turn. “All” supplies the simulator's HP loss for both attacks and the end-turn action. All-action feedback therefore supplies three targets per state. The test card description remains hidden throughout training. Only the base description is shown when the frozen model encounters it. The synthetic enemy has 100 HP and zero Block, so immediate HP loss equals attack damage.
+
+Each test compares ten twice (A) with twenty-two once (B) at all five Strength values. There are 32 combinations of unfamiliar IDs and hand order, repeated for three seeds. The reports give mean predicted HP loss, mean absolute error and nearest-integer accuracy separately for each attack and stack count. They also count how many layouts rank the correct card first at both members of a Strength pair. At 2 Strength both attacks deal 24 and only the numerical predictions are assessed.
+
+| Practice | Feedback | Mean absolute error (HP) | Correct rounded HP / 960 | Both 0 and 4 / 96 | Both 1 and 3 / 96 |
+|---|---|---:|---:|---:|---:|
+| Random | Played | 1.26 | 142 | 93 | 50 |
+| Random | All | 0.84 | 353 | 90 | 50 |
+| Paired | Played | 1.05 | 279 | 74 | 19 |
+| Paired | All | 0.71 | 434 | 93 | 33 |
+
+With random practice and played-action feedback, the mean predictions for A at Strength 0 through 4 were 19.65, 21.61, 23.96, 26.02 and 27.67 HP. For B they were 21.40, 21.79, 23.22, 24.51 and 25.53. At 1 Strength the average predicted advantage for B was only 0.18 HP, even though B wins by 1. Averages can conceal substantial errors on individual IDs. With the original binary objective the 1-and-3 pair scores were 13/96 for random practice and 25/96 for paired practice. Exact played-action feedback improved the first and reduced the second. These are repeated variants of one matchup across three seeds, so the results do not estimate general combat performance.

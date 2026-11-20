@@ -111,6 +111,10 @@ class Batch:
         self.winners = torch.tensor([f.winner for f in fights])
 
     def scores(self, model, ids):
+        scores, _ = self.outputs(model, ids)
+        return scores
+
+    def outputs(self, model, ids):
         selected = self.states[ids]
         unique, reverse = torch.unique(selected, return_inverse=True)
         vectors = model.embed_rows([self.rows[i] for i in unique.tolist()])
@@ -120,8 +124,7 @@ class Batch:
         sources = torch.cat((context[:,1:3],absent),dim=1)
         targets = torch.cat((context[:,3:4].expand(-1,2,-1),absent),dim=1)
         kinds = torch.tensor([0,0,2]).expand(batch,-1)
-        scores,_ = model.score_rows(context[:,:1].expand(-1,3,-1),sources,targets,kinds)
-        return scores
+        return model.score_rows(context[:,:1].expand(-1,3,-1),sources,targets,kinds)
 
 
 @torch.no_grad()

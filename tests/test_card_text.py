@@ -8,11 +8,23 @@ import torch
 
 from battle.__main__ import load, save
 from battle.policy import CombatPolicy, lexical_tokens, scalars
-from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, familiar, identity, novel
-from experiments.card_text.strength import probe, training_data
+from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, card, familiar, identity, novel
+from experiments.card_text.strength import decision, probe, training_data
 
 
 class CardTextTests(unittest.TestCase):
+    def test_exact_damage_targets_are_separate_from_inputs(self):
+        rules = (HOLDOUT, (22, 1))
+        cards = [card(r, 0) for r in rules]
+        for strength, targets in enumerate(((20,22,0), (22,23,0), (24,24,0), (26,25,0), (28,26,0))):
+            fight = decision(cards, rules, strength)
+            self.assertEqual(fight.damage_by_action, targets)
+            if strength == 2:
+                self.assertEqual(fight.winner, -1)
+            altered = decision(cards, rules[::-1], strength)
+            self.assertEqual(fight.state, altered.state)
+            self.assertEqual(altered.damage_by_action, (targets[1], targets[0], 0))
+
     def test_strength_probe_only_changes_the_status(self):
         for group, fights in probe():
             for low, high in zip(fights[::2], fights[1::2]):
