@@ -9,9 +9,31 @@ import torch
 from battle.__main__ import load, save
 from battle.policy import CombatPolicy, lexical_tokens, scalars
 from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, familiar, identity, novel
+from experiments.card_text.strength import probe, training_data
 
 
 class CardTextTests(unittest.TestCase):
+    def test_strength_probe_only_changes_the_status(self):
+        for group, fights in probe():
+            for low, high in zip(fights[::2], fights[1::2]):
+                hidden = copy.deepcopy(high.state)
+                low_count, high_count = (1, 3) if group == "unseen_stacks_flip" else (0, 4)
+                self.assertEqual(hidden["player"]["powers"], [{"id": "Strength", "amount": high_count}])
+                self.assertEqual(low.state["player"]["powers"], [{"id": "Strength", "amount": 1}] if low_count else [])
+                hidden["player"]["powers"] = low.state["player"]["powers"]
+                self.assertEqual(low.state, hidden)
+                self.assertEqual(low.winner != high.winner, group.endswith("_flip"))
+
+    def test_strength_training_budget_and_holdout(self):
+        random_fights, paired_fights = (training_data(s) for s in ("random", "paired"))
+        self.assertEqual(len(random_fights), len(paired_fights))
+        self.assertEqual(random_fights[:2048], paired_fights[:2048])
+        for fight in random_fights + paired_fights:
+            self.assertNotIn("Deal 10 damage twice.", [c["description"] for c in fight.state["hand"]])
+        for low, high in zip(paired_fights[2048::2], paired_fights[2049::2]):
+            self.assertEqual(low.state["hand"], high.state["hand"])
+            self.assertNotEqual(low.winner, high.winner)
+
     def test_input_separation_and_visible_numbers(self):
         state = familiar(7,1)[0].state
         other = copy.deepcopy(state)

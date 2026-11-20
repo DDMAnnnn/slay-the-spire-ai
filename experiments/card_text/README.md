@@ -32,3 +32,21 @@ From the project root with PyTorch installed:
 ```
 
 The runner saves six policy checkpoints and a results JSON with per-seed counts and the Strength breakdown. It also checks batched evaluation logits against the normal game-policy entry point after reloading the weights.
+
+## Can the policy use Strength with only base wording?
+
+Run `python -m experiments.card_text.strength build/strength-pairs` for both training schedules and all three seeds. This diagnostic rewards choosing the attack that deals more damage. Enemy HP stays at 100 and Block at zero. Every pair of test inputs differs only in the visible Strength status. Training supplies a binary outcome for a logged action. The model never sees adjusted damage, hit labels, or a Strength tooltip.
+
+Both schedules use 4,096 decisions, 480 updates, identical initialization per seed, and training Strength values of 0, 2 and 4. Random practice samples hands and stacks independently before rejecting damage ties. Paired practice replaces half the samples with the same hand shown at 0 and 4, selected so the winner flips. This comparison changes both pairing and the frequency of reversals. The damage objective and fixed HP also differ from the earlier lethal-choice experiment.
+
+The table counts a pair only if the frozen policy chose correctly at **both** stack counts. Counts aggregate seeds 19, 23 and 41. For the held-out attack each seed uses the same 32 variants (two slot orders and sixteen assignments of opaque IDs). These are variations of one matchup, not distinct card mechanics.
+
+| Test | Random practice | Paired practice |
+|---|---:|---:|
+| Three familiar reversal matchups, 0 and 4 | 288/288 | 288/288 |
+| Ten twice vs. twenty-two once, 0 and 4 | 96/96 | 87/96 |
+| Same held-out matchup, 1 and 3 | 13/96 | 25/96 |
+| Held-out card in two matchups with a fixed winner, 0 and 4 | 192/192 | 182/192 |
+| Familiar six twice vs. twenty-two once, single hit always better, 0 and 4 | 96/96 | 96/96 |
+
+The 1-and-3 follow-up used the same saved weights. At 1 Strength the totals are 22 vs. 23. At 3 they are 26 vs. 25. All six models chose correctly at 3. At 1, the per-seed counts out of 32 were 13, 0, 0 for random practice and 0, 25, 0 for paired practice. Clamping Strength to the lower value makes each reversal pair identical at the input and takes the both-correct count to zero. The observed decisions provide evidence of transfer at practiced stack counts and weak interpolation to new counts. No exact damage predictions were requested or measured.
