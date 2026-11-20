@@ -69,13 +69,8 @@ if __name__ == "__main__":
     replay = sub.add_parser("replay")
     replay.add_argument("file", type=Path)
     replay.add_argument("--full", action="store_true")
-    encode = sub.add_parser("encode", help="inspect card translations and encoder input")
-    encode.add_argument("file", type=Path)
     args = parser.parse_args()
-    if args.mode == "encode":
-        from card_input import inspect
-        inspect(args.file)
-    elif args.mode == "replay":
+    if args.mode == "replay":
         review(args.file, args.full)
     else:
         print("Waiting for F8 in combat. Ctrl+C stops the policy.", flush=True)

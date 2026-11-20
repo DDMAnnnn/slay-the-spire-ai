@@ -9,23 +9,11 @@ A first-party combat adapter for the original Slay the Spire and a Python policy
 3. Double-click **Start combat agent.cmd** or run `py -3 agent.py play`. Choose the character, Ascension, route, and encounter in the game yourself. At a player turn, press **F8**. The sample policy can spend a Fire Potion and play cards. F8 again releases control. Avoid manual actions during automated combat.
 4. The agent stops controlling the game at the end of the fight or on an unsupported selection screen. The Python process can wait for another F8 session. Close it with Ctrl+C.
 
-## Inspect model inputs
+## Card rules and PyTorch exercises
 
-The [original card table](CARD_TABLE.md) records the hand-authored rules, default parameters, and upgrade changes for the installed game's registered cards. Run `python check_card_table.py path/to/desktop-1.0.jar` with a JDK available to check IDs, English names, rule syntax and numeric parameter references. This table supplies reference translations. The current neural encoder still uses the clause translator described below.
+The [original card table](CARD_TABLE.md) is the reference for all 370 registered card IDs. Run `python check_card_table.py path/to/desktop-1.0.jar` with a JDK available to verify coverage and rule syntax. The live wiring policy runs independently of the table.
 
-Use Python 3.10 or newer. Install the model dependencies with `python -m pip install -r requirements-model.txt`. With a fresh recording from the rebuilt bridge, run `python agent.py encode path/to/fight.jsonl`. The same command reads a live `decision.json` snapshot without sending game actions. On the development machine the verified CPU dependencies are also available by setting `$env:PYTHONPATH = (Resolve-Path build/python-deps).Path` in the project directory.
-
-In Python, `CardInput().hand(state)` returns a tensor with one 64-component vector per hand slot and a separate inspectable reading per card. Keep one CardInput instance for a training run and include its encoder parameters in the policy optimizer. The weights start randomly initialized. The wired first-legal-action policy is still the live default.
-
-The translator fits a linear classifier on labeled English and Simplified Chinese effect clauses when constructed. It copies numbers from the observed card, retains clause order and checks token transitions and classifier confidence before accepting a label. Referenced keyword definitions use default public rules. Live orb values, stance and powers are recorded separately. Displayed card numbers may already include combat modifiers. The encoder describes observations and does not simulate their resolution.
-
-The test holds out the whole Shrug It Off description while including block and draw clauses in training. Run `python -m unittest discover -s tests -v`. Run `python audit_cards.py path/to/desktop-1.0.jar --show-unknown` to inspect the game's base descriptions. The audit measures how much text the parser accepts. Correctness on arbitrary unseen mechanics needs independent labels. Unrecognized clauses retain their text for review and produce an unknown effect. Older recordings lack descriptions.
-
-### 18 Nov 2026 — What happens to a word I haven't taught it?
-
-Two cards can both say “deal 6 damage” and grant different modded powers. Their parsed effects used to coincide. I kept the shared damage input and added a trainable UTF-8 byte encoder for the description and available keyword definitions. A new word fits the input immediately. Learning what it does still needs evidence. The bridge records definitions for keywords exposed through the game's card keyword list and dictionary. Custom tooltip renderers may need their own adapter.
-
-I can turn off the text branch with `CardEncoder(use_text=False)`. The regression test varies only the unfamiliar word, then only the definition. To measure transfer in play, I would compare an Ironclad checkpoint with random initialization on the same held-out character or mod, using matched seeds and interaction budgets. I would measure initial win rate and the learning curve separately. Repeating that comparison with the text branch disabled would help isolate its contribution.
+For the attention exercises, install PyTorch with `python -m pip install -r requirements-model.txt`. On the development machine, the existing CPU installation is also available in PowerShell with `$env:PYTHONPATH = (Resolve-Path build/python-deps).Path`.
 
 ## Read a recording
 
