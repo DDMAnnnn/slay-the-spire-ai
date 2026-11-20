@@ -6,7 +6,7 @@ import torch
 from torch.nn import functional as F
 
 from .experience import records, transitions
-from .memory import MemoryBank, MemoryInterpreter, observe, save_memory
+from .memory import MemoryBank, MemoryInterpreter, integer_field, observe, save_memory, scale
 
 
 def recording_experiences(path, through=None):
@@ -35,13 +35,26 @@ def remember_through(folder, ticket, runtime, output):
         save_memory(output, model, bank)
 
 
-def fit(episodes, *, seed=19, updates=300, batch_size=32):
+def integer_penalty(pred, units, natural):
+    """L1 distance to a valid outcome, evaluated on the original game-unit grid."""
+    raw = pred * units
+    nearest = raw.detach().round()
+    nearest = torch.where(natural, nearest.clamp_min(0), nearest)
+    return ((raw - nearest).abs() / units).mean()
+
+
+def fit(episodes, *, seed=19, updates=300, batch_size=32, integer_weight=0.):
+    if integer_weight < 0:
+        raise ValueError("integer_weight must be nonnegative")
     rng = random.Random(seed)
     torch.manual_seed(seed)
     # An all-zero but observable quantity must remain forecastable on a new card.
     fields = sorted({"hand.arrivals", "energy", "target.current_hp", "player.block"} |
                     {k for e in episodes for k in e.changes})
     model = MemoryInterpreter(fields)
+    discrete = [i for i,k in enumerate(fields) if integer_field(k)]
+    units = model.prior.weight.new_tensor([scale(fields[i]) for i in discrete])
+    natural = torch.tensor([fields[i] == "hand.arrivals" for i in discrete], device=units.device)
     opt = torch.optim.AdamW(model.parameters(), lr=.002)
     # Each query's support was available before that battle began. The cache
     # holds references to episodes, never labels belonging to its query fight.
@@ -54,7 +67,7 @@ def fit(episodes, *, seed=19, updates=300, batch_size=32):
             support[e.fight,e.cue.key] = prior_fights.candidates(e.cue)
         for e in fight:
             prior_fights.remember(e)
-    for _ in range(updates):
+    for update in range(updates):
         queries = rng.choices(episodes, k=batch_size)
         supports = []
         for q in queries:
@@ -68,6 +81,8 @@ def fit(episodes, *, seed=19, updates=300, batch_size=32):
         pred, _, _ = model(*model.tensors([q.cue for q in queries],supports))
         targets = pred.new_tensor([model.labels(q) for q in queries])
         loss = F.smooth_l1_loss(pred, targets)
+        if integer_weight and discrete and update >= 3 * updates // 4:
+            loss = loss + integer_weight * integer_penalty(pred[:,discrete], units, natural)
         opt.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(),1.)

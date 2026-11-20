@@ -166,6 +166,23 @@ def scale(field):
     return 8. if field.endswith((".current_hp", ".block")) else 1.
 
 
+_DISCRETE_PREFIXES = tuple(zone + "/" for zone in ZONES) + ("relic/", "counter/", "potion[", "orb[", "stance/")
+
+
+def integer_field(field):
+    """The public game fields whose observed changes are measured in whole units."""
+    return (field in {"energy", "turn", "hand.arrivals"}
+            or field.endswith((".current_hp", ".block")) or ".power." in field
+            or field.startswith(_DISCRETE_PREFIXES))
+
+
+def point_outcome(field, value):
+    if not integer_field(field):
+        return value
+    number = round(value)
+    return max(0, number) if field == "hand.arrivals" else number
+
+
 class MemoryInterpreter(nn.Module):
     """Cross-attend to observed outcomes and transfer residuals between contexts."""
     def __init__(self, fields, retrieval="grouped"):
@@ -222,7 +239,7 @@ class MemoryInterpreter(nn.Module):
         return [episode.changes.get(k,0)/scale(k) for k in self.fields]
 
     @torch.no_grad()
-    def interpret(self, cue, bank):
+    def interpret(self, cue, bank, *, integer_outcomes=False):
         episodes = bank.candidates(cue)
         prediction, embedding, weights = self(*self.tensors([cue],[episodes]))
         changes = {k:v * scale(k) for k,v in zip(self.fields, prediction[0].tolist())}
@@ -232,6 +249,8 @@ class MemoryInterpreter(nn.Module):
                 if field not in self.fields:
                     changes[field] = changes.get(field,0.) + w*val
         extra = [(k,v) for k,v in changes.items() if k not in self.fields]
+        if integer_outcomes:
+            changes = {k:point_outcome(k,v) for k,v in changes.items()}
         return changes, embedding[0] + embedding.new_tensor(vector(extra, WIDTH))
 
 

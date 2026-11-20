@@ -56,6 +56,16 @@ At zero Pommel experience the untrained model's HP MAE was 5.54. Starter-trained
 
 ## Reproduce
 
+### Whole-number predictions
+
+I wanted to ask about the actual six damage of an ordinary Strike. I trained a paired variant using the original seed, data, memory and 300 updates. For the last 75 updates I added 0.05 times the absolute distance to the nearest valid integer, calculated in game units and then scaled like the prediction target. Signed changes can be negative; hand arrivals are bounded below by zero. Both models can return a discrete point estimate through `interpret(cue, bank, integer_outcomes=True)`. The C-model still receives a continuous embedding.
+
+On 40 fresh starter fights (seeds 8000–8039), 177 nonterminal Strikes had zero enemy Block, sufficient HP, and no relevant Strength, Weak or Vulnerable. Every one dealt six. The original predicted 5.67 damage on average and rounded to six 122/177 times. With the penalty the mean was 5.68, and 120/177 rounded to six. Strike's zero hand arrivals rounded correctly on 259/259 plays for both. Defend's exact Block count improved from 179/198 to 180/198. On 60 fresh Pommel fights (9000–9059), both predicted one draw on all 68 eligible plays after four memories. With one memory, exact draw counts fell from 6/68 to 2/68. I kept ordinary training as the default because attraction to an integer can reinforce the wrong integer.
+
+To reproduce from the project root, run `python -m experiments.memory.integer_outcomes build/memory-final build/memory-objects/collect.exe build/memory-integers` with the collector's runtime on PATH. Substitute the path to your built collector if needed.
+
+### Original memory experiment
+
 The experiment needs PyTorch, Git, a C++17 GCC toolchain and the upstream simulator's pinned JSON submodule. From the project root on Windows, with the chosen compiler and its runtime on PATH:
 
 ```powershell

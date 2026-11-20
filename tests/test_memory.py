@@ -8,7 +8,8 @@ from unittest.mock import patch
 import torch
 
 from battle.memory import Cue, Experience, MemoryBank, MemoryInterpreter, cue_for, load_memory, observe, save_memory
-from battle.memory_training import remember_through
+from battle.memory import point_outcome
+from battle.memory_training import integer_penalty, remember_through
 from battle.policy import CombatPolicy
 
 
@@ -61,6 +62,24 @@ class MemoryTests(unittest.TestCase):
                 scores,_=policy(self.before,["play 0 0","end"])
             self.assertEqual(scores.shape,(2,))
             self.assertTrue(scores.isfinite().all())
+
+    def test_integer_preference_in_game_units(self):
+        units = torch.tensor([8., 8., 1.])
+        prediction = torch.tensor([[5.8/8, -6.2/8, -0.9]], requires_grad=True)
+        loss = integer_penalty(prediction, units, torch.tensor([False, False, True]))
+        loss.backward()
+        torch.testing.assert_close(prediction.grad.sign(), torch.tensor([[-1., -1., -1.]]))
+        self.assertEqual(integer_penalty(torch.tensor([[6/8, -6/8, 0.]]), units,
+                                         torch.tensor([False, False, True])).item(), 0.)
+        self.assertEqual(point_outcome("target.current_hp", -5.8), -6)
+        self.assertEqual(point_outcome("hand.arrivals", -0.9), 0)
+        self.assertEqual(point_outcome("future.continuous", 0.25), 0.25)
+        bank = MemoryBank([self.item])
+        changes, raw_vector = self.model.interpret(self.item.cue, bank)
+        points, vector = self.model.interpret(self.item.cue, bank, integer_outcomes=True)
+        self.assertIsInstance(points["hand.arrivals"], int)
+        self.assertEqual(points["target.current_hp"], round(changes["target.current_hp"]))
+        torch.testing.assert_close(vector, raw_vector)
 
     def test_direct_examples_keep_their_weight_when_the_related_pool_grows(self):
         cue = self.item.cue
