@@ -96,3 +96,30 @@ Reproduce both budget settings from the repository root:
 | 8,192 / 960 | Fresh random hands | 0.906 | 85 | 52 | 17, 22, 13 |
 
 All 96 cases are slot and unfamiliar-ID variants of one matchup across three model seeds. Numerical error averages both cards at all five Strength values. Paired training's early advantage largely disappears for the bigger pool at fixed compute. Extra updates on the second block produce a higher paired flip score than either control, alongside larger numerical errors.
+
+## Does the pairing advantage repeat on other attacks?
+
+For each fold, hold out one two-hit description completely, then train fresh models on the other 15 descriptions. The withheld base amount still appears on a single-hit card, and the test opponent's wording is familiar. Both test IDs are unfamiliar. The original 10-twice fold used the nine existing 480-update checkpoints. Re-running the generalized evaluator reproduced every field in their original reports. The 4-, 6- and 8-twice folds are new.
+
+The test opponent deals twice the held-out base amount plus two in one hit. That gives the same one-HP disadvantage for the double hit at 1 Strength and the same one-HP advantage at 3 in every fold. A pass requires choosing correctly at both. All four matchups tie at 2. Damage error is the mean absolute error across both cards, all five Strength values and all layouts. The 32 layouts vary hand order and opaque IDs. They are repeated measurements on one matchup per fold.
+
+Every schedule uses 4,096 records, 480 updates of 48 examples, the same three initialization seeds, and exact damage for the logged action. Strength ranges over 0, 2 and 4 in training. The matched random control shuffles Strength over the identical repeated hands, and the fresh random control redraws hands. The hand generator, sampled action slots and minibatch draws match across paired and shuffled practice within each fold. The test checks transfer of an attack description within one Strength mechanic at the original budget.
+
+Reproduce the full panel with `python -m experiments.card_text.holdout_panel build/holdout-panel`. The JSON report for each model includes numerical error and predictions at each Strength.
+
+| Withheld base damage (two hits) | Schedule | Correct switches / 96 | Per seed (19, 23, 41) / 32 | Mean absolute error, HP |
+|---:|---|---:|---|---:|
+| 4 | Broad paired | 45 | 31, 3, 11 | 0.831 |
+| 4 | Shuffled Strength | 30 | 24, 3, 3 | 1.070 |
+| 4 | Fresh hands | 19 | 8, 3, 8 | 2.255 |
+| 6 | Broad paired | 23 | 18, 3, 2 | 0.815 |
+| 6 | Shuffled Strength | 60 | 30, 16, 14 | 0.738 |
+| 6 | Fresh hands | 66 | 24, 25, 17 | 0.511 |
+| 8 | Broad paired | 70 | 28, 22, 20 | 0.691 |
+| 8 | Shuffled Strength | 73 | 29, 21, 23 | 0.810 |
+| 8 | Fresh hands | 47 | 25, 4, 18 | 1.234 |
+| 10 | Broad paired | 69 | 22, 26, 21 | 0.729 |
+| 10 | Shuffled Strength | 51 | 24, 6, 21 | 0.839 |
+| 10 | Fresh hands | 12 | 10, 0, 2 | 0.931 |
+
+On the three new matchups alone, paired practice passed 138/288 switches with 0.779 HP error, shuffled Strength passed 163/288 with 0.873 HP error, and fresh hands passed 132/288 with 1.333 HP error. Including the original matchup yields 207, 214 and 144 switches out of 384 and errors of 0.767, 0.864 and 1.233 HP respectively. The ordering depends on the metric and the held-out card. These runs measure damage estimates and one-action rankings within a single mechanic.
