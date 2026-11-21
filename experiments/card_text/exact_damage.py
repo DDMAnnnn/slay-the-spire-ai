@@ -15,6 +15,16 @@ from .strength import damage, decision, training_data
 
 @torch.no_grad()
 def measure(model, double=HOLDOUT):
+    def predict(fights):
+        batch = Batch(model, fights)
+        _, outcomes = batch.outputs(model, torch.arange(len(fights)))
+        torch.testing.assert_close(outcomes[0], model(fights[0].state, OPTIONS)[1], atol=2e-5, rtol=2e-5)
+        return outcomes[:, :, 2]
+
+    return measure_predictions(predict, double)
+
+
+def measure_predictions(predict, double):
     single = (2 * double[0] + 2, 1)
     # The single hit leads by one at 1 Strength and trails by one at 3.
     templates = []
@@ -32,10 +42,7 @@ def measure(model, double=HOLDOUT):
     chosen = []
     for s in range(5):
         fights = [decision(cards, rules, s) for cards, rules in templates]
-        batch = Batch(model, fights)
-        _, outcomes = batch.outputs(model, indices)
-        torch.testing.assert_close(outcomes[0], model(fights[0].state, OPTIONS)[1], atol=2e-5, rtol=2e-5)
-        predictions = outcomes[:, :, 2]  # existing target HP drop output, in HP units
+        predictions = predict(fights)
         cards = torch.stack((predictions[indices, a_slots], predictions[indices, 1 - a_slots]), dim=1)
         truth = torch.tensor([damage(double, s), damage(single, s)])
         output.append(dict(strength=s, truth=truth.tolist(), mean=cards.mean(0).tolist(),

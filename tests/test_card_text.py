@@ -13,9 +13,31 @@ from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, card, fami
 from experiments.card_text.strength import decision, probe, training_data
 from experiments.card_text.broad_pairs import examples
 from experiments.card_text.holdout_panel import training_rules
+from experiments.card_text.rule_reference import ParsedAttackPolicy, attack_fields, evaluate_reference, reference_damage
 
 
 class CardTextTests(unittest.TestCase):
+    def test_reference_and_parsed_inputs_use_public_wording(self):
+        # The ID, internal fixture rules and displayed wording deliberately disagree.
+        cards = [card((22, 1), 0), card((10, 2), 0)]
+        cards[0]["description"] = "Deal 13 damage twice."
+        fight = decision(cards, ((22, 1), (10, 2)), 3)
+        self.assertEqual(reference_damage(fight.state), [32, 26, 0])
+        rows, addresses = ParsedAttackPolicy().read_state(fight.state)
+        fields = rows[addresses["hand", 0]].numbers
+        self.assertEqual((fields["D"], fields["hits"]), (13, 2))
+        with self.assertRaises(ValueError):
+            attack_fields("Deal 13 damage twice. Draw a card.")
+
+    def test_hand_coded_reference_reaches_exact_damage_on_each_fold(self):
+        for amount in (4, 6, 8, 10):
+            report = evaluate_reference(amount)
+            self.assertEqual(report["correct_both_1_3"], 32)
+            self.assertEqual(report["correct_both_0_4"], 32)
+            for row in report["by_strength"]:
+                self.assertEqual(row["mae"], [0, 0])
+                self.assertEqual(row["rounded_exact"], [32, 32])
+
     def test_rotating_holdout_excludes_only_the_test_card(self):
         self.assertEqual(training_rules(10), KNOWN)
         for amount in (4, 6, 8, 10):
