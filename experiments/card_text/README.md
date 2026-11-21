@@ -123,3 +123,20 @@ Reproduce the full panel with `python -m experiments.card_text.holdout_panel bui
 | 10 | Fresh hands | 12 | 10, 0, 2 | 0.931 |
 
 On the three new matchups alone, paired practice passed 138/288 switches with 0.779 HP error, shuffled Strength passed 163/288 with 0.873 HP error, and fresh hands passed 132/288 with 1.333 HP error. Including the original matchup yields 207, 214 and 144 switches out of 384 and errors of 0.767, 0.864 and 1.233 HP respectively. The ordering depends on the metric and the held-out card. These runs measure damage estimates and one-action rankings within a single mechanic.
+
+## A hand-coded reference for the same four matchups
+
+The reference reads only public base wording and the player's Strength. It extracts base damage per hit and hit count, adds Strength to each hit, then ranks actions by total immediate damage. Ending the turn deals zero. Every fixture enemy has 100 HP, zero Block and no damage modifiers. This is an exact mechanics reference for these deterministic hands. It covers the two benchmark phrasings and rejects unsupported descriptions.
+
+The intermediate control adds the parsed base damage and hit count to the existing card row as numeric inputs. The model still sees the base text, ID and player's Strength and learns target HP loss from the played action. It receives no hand-coded Strength adjustment or final total. Each training run uses the original shuffled-Strength fold, initialization, 4,096 examples, logged actions and 480 updates. A separate learned model is trained for each held-out attack and seed. All 12 historical text-only reports were reproduced with the shared evaluator.
+
+Run `python -m experiments.card_text.rule_reference build/rule-reference --reference-only` for the deterministic result, or omit `--reference-only` to reproduce the 12 parsed-input runs as well. Each layout is tested at Strength 0 through 4. A switch pass requires choosing the winning attack at both 1 and 3. Numerical error is measured on both attacks at all five values, including the tie at 2. The deterministic reference is run once per layout; the neural models are evaluated for three seeds.
+
+| Held-out two-hit amount | Text switches / 96 | Parsed-input switches / 96 | Reference switches / 32 | Text error (HP) | Parsed-input error (HP) | Reference error (HP) |
+|---:|---:|---:|---:|---:|---:|---:|
+| 4 | 30 | 54 | 32 | 1.070 | 0.510 | 0.000 |
+| 6 | 60 | 88 | 32 | 0.738 | 1.313 | 0.000 |
+| 8 | 73 | 78 | 32 | 0.810 | 0.941 | 0.000 |
+| 10 | 51 | 62 | 32 | 0.839 | 0.975 | 0.000 |
+
+Across the four folds the text model passed 214/384 switches and averaged 0.864 HP absolute error. With parsed fields it passed 282/384 and averaged 0.935 HP error. The deterministic reference passed 128/128 switches and matched all 1,280 attack totals exactly. Exact parsing helped with the choice on this panel; it did not produce more accurate damage estimates on average. Matching the reference here establishes observable equivalence on these situations only.
