@@ -13,11 +13,11 @@ from .run import KNOWN, card
 from .strength import decision
 
 
-def examples(stage, method):
+def examples(stage, method, known=KNOWN):
     rng = random.Random(21000 + stage)
     hands, strengths = [], []
     for _ in range(2048):
-        rules = rng.sample(KNOWN, 2)
+        rules = rng.sample(known, 2)
         cards = [card(rule, rng.randrange(4)) for rule in rules]
         hands.extend([(cards, rules)] * 2)
         strengths.extend(rng.sample((0, 2, 4), 2))
@@ -27,9 +27,16 @@ def examples(stage, method):
     if method == "independent":
         # Ordinary random play gets a fresh hand draw at each decision.
         for i in range(1, len(hands), 2):
-            rules = rng.sample(KNOWN, 2)
+            rules = rng.sample(known, 2)
             hands[i] = ([card(rule, rng.randrange(4)) for rule in rules], rules)
     return [decision(cards, rules, s) for (cards, rules), s in zip(hands, strengths)]
+
+
+def train_block(model, optimizer, generator, fights):
+    # Observe the same played action on both visits, including in the control.
+    actions = torch.randint(3, (len(fights) // 2,), generator=generator).repeat_interleave(2)
+    batches = torch.randint(len(fights), (480, 48), generator=generator)
+    fit_damage(model, optimizer, fights, actions, batches, "played")
 
 
 def practice(output, seed, method, pooled=False):
@@ -41,10 +48,7 @@ def practice(output, seed, method, pooled=False):
         fights = examples(stage, method)
         if pooled:
             fights.extend(examples(2, method))
-        # Observe the same played action on both visits, including in the control.
-        actions = torch.randint(3, (len(fights) // 2,), generator=generator).repeat_interleave(2)
-        batches = torch.randint(len(fights), (480, 48), generator=generator)
-        fit_damage(model, optimizer, fights, actions, batches, "played")
+        train_block(model, optimizer, generator, fights)
         budget = "pool480" if pooled else str(stage * 480)
         stem = output / f"{method}-{seed}-{budget}"
         save(model, stem.with_suffix(".pt"))

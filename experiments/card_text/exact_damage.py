@@ -1,5 +1,6 @@
 """Regress immediate target HP loss from public pre-action inputs."""
 import argparse
+import itertools
 import json
 from pathlib import Path
 
@@ -8,29 +9,35 @@ from torch.nn import functional as F
 
 from battle.__main__ import load, save
 from battle.policy import CombatPolicy
-from .run import Batch, HOLDOUT, OPTIONS
-from .strength import damage, decision, probe, training_data
+from .run import Batch, HOLDOUT, OPTIONS, card, identity
+from .strength import damage, decision, training_data
 
 
 @torch.no_grad()
-def measure(model):
-    # Reuse the exact 32 alias/slot layouts of the ranking test, including its
-    # two unknown IDs. Every layout is replayed at all five stack counts.
-    templates = dict(probe())["unseen_flip"][::2]
-    a_slots = torch.tensor([next(i for i, c in enumerate(f.state["hand"])
-                                 if c["description"] == "Deal 10 damage twice.") for f in templates])
+def measure(model, double=HOLDOUT):
+    single = (2 * double[0] + 2, 1)
+    # The single hit leads by one at 1 Strength and trails by one at 3.
+    templates = []
+    slots = []
+    for aliases in itertools.product(range(4), repeat=2):
+        for slot in (0, 1):
+            rules = (double, single) if slot == 0 else (single, double)
+            cards = [dict(card(rule, alias), id=identity(("strength-probe", i), alias))
+                     for i, (rule, alias) in enumerate(zip(rules, aliases))]
+            templates.append((cards, rules))
+            slots.append(slot)
+    a_slots = torch.tensor(slots)
     indices = torch.arange(len(templates))
     output = []
     chosen = []
     for s in range(5):
-        fights = [decision(f.state["hand"], (HOLDOUT, (22, 1)) if slot == 0 else ((22, 1), HOLDOUT), s)
-                  for f, slot in zip(templates, a_slots.tolist())]
+        fights = [decision(cards, rules, s) for cards, rules in templates]
         batch = Batch(model, fights)
         _, outcomes = batch.outputs(model, indices)
         torch.testing.assert_close(outcomes[0], model(fights[0].state, OPTIONS)[1], atol=2e-5, rtol=2e-5)
         predictions = outcomes[:, :, 2]  # existing target HP drop output, in HP units
         cards = torch.stack((predictions[indices, a_slots], predictions[indices, 1 - a_slots]), dim=1)
-        truth = torch.tensor([damage(HOLDOUT, s), damage((22, 1), s)])
+        truth = torch.tensor([damage(double, s), damage(single, s)])
         output.append(dict(strength=s, truth=truth.tolist(), mean=cards.mean(0).tolist(),
                            mae=(cards - truth).abs().mean(0).tolist(),
                            rounded_exact=(cards.round() == truth).sum(0).tolist()))

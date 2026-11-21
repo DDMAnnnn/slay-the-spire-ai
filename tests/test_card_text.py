@@ -12,9 +12,19 @@ from battle.policy import CombatPolicy, lexical_tokens, scalars
 from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, card, familiar, identity, novel
 from experiments.card_text.strength import decision, probe, training_data
 from experiments.card_text.broad_pairs import examples
+from experiments.card_text.holdout_panel import training_rules
 
 
 class CardTextTests(unittest.TestCase):
+    def test_rotating_holdout_excludes_only_the_test_card(self):
+        self.assertEqual(training_rules(10), KNOWN)
+        for amount in (4, 6, 8, 10):
+            rules = training_rules(amount)
+            self.assertEqual(len(rules), 15)
+            self.assertNotIn((amount, 2), rules)
+            self.assertIn((amount, 1), rules)
+            self.assertIn((2 * amount + 2, 1), rules)
+
     def test_broad_pair_controls(self):
         def stacks(fight):
             return sum(p["amount"] for p in fight.state["player"]["powers"])
