@@ -67,3 +67,32 @@ Each test compares ten twice (A) with twenty-two once (B) at all five Strength v
 | Paired | All | 0.71 | 434 | 93 | 33 |
 
 With random practice and played-action feedback, the mean predictions for A at Strength 0 through 4 were 19.65, 21.61, 23.96, 26.02 and 27.67 HP. For B they were 21.40, 21.79, 23.22, 24.51 and 25.53. At 1 Strength the average predicted advantage for B was only 0.18 HP, even though B wins by 1. Averages can conceal substantial errors on individual IDs. With the original binary objective the 1-and-3 pair scores were 13/96 for random practice and 25/96 for paired practice. Exact played-action feedback improved the first and reduced the second. These are repeated variants of one matchup across three seeds, so the results do not estimate general combat performance.
+
+## Broad paired practice with exact played-action feedback
+
+Each block contains 4,096 logged decisions. Broad paired practice draws 2,048 hands from all 105 combinations of the 15 known attack descriptions, then plays the same logged action in each hand at two distinct Strength values drawn from 0, 2 and 4. At the first block, 1,972 pairs kept the same winner, 17 reversed it and 59 included a tie. The second block had 1,942, 19 and 87 respectively. No winner-based filter is applied. Base wording, card IDs and hand order stay fixed across a pair. A pair contributes two ordinary regression examples and may occur in separate minibatches.
+
+The matched random control uses the identical hands, IDs, logged action indices and marginal Strength counts. It shuffles Strength across examples so a repeated hand can get the same or a different value. The independent random control also redraws the second hand in each pair, representing fresh random hands under the same budget. Every arm uses exact HP loss only for the logged action, the same initialization seeds (19, 23 and 41), batch size 48 and the same sampled minibatch indices within each budget.
+
+Three budgets answer different questions. The original budget uses 480 updates on a 4,096-record pool. The pooled run draws from both blocks (8,192 records) at the same 480-update limit, with 23,040 sampled examples in either case. The extended run continues the original checkpoint and optimizer for 480 additional updates on the second block, totalling 960 updates. It changes both the example stream and the update count. All reports use the same frozen held-out matchup and slot/ID layouts as the earlier exact-damage experiment.
+
+Reproduce both budget settings from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -m experiments.card_text.broad_pairs build/broad-pairs
+.\.venv\Scripts\python.exe -m experiments.card_text.broad_pairs build/broad-pairs --pooled
+```
+
+| Pool / updates | Practice | Mean absolute error (HP) | Both 0 and 4 / 96 | Both 1 and 3 / 96 | Both 1 and 3 per seed / 32 |
+|---|---|---:|---:|---:|---|
+| 4,096 / 480 | Broad paired | 0.729 | 95 | 69 | 22, 26, 21 |
+| 4,096 / 480 | Same hands, shuffled Strength | 0.839 | 94 | 51 | 24, 6, 21 |
+| 4,096 / 480 | Fresh random hands | 0.931 | 75 | 12 | 10, 0, 2 |
+| 8,192 / 480 | Broad paired | 0.867 | 89 | 48 | 19, 14, 15 |
+| 8,192 / 480 | Same hands, shuffled Strength | 0.863 | 90 | 44 | 18, 11, 15 |
+| 8,192 / 480 | Fresh random hands | 0.758 | 90 | 49 | 25, 5, 19 |
+| 8,192 / 960 | Broad paired | 1.334 | 91 | 63 | 14, 29, 20 |
+| 8,192 / 960 | Same hands, shuffled Strength | 0.711 | 92 | 46 | 18, 7, 21 |
+| 8,192 / 960 | Fresh random hands | 0.906 | 85 | 52 | 17, 22, 13 |
+
+All 96 cases are slot and unfamiliar-ID variants of one matchup across three model seeds. Numerical error averages both cards at all five Strength values. Paired training's early advantage largely disappears for the bigger pool at fixed compute. Extra updates on the second block produce a higher paired flip score than either control, alongside larger numerical errors.
