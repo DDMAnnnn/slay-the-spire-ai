@@ -1,4 +1,5 @@
 import copy
+from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -10,9 +11,31 @@ from battle.__main__ import load, save
 from battle.policy import CombatPolicy, lexical_tokens, scalars
 from experiments.card_text.run import Batch, HOLDOUT, KNOWN, OPTIONS, card, familiar, identity, novel
 from experiments.card_text.strength import decision, probe, training_data
+from experiments.card_text.broad_pairs import examples
 
 
 class CardTextTests(unittest.TestCase):
+    def test_broad_pair_controls(self):
+        def stacks(fight):
+            return sum(p["amount"] for p in fight.state["player"]["powers"])
+
+        for stage in (1, 2):
+            paired = examples(stage, "paired")
+            control = examples(stage, "random")
+            independent = examples(stage, "independent")
+            self.assertEqual(len(paired), 4096)
+            self.assertEqual([f.state["hand"] for f in paired], [f.state["hand"] for f in control])
+            self.assertEqual(Counter(map(stacks, paired)), Counter(map(stacks, control)))
+            self.assertEqual(list(map(stacks, independent)), list(map(stacks, control)))
+            self.assertNotEqual(independent[1].state["hand"], independent[0].state["hand"])
+            descriptions = {tuple(sorted(c["description"] for c in f.state["hand"])) for f in paired}
+            self.assertEqual(len(descriptions), 105)
+            self.assertFalse(any("Deal 10 damage twice." in hand for hand in descriptions))
+            self.assertTrue(any(f.winner == -1 for f in paired))
+            for first, second in zip(paired[::2], paired[1::2]):
+                self.assertEqual(first.state["hand"], second.state["hand"])
+                self.assertNotEqual(stacks(first), stacks(second))
+
     def test_exact_damage_targets_are_separate_from_inputs(self):
         rules = (HOLDOUT, (22, 1))
         cards = [card(r, 0) for r in rules]

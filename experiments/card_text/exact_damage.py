@@ -41,16 +41,9 @@ def measure(model):
                 correct_both_1_3=int((chosen[1] & chosen[3]).sum()))
 
 
-def train(output, seed, schedule, feedback):
-    torch.manual_seed(seed)
-    model = CombatPolicy(width=32, heads=4, card_input="id_text")
-    fights = training_data(schedule)
+def fit_damage(model, optimizer, fights, actions, batches, feedback):
     batch = Batch(model, fights)
     targets = torch.tensor([f.damage_by_action for f in fights], dtype=torch.float32)
-    generator = torch.Generator().manual_seed(seed + 500)
-    actions = torch.randint(3, (len(fights),), generator=generator)
-    batches = torch.randint(len(fights), (480, 48), generator=generator)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=.001)
     for indices in batches:
         _, outcomes = batch.outputs(model, indices)
         predictions = outcomes[:, :, 2]
@@ -64,6 +57,17 @@ def train(output, seed, schedule, feedback):
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
         optimizer.step()
+
+
+def train(output, seed, schedule, feedback):
+    torch.manual_seed(seed)
+    model = CombatPolicy(width=32, heads=4, card_input="id_text")
+    fights = training_data(schedule)
+    generator = torch.Generator().manual_seed(seed + 500)
+    actions = torch.randint(3, (len(fights),), generator=generator)
+    batches = torch.randint(len(fights), (480, 48), generator=generator)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=.001)
+    fit_damage(model, optimizer, fights, actions, batches, feedback)
     stem = output / f"{schedule}-{feedback}-{seed}"
     save(model, stem.with_suffix(".pt"))
     report = measure(load(stem.with_suffix(".pt")))
