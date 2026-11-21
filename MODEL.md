@@ -132,3 +132,11 @@ I tried four twice and eight twice too, each with its own training run and the s
 I wanted a target for the ten-twice example. I know what the card says, and I know how Strength works. If I give the program both rules, it gets every one of the 1,280 damage numbers right. It doesn't need a list of which card wins at each stack count. The part I can now test is what happens when I give the model just the first rule.
 
 I gave it the correct base damage and hit count for every card, then trained it on the same played attacks as before. The correct switches went from 214/384 to 282/384. But the average damage error went from 0.86 HP to 0.93 HP. I can hand it the meaning of "twice" and still leave it with a real learning problem. For these hands I have an exact reference I can keep using. For a whole fight I still want to ask whether the move is worth playing, even if I know exactly what it does. [Hand-coded reference](experiments/card_text/README.md#a-hand-coded-reference-for-the-same-four-matchups)
+
+## 21 Nov 2026 - Let the game tell me what the cards do
+
+I kept getting better ways to test whether the model could work out what Strike means. What I actually want to know is whether it plays Strike at the right time. I can hand it the card rules and let the game resolve the effects. That's the version I want to use for combat now. The card table covers all 370 registered cards. Potions, relics and statuses still have gaps in their explicit rules. I can keep the reader experiments for the day I want to try an unfamiliar mod.
+
+I trained one Ironclad policy on 256 simulated A20 starter fights. Winning and the HP left at the end give each action its eventual feedback. Random card play, attack-first and the trained policy all went 64/64 on the standard test starts. At 20 starting HP the same checkpoint won 56/64, attack-first won 51 and random play won 34. There were nine seeds where only the learned policy beat attack-first and four the other way around. I'd look at those fights before saying it learned when to block.
+
+For the long-term model I want to hand back outcomes: survival, HP left and eventually which potions were spent. I'm keeping deck, route and shop choices for the next stage. [Combat benchmark](experiments/combat/README.md)

@@ -55,13 +55,18 @@ json snapshot(const BattleContext& b) {
 
 int main(int argc, char** argv) {
     const bool paired = argc == 5 && std::string(argv[4]) == "--paired-draw";
-    const bool policy = argc == 5 && std::string(argv[4]) == "--policy";
+    const bool policy = (argc == 5 || argc == 6) && std::string(argv[4]) == "--policy";
     if (argc != 4 && !paired && !policy) return 2;
     const int start = std::stoi(argv[1]), count = std::stoi(argv[2]), addPommel = std::stoi(argv[3]);
     const MonsterEncounter enemies[] = {MonsterEncounter::CULTIST, MonsterEncounter::JAW_WORM,
                                         MonsterEncounter::TWO_LOUSE, MonsterEncounter::SMALL_SLIMES};
     for (int seed=start; seed<start+count; ++seed) {
         GameContext g(CharacterClass::IRONCLAD, seed, 20);
+        if (policy && argc == 6) {
+            const int hp = std::stoi(argv[5]);
+            if (hp < 1 || hp > g.maxHp) return 2;
+            g.curHp = hp;
+        }
         g.floorNum = 1;
         if (addPommel) g.obtainCard(CardId::POMMEL_STRIKE);
         BattleContext b;

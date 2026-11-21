@@ -11,7 +11,7 @@ A first-party combat adapter for the original Slay the Spire and a Python policy
 
 ## Card rules and PyTorch exercises
 
-The [combat model and design notes](battle/README.md) cover the trainable interpreter, object encoder, joint action scorer and recording-based training. Run the model with `python -m battle` and a subcommand.
+The [combat model and design notes](battle/README.md) cover hand-authored mechanics, the object encoder, action scoring and recording-based training. The [A20 starter-fight experiment](experiments/combat/README.md) trains decisions from completed fights. Run the model with `python -m battle` and a subcommand.
 
 The [original card table](CARD_TABLE.md) is the reference for all 370 registered card IDs. Run `python check_card_table.py path/to/desktop-1.0.jar` with a JDK available to verify coverage and rule syntax. The live wiring policy runs independently of the table.
 

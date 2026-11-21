@@ -12,8 +12,10 @@ from battle.__main__ import load, save
 from battle.policy import CombatPolicy
 
 
-def episodes(collector, start, count, choose):
+def episodes(collector, start, count, choose, start_hp=None):
     command = [str(collector.resolve()), str(start), str(count), "0", "--policy"]
+    if start_hp is not None:
+        command.append(str(start_hp))
     with subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True) as proc:
         try:
             steps = []
@@ -60,9 +62,11 @@ def update(model, optimizer, games):
 
 
 @torch.no_grad()
-def evaluate(collector, start, count, choose):
+def evaluate(collector, start, count, choose, start_hp=None):
     fights = []
-    for steps, end in episodes(collector, start, count, choose):
+    for steps, end in episodes(collector, start, count, choose, start_hp):
+        if start_hp is not None:
+            assert steps[0][0]["player"]["current_hp"] == start_hp
         end["first_enemy"] = steps[0][0]["monsters"][0]["id"]
         plays = [s["hand"][int(opts[i].split()[1])]["id"] for s, opts, i in steps if opts[i] != "end"]
         end.update(strikes=plays.count("Strike_R"), defends=plays.count("Defend_R"), decisions=len(steps))
@@ -71,14 +75,7 @@ def evaluate(collector, start, count, choose):
     return fights
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("collector", type=Path)
-    parser.add_argument("output", type=Path)
-    args = parser.parse_args()
-    args.output.mkdir(parents=True, exist_ok=True)
-    torch.set_num_threads(1)
-    torch.manual_seed(19)
+def train(collector, checkpoint):
     model = CombatPolicy(width=32, heads=4, card_input="hardcoded")
     optimizer = torch.optim.AdamW(model.parameters(), lr=.0008)
 
@@ -91,15 +88,30 @@ def main():
 
     games = []
     train_results = []
-    for steps, end in episodes(args.collector, 22000, 256, sample):
+    for steps, end in episodes(collector, 22000, 256, sample):
         games.append((steps, end))
         train_results.append(end)
         if len(games) == 8:
             update(model, optimizer, games)
             games.clear()
     assert len(train_results) == 256
-    checkpoint = args.output / "combat.pt"
     save(model, checkpoint)
+    return train_results
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("collector", type=Path)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--evaluate-hp", type=int, help="Evaluate the existing checkpoint at this starting HP")
+    args = parser.parse_args()
+    args.output.mkdir(parents=True, exist_ok=True)
+    torch.set_num_threads(1)
+    torch.manual_seed(19)
+    checkpoint = args.output / "combat.pt"
+    report = {}
+    if args.evaluate_hp is None:
+        report["training"] = train(args.collector, checkpoint)
     policy = load(checkpoint)
     rng = random.Random(19)
 
@@ -111,14 +123,14 @@ def main():
         # All targeted plays in the starter benchmark are attacks.
         return next((i for i, action in enumerate(options) if len(action.split()) == 3), 0)
 
-    report = {"training": train_results}
     for name, choose in (("random_play", random_play), ("attack_first", attack_first),
                          ("learned", lambda s, opts: opts.index(policy.choose(s, opts)))):
-        fights = evaluate(args.collector, 44000, 64, choose)
+        fights = evaluate(args.collector, 44000, 64, choose, args.evaluate_hp)
         report[name] = fights
         print(name, sum(f["victory"] for f in fights), "wins;",
               sum(f["hp"] for f in fights) / len(fights), "mean remaining HP", flush=True)
-    (args.output / "results.json").write_text(json.dumps(report, indent=2), encoding="utf8")
+    filename = "results.json" if args.evaluate_hp is None else f"results-hp{args.evaluate_hp}.json"
+    (args.output / filename).write_text(json.dumps(report, indent=2), encoding="utf8")
 
 
 if __name__ == "__main__":

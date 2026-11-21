@@ -1,11 +1,11 @@
 # One combat decision
 
-I started with two choices, playing the same Twin Strike on the left enemy or on the right. The game already offers both choices. I want to read the card once and score both uses of it. The checkpoint produced by init has a trained text reader and random policy weights. Training the policy on recorded choices is a separate operation.
+I started with two choices, playing the same Twin Strike on the left enemy or on the right. The game already offers both choices. I want to read the card once and score both uses of it. New checkpoints use hand-authored combat facts and random policy weights by default. The combat model learns which legal action to take. The learned reader remains available as an experimental input mode.
 
 | Stage | Input | Output and reason |
 |---|---|---|
 | Observation | A public decision and its legal action strings | One row for the player and one per card instance, enemy, potion slot, relic and orb. Each card includes its zone. Powers stay with their owner. Two copies can share a meaning while differing in cost. Empty slots and pile counts retain resource capacity and multiplicity. |
-| Interpreter | Object kind, ID, text and available metadata | An ordered program tagged catalog, predicted or unresolved. The vanilla card table supplies 370 reference rules with upgrade variants. A small supervised clause classifier shares language features across object kinds and copies numeric arguments into templates. An unknown identifier and available text or glossary stay visible when it abstains. |
+| Mechanics input | Object kind, ID, current values and public metadata | The default hardcoded mode looks up the 370 vanilla card programs and available power, potion and relic rules. Unknown objects retain their ID and available public description. Enemy rows carry visible current intent. Coverage outside cards is partial. The optional catalog mode adds a supervised classifier for missing entries. |
 | Object encoder | Each row's rule tokens and observed numbers | An ordered GRU reads the tokens. Numeric literals share an embedding and a continuous magnitude. Other scalar fields have a signed log magnitude and a presence bit. These signals combine into a 64-number row. This preserves operand order and distinguishes a missing field from zero. |
 | Battle encoder | N rows of width 64 | Two layers of four-head self-attention return N contextual rows. No arbitrary pile positions are supplied. Orb slots carry their meaningful order. Width, depth and head count are capacity choices and have no win-rate evidence yet. |
 | Action scorer | Player row, source row, target row and action kind | The same network scores each legal choice. With A choices its input shape is [A,208] and its output is [A]. A learned empty row handles absent sources and targets. The highest-scoring legal string can go straight to the game. |
@@ -15,18 +15,21 @@ I started with two choices, playing the same Twin Strike on the left enemy or on
 
 Direct card encodings can be initialized with `python -m battle init CHECKPOINT --card-input id` or `--card-input id_text`. In these modes the combat policy learns the action scores without a catalogue reader. The [held-out card experiment](../experiments/card_text/README.md) compares the two encodings with the same feedback.
 
+The first full-fight policy experiment uses `hardcoded` inputs. Its runner trains the decision scores from terminal combat rewards. See the [A20 starter-fight benchmark](../experiments/combat/README.md).
+
 From the repository root in PowerShell with Python 3.10+ and PyTorch:
 
 ```powershell
 $python = '.\.venv\Scripts\python.exe'
 $ckpt = 'build/battle-v2/reader-and-policy.pt'
 & $python -m battle init $ckpt
-& $python -m battle read $ckpt card 'Deal 13 damage 4 times.'
 $traces = @(Get-ChildItem "$env:USERPROFILE/SpireCombatAI/recordings/*.jsonl" | ForEach-Object FullName)
 & $python -m battle inspect $ckpt $traces[0]
 & $python -m battle train $ckpt build/battle-v2/imitation.pt $traces
 & $python -m unittest discover -s tests -v
 ```
+
+For the older learned-reader workflow, pass `--card-input catalog` to `init` and use `python -m battle read CHECKPOINT card "Deal 13 damage 4 times."` to inspect its text prediction.
 
 To select this policy in the existing F8 game session, run `.\.venv\Scripts\python.exe -m battle play build/battle-v2/imitation.pt` from the repository root. The bridge accepts the same atomic play-slot-target commands as before. New schema-2 recordings require the rebuilt mod jar. Older traces work with the fields they contain.
 
