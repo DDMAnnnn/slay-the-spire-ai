@@ -103,7 +103,7 @@ def main():
         if name in ("inspect", "train", "play"):
             cmd.add_argument("--memory", type=Path, help="Use a separately trained episodic interpreter")
         if name == "init":
-            cmd.add_argument("--card-input", choices=("catalog","id","id_text"), default="catalog")
+            cmd.add_argument("--card-input", choices=("hardcoded","catalog","id","id_text"), default="hardcoded")
         elif name == "read":
             cmd.add_argument("kind", choices=("card", "power", "potion", "enemy", "relic"))
             cmd.add_argument("text")
@@ -135,7 +135,7 @@ def main():
         model.memory_runtime = load_memory(args.memory)
     if args.command == "read":
         if model.reader is None:
-            parser.error("Direct card input encodes text inside the policy; read requires a catalogue reader.")
+            parser.error("Free-text read requires a checkpoint initialized with --card-input catalog.")
         print(model.reader.read_text(args.kind, args.text))
     elif args.command == "inspect":
         inspect(model, args.recording, args.decision)

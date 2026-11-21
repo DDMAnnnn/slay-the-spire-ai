@@ -9,7 +9,7 @@ import torch
 from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence, pad_sequence
 
-from .reader import BASE_POTENCY, card_catalog, clauses, tokenize_description
+from .reader import BASE_POTENCY, card_catalog, clauses, reference_meaning, tokenize_description
 
 
 # Each field has a value and a presence bit. A hidden intent differs from zero damage.
@@ -61,7 +61,13 @@ def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
             for keyword, definition in sorted(obj.get("glossary", {}).items()):
                 row.words.extend([keyword, definition])
             return
-        meaning = reader.interpret(kind, obj)
+        if card_input == "hardcoded":
+            meaning = reference_meaning(kind, obj)
+            if meaning is None:
+                row.words.extend([kind, "unresolved", obj.get("id", ""), obj.get("description", "")])
+                return
+        else:
+            meaning = reader.interpret(kind, obj)
         row.words.extend([kind, meaning.source, meaning.program])
         if meaning.source == "predicted":
             for clause in clauses(obj["description"]):
@@ -163,7 +169,7 @@ def action_indices(option, addresses):
 class CombatPolicy(nn.Module):
     def __init__(self, width=64, heads=4, reader=None, card_input="catalog"):
         super().__init__()
-        if card_input not in ("catalog", "id", "id_text"):
+        if card_input not in ("catalog", "hardcoded", "id", "id_text"):
             raise ValueError(f"Unknown card input: {card_input}")
         if reader is None and card_input == "catalog":
             from .reader_training import new_reader
@@ -216,8 +222,8 @@ class CombatPolicy(nn.Module):
         return self.battle(self.embed_rows(rows).unsqueeze(0)).squeeze(0)
 
     def read_state(self, state):
-        return observation_rows(state, self.reader, use_catalog=self.reader is not None and
-                                self.memory_runtime is None, card_input=self.card_input)
+        use_catalog = (self.reader is not None or self.card_input == "hardcoded") and self.memory_runtime is None
+        return observation_rows(state, self.reader, use_catalog=use_catalog, card_input=self.card_input)
 
     def score_rows(self, players, sources, targets, kinds):
         fused = torch.cat([players, sources, targets, self.kind(kinds)], dim=-1)

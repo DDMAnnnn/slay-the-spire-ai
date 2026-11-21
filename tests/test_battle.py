@@ -11,6 +11,7 @@ from battle.policy import CombatPolicy, observation_rows
 from battle.reader import card_catalog
 from battle.reader_training import fit_reader
 from agent import respond
+from battle.__main__ import load, save
 
 
 def fight():
@@ -24,6 +25,25 @@ def fight():
 
 
 class BattleTests(unittest.TestCase):
+    def test_hardcoded_input_through_checkpoint_and_policy(self):
+        state = fight()
+        state["hand"][0].update(id="Defend_R", upgrades=1, base_block=11)
+        state["player"]["powers"] = [{"id":"Weak", "amount":2}]
+        state["hand"].append({"id":"unknown-card", "description":"Example printed rule."})
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / "combat.pt"
+            save(CombatPolicy(width=32, card_input="hardcoded"), path)
+            model = load(path)
+        self.assertIsNone(model.reader)
+        self.assertIsNone(model.belief)
+        rows, index = model.read_state(state)
+        self.assertIn("Block(B)", rows[index["hand",0]].words)
+        self.assertEqual(rows[index["hand",0]].numbers["B"], 11)
+        self.assertIn("unresolved", rows[index["hand",2]].words)
+        self.assertIn("Example printed rule.", rows[index["hand",2]].words)
+        self.assertIn("Modify(OwnerAttackDamage,Scale(0.75))", rows[0].words)
+        self.assertIn(model.choose(state, ["play 0","play 1 0","end"]), ["play 0","play 1 0","end"])
+
     @classmethod
     def setUpClass(cls):
         torch.set_num_threads(1)

@@ -55,7 +55,8 @@ json snapshot(const BattleContext& b) {
 
 int main(int argc, char** argv) {
     const bool paired = argc == 5 && std::string(argv[4]) == "--paired-draw";
-    if (argc != 4 && !paired) return 2;
+    const bool policy = argc == 5 && std::string(argv[4]) == "--policy";
+    if (argc != 4 && !paired && !policy) return 2;
     const int start = std::stoi(argv[1]), count = std::stoi(argv[2]), addPommel = std::stoi(argv[3]);
     const MonsterEncounter enemies[] = {MonsterEncounter::CULTIST, MonsterEncounter::JAW_WORM,
                                         MonsterEncounter::TWO_LOUSE, MonsterEncounter::SMALL_SLIMES};
@@ -78,6 +79,37 @@ int main(int argc, char** argv) {
                 }
             }
             Move move(Kind::END_TURN);
+            if (policy) {
+                auto state = snapshot(b);
+                state["player"]["relics"] = json::array({{{"id","Burning Blood"}}});
+                for (int i=0; i<b.monsters.monsterCount; ++i) {
+                    auto& row = state["monsters"][i];
+                    const auto& monster = b.monsters.arr[i];
+                    auto info = monster.getMoveBaseDamage(b);
+                    row["targetable"] = monster.isTargetable();
+                    row["intent"] = info.attackCount > 0 ? "ATTACK" : "NON_ATTACK";
+                    if (info.attackCount > 0) {
+                        row["damage"] = monster.calculateDamageToPlayer(b, info.damage);
+                        row["hits"] = info.attackCount;
+                    }
+                    power(row,"Strength",monster.getStatus<MonsterStatus::STRENGTH>());
+                    power(row,"Ritual",monster.getStatus<MonsterStatus::RITUAL>());
+                }
+                json options = json::array();
+                for (const auto& play : legal) {
+                    int i = play.getSourceIdx();
+                    std::string action = "play " + std::to_string(i);
+                    if (b.cards.hand[i].requiresTarget()) action += " " + std::to_string(play.getTargetIdx());
+                    options.push_back(action);
+                }
+                options.push_back("end");
+                std::cout << json({{"state",state},{"options",options}}).dump() << std::endl;
+                int choice;
+                if (!(std::cin >> choice) || choice < 0 || choice >= int(options.size())) return 4;
+                if (choice < int(legal.size())) move = legal[choice];
+                move.execute(b);
+                continue;
+            }
             if (!legal.empty()) move=legal[std::uniform_int_distribution<int>(0,legal.size()-1)(rng)];
             auto state = snapshot(b);
             std::string action = "end";
@@ -106,6 +138,11 @@ int main(int argc, char** argv) {
             if (paired) continue;
             std::cout << json({{"fight",seed},{"step",step},{"state",state},{"action",action},
                                {"after",snapshot(b)},{"terminal",b.outcome!=Outcome::UNDECIDED}}).dump() << '\n';
+        }
+        if (policy) {
+            std::cout << json({{"victory", b.outcome == Outcome::PLAYER_VICTORY},
+                               {"hp", std::max(0,b.player.curHp)}, {"max_hp", b.player.maxHp},
+                               {"fight", seed}}).dump() << std::endl;
         }
     }
 }

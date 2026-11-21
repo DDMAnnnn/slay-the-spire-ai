@@ -40,8 +40,22 @@ REFERENCE = {
     ("relic", "SacredBark"): "Scale(PotionPotency,2)",
     ("relic", "Burning Blood"): "On(CombatEnd,Heal(6))",
     ("power", "Strength"): "Modify(OwnerAttackDamage,Add(Stacks))",
+    ("power", "Weak"): "Modify(OwnerAttackDamage,Scale(0.75))",
+    ("power", "Frail"): "Modify(BlockFromOwnerCards,Scale(0.75))",
+    ("power", "Vulnerable"): "Modify(ReceivedAttackDamage,Scale(1.5))",
+    ("power", "Curl Up"): "OnceOnUnblockedAttackDamage(GainBlock(Stacks))",
+    ("power", "Ritual"): "AtEndOfTurnAfterApplicationTurn(GainStrength(Stacks))",
 }
 BASE_POTENCY = {"Fire Potion": 20, "Block Potion": 12, "Strength Potion": 2}
+
+
+def reference_meaning(kind, obj):
+    identifier = obj.get("id", "")
+    if kind == "card" and identifier in card_catalog():
+        base, upgraded, _ = card_catalog()[identifier]
+        return Meaning(upgraded if obj.get("upgrades", 0) else base, "catalog")
+    program = REFERENCE.get((kind, identifier))
+    return Meaning(program, "catalog") if program is not None else None
 
 
 def tokenize_description(text):
@@ -105,13 +119,9 @@ class RuleReader(nn.Module):
         return Meaning(";".join(programs), "predicted") if programs else Meaning("", "unresolved")
 
     def interpret(self, kind, obj):
-        identifier = obj.get("id", "")
-        if kind == "card" and identifier in card_catalog():
-            base, upgraded, _ = card_catalog()[identifier]
-            return Meaning(upgraded if obj.get("upgrades", 0) else base, "catalog")
-        reference = REFERENCE.get((kind, identifier))
+        reference = reference_meaning(kind, obj)
         if reference is not None:
-            return Meaning(reference, "catalog")
+            return reference
         description = obj.get("description") or ""
         result = self.read_text(kind, description)
         if kind == "card" and "Attack(" in result.program and obj.get("type") != "ATTACK":
