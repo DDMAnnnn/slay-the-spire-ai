@@ -85,6 +85,8 @@ def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
 
     actor = add("player", player)
     actor.words.extend([player.get("class", ""), player.get("stance", "")])
+    if state.get("selection") == "headbutt":
+        actor.words.append("Headbutt choose discard to draw pile top")
     actor.numbers.update(energy=state["energy"], turn=state["turn"],
                          enemy_count=len(state["monsters"]), potion_slots=len(player["potions"]))
     powers(actor, player)
@@ -158,6 +160,10 @@ def action_indices(option, addresses):
     parts = option.split()
     if parts == ["end"]:
         return 2, -1, -1
+    if len(parts) == 2 and parts[0] == "retrieve":
+        # Reuse the checkpoint's card-action embedding. The source zone and
+        # player prompt distinguish retrieving a card from playing it.
+        return KINDS.index("play"), addresses[("discard", int(parts[1]))], -1
     if len(parts) not in (2, 3) or parts[0] not in ("play", "potion"):
         raise ValueError(f"Unsupported bridge action {option!r}")
     kind = parts[0]

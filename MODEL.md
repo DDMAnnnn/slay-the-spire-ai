@@ -140,3 +140,9 @@ I kept getting better ways to test whether the model could work out what Strike 
 I trained one Ironclad policy on 256 simulated A20 starter fights. Winning and the HP left at the end give each action its eventual feedback. Random card play, attack-first and the trained policy all went 64/64 on the standard test starts. At 20 starting HP the same checkpoint won 56/64, attack-first won 51 and random play won 34. There were nine seeds where only the learned policy beat attack-first and four the other way around. I'd look at those fights before saying it learned when to block.
 
 For the long-term model I want to hand back outcomes: survival, HP left and eventually which potions were spent. I'm keeping deck, route and shop choices for the next stage. [Combat benchmark](experiments/combat/README.md)
+
+## 22 Nov 2026 - Headbutt on which slime, and what do I draw next?
+
+I had two Defends, Madness and Headbutt. The small Spike Slime had 14 HP and showed a 6-damage attack. The medium Acid Slime had 27 HP and showed a debuff. I wanted the model to be able to pick either target in the same decision as playing Headbutt. With the old checkpoint it picked the small slime. Its HP went to 5. Only then did the fork ask which card to put back.
+
+I tried scoring the discard cards with the same weights that read a card in hand. This time the source row says discard, the prompt says what I'm choosing, and there's no enemy target. It picked Strike over Defend. I ended the turn and Strike was the first card drawn. From the same post-hit position I tried Defend instead, and the first draw changed to Defend. That answers one question I had about the wiring. I still don't know whether it would pick Defend when that's the draw that keeps me alive. [Replay the two decisions](experiments/headbutt/README.md)
