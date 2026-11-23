@@ -33,3 +33,22 @@ All three policies won every standard start. After observing that ceiling, I rep
 | Learned combat policy | 64/64 | 55.31 | 56/64 | 7.64 |
 
 At 20 HP the learned policy won nine encounters lost by attack-first and lost four that attack-first won. Its per-encounter wins were 16/16 Cultist, 15/16 Jaw Worm, 15/16 two Louses, and 10/16 small Slimes. This measures one policy initialization and the same four starter encounters used during training. The comparison cannot attribute the advantage to blocking alone; card order and target selection also differ. As a bridge compatibility check, the saved model scored all eight legal actions in a previously recorded real-game frame.
+
+## Watch a complete fork battle
+
+Open `build/combat-policy/battle.html` in a browser. Previous and Next step through decisions, Play advances automatically, and the final frame reports the encounter outcome. Each frame shows the public state before the highlighted decision. Use the [fork build instructions](../headbutt/README.md) to install the native environment.
+
+From the project root in PowerShell:
+
+```powershell
+$env:PYTHONPATH = (Resolve-Path build/fork-binding/Release).Path
+.venv/Scripts/python.exe -m experiments.combat.fork_battle --tune-to build/combat-policy/fork.pt
+.venv/Scripts/python.exe -m experiments.combat.fork_battle --checkpoint build/combat-policy/fork.pt --seed 8
+Start-Process build/combat-policy/battle.html
+```
+
+The first Python invocation tunes the existing scorer on seeds 7000 through 7031, saves a new checkpoint, and generates the replay. The second regenerates it for a chosen seed. Both add Headbutt and Discovery to the A20 Ironclad starter deck. Setup takes the first legal out-of-combat option until a fight begins. Every action from the opening hand to combat termination comes from the policy.
+
+The encoder and self-attention stay frozen during tuning. Four batches of eight completed fights update the action embeddings and scorer by policy gradient using victory plus remaining HP fraction and a leave-one-fight-out baseline. An older checkpoint initializes independent selection, skip, confirm and potion-discard embeddings from related actions. The model scores the contextual source, target, player (including the prompt), and action type. Native action IDs are carried for execution only. For a card-offer prompt, each offered card gets its own row. The original recording interface remains supported.
+
+Seed 8 is a demonstration, separate from the tuning seeds. No win-rate comparison was made for the updated policy.

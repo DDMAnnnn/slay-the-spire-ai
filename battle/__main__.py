@@ -21,7 +21,7 @@ def save(model, path):
     with NamedTemporaryFile(dir=path.parent, delete=False) as f:
         tmp = Path(f.name)
     try:
-        torch.save({"format": 3, "reader": model.reader.schema() if model.reader is not None else None,
+        torch.save({"format": 4, "reader": model.reader.schema() if model.reader is not None else None,
                     "card_input": model.card_input, "width": model.tokens.embedding_dim,
                     "heads": model.heads, "weights": model.state_dict()}, tmp)
         os.replace(tmp, path)
@@ -33,13 +33,18 @@ def load(path):
     data = torch.load(path, map_location="cpu", weights_only=True)
     if data["format"] == 1:
         schema = json.loads((DATA / "legacy_schema.json").read_text(encoding="utf8"))
-    elif data["format"] in (2, 3):
+    elif data["format"] in (2, 3, 4):
         schema = data["reader"]
     else:
         raise ValueError("Unsupported battle checkpoint")
     model = CombatPolicy(reader=RuleReader(**schema) if schema is not None else None,
                          card_input=data.get("card_input","catalog"), width=data.get("width",64),
                          heads=data.get("heads",4))
+    if data["format"] < 4:
+        # Warm-start select from play, skip/confirm from end and discard from potion.
+        # Separate rows can then learn distinct meanings from combat returns.
+        kinds = data["weights"]["kind.weight"]
+        data["weights"]["kind.weight"] = kinds[[0, 1, 2, 0, 2, 2, 1]]
     model.load_state_dict(data["weights"])
     return model.eval()
 

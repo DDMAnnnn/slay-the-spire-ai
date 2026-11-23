@@ -18,7 +18,22 @@ SCALARS = ("current_hp", "max_hp", "block", "energy", "turn", "gold", "ascension
            "evoke", "D", "B", "M", "base_potency", "potency", "hand_count", "draw_count",
            "discard_count", "exhaust_count", "enemy_count", "potion_slots", "targetable")
 ZONES = ("hand", "draw", "discard", "exhaust")
-KINDS = ("play", "potion", "end")
+KINDS = ("play", "potion", "end", "select", "skip", "confirm", "discard_potion")
+
+
+@dataclass(frozen=True)
+class Candidate:
+    native: int
+    kind: str
+    source: tuple | None = None
+    target: tuple | None = None
+
+
+@dataclass
+class CombatDecision:
+    state: dict
+    prompt: str
+    candidates: list[Candidate]
 
 
 @dataclass
@@ -90,12 +105,14 @@ def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
     actor.numbers.update(energy=state["energy"], turn=state["turn"],
                          enemy_count=len(state["monsters"]), potion_slots=len(player["potions"]))
     powers(actor, player)
-    for zone in ZONES:
+    for zone in (*ZONES, *(("offer",) if "offer" in state else ())):
         cards = state[zone]
         actor.numbers[zone + "_count"] = len(cards)
         for slot, card in enumerate(cards):
             row = add(zone, card, (zone, slot))
             row.words.extend([card.get("type", ""), card.get("target", "")])
+            if card.get("selected"):
+                row.words.append("already selected")
             describe(row, "card", card)
             if direct:
                 # Cost and upgrade count remain public in both arms. A second
@@ -236,10 +253,20 @@ class CombatPolicy(nn.Module):
         actions = self.action(fused)
         return self.score(actions).squeeze(-1), self.outcomes(actions)
 
-    def forward(self, state, options):
+    def forward(self, state, options=None):
+        decision = state if isinstance(state, CombatDecision) else None
+        if decision is not None:
+            state = decision.state
+            options = decision.candidates
         rows, addresses = self.read_state(state)
+        if decision is not None and decision.prompt != "Play a combat action":
+            rows[0].words.append(decision.prompt)
         context = self.encode(rows)
-        indices = [action_indices(option, addresses) for option in options]
+        if decision is None:
+            indices = [action_indices(option, addresses) for option in options]
+        else:
+            indices = [(KINDS.index(c.kind), addresses[c.source] if c.source else -1,
+                        addresses[c.target] if c.target else -1) for c in options]
         kind, src, tgt = torch.tensor(indices, device=context.device).T
         lookup = torch.cat([context, self.absent])
         sources = lookup[src]
@@ -248,7 +275,16 @@ class CombatPolicy(nn.Module):
             interpreter, bank = self.memory_runtime
             meanings = []
             for action in options:
-                played = source(state, action)
+                if decision is not None:
+                    played = None
+                    if action.kind in ("play", "potion"):
+                        zone, slot = action.source
+                        obj = ({"id": state["player"]["potions"][slot]} if zone == "potion"
+                               else state[zone][slot])
+                        played = ("potion" if zone == "potion" else "card", obj,
+                                  action.target[1] if action.target else None)
+                else:
+                    played = source(state, action)
                 if played:
                     kind_name, obj, target = played
                     _, meaning = interpreter.interpret(cue_for(kind_name, obj, state, target), bank)

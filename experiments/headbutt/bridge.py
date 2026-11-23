@@ -1,5 +1,5 @@
 """A20 Ironclad combat decisions from the pinned fork's public observation and mask."""
-from dataclasses import dataclass
+from battle.policy import Candidate, CombatDecision
 from functools import lru_cache
 
 import sts_env as sts
@@ -38,10 +38,40 @@ def powers(values, names):
             for name, v in zip(names, values) if v]
 
 
-@dataclass
-class Decision:
-    state: dict
-    actions: dict  # policy action -> native action index, in mask order
+# Pinned fork's CardSelectTask enum. Choice rows supply the actual objects.
+# A zone of "offer" uses the grid's public order, including for a sorted draw grid.
+PROMPTS = {
+    1: ("hand", "Upgrade a card in hand"),
+    2: ("offer", "Shuffle a chosen card into the draw pile"),
+    3: ("offer", "Choose a card to add to hand"),
+    4: ("hand", "Copy a card in hand"),
+    5: ("hand", "Exhaust a card from hand"),
+    6: ("hand", "Choose cards in hand to exhaust"),
+    7: ("exhaust", "Return an exhausted card to hand"),
+    8: ("hand", "Put a card on the bottom of the draw pile at zero cost until played"),
+    9: ("hand", "Discard selected cards and draw replacements"),
+    10: ("discard", "Headbutt choose discard to draw pile top"),
+    11: ("discard", "Return a discarded card to hand"),
+    12: ("discard", "Return a discarded card to hand at zero cost this turn"),
+    13: ("discard", "Return selected cards to hand and retain them"),
+    14: ("hand", "Choose a card to copy next turn"),
+    15: ("hand", "Exhaust a card for energy"),
+    16: ("offer", "Choose a skill from the draw pile for hand"),
+    17: ("offer", "Choose an attack from the draw pile for hand"),
+    18: ("offer", "Choose from the draw pile for hand"),
+    19: ("hand", "Put a card on top of the draw pile at zero cost until played"),
+    20: ("hand", "Put a card from hand on top of the draw pile"),
+    21: ("hand", "Choose cards to discard"),
+    22: ("hand", "Choose cards to retain"),
+    23: ("offer", "Scry: choose cards from the top of the draw pile to discard"),
+    24: ("offer", "Choose a draw pile card to play twice and exhaust"),
+    25: ("offer", "Choose a Wish effect"),
+    26: ("offer", "Choose a stance"),
+    27: ("offer", "Choose an attack to add to hand"),
+    28: ("hand", "Put selected cards at the bottom at zero cost until played"),
+}
+PLAY = "Play a combat action"
+TARGET_POTIONS = {"Fear Potion", "Fire Potion", "Poison Potion", "Weak Potion"}
 
 
 def read(env):
@@ -54,9 +84,15 @@ def read(env):
         raise ValueError("This adapter expects an Ironclad combat decision")
     p = block(obs, "player")[0]
     normal = int(p[7]) == 1
-    headbutt = int(p[7]) == 2 and int(g[26]) == 10
-    if not (normal or headbutt):
-        raise ValueError(f"Unsupported combat prompt: input {int(p[7])}, task {int(g[26])}")
+    task = int(g[26])
+    if normal:
+        zone, prompt = None, PLAY
+    elif int(p[7]) == 2 and task in PROMPTS:
+        zone, prompt = PROMPTS[task]
+        if task == 3 and not block(obs, "choices")[3, 5]:
+            prompt += " at zero cost this turn"
+    else:
+        raise ValueError(f"Unsupported combat prompt: input {int(p[7])}, task {task}")
     player = dict(current_hp=int(p[0]), max_hp=int(p[1]), block=int(p[2]),
                   gold=int(g[2]), floor=int(g[3]), ascension=int(g[5]),
                   powers=powers(p[sts.N_PLAYER_BASE:], sts.PLAYER_STATUS_NAMES),
@@ -66,8 +102,8 @@ def read(env):
                            for v in g[17:17 + int(g[16])]])
     player["class"] = "IRONCLAD"
     state = {"energy": int(p[3]), "turn": int(p[4]), "player": player, "monsters": []}
-    for zone in ("hand", "draw", "discard", "exhaust"):
-        state[zone] = [card(r) for r in block(obs, zone) if r[0]]
+    for pile in ("hand", "draw", "discard", "exhaust"):
+        state[pile] = [card(r) for r in block(obs, pile) if r[0]]
     for r in block(obs, "monsters"):
         if not r[0]:
             continue
@@ -79,30 +115,58 @@ def read(env):
             monster.update(damage=int(r[8]), hits=int(r[9]))
         state["monsters"].append(monster)
 
-    actions = {}
     hand = block(obs, "hand")
     choices = block(obs, "choices")
-    if headbutt:
-        state["selection"] = "headbutt"
+    if zone == "offer":
+        state["offer"] = []
+    refs = {}
+    if zone:
+        for slot, (kind, encoded, up, picked, _, legal) in enumerate(choices):
+            if not kind:
+                continue
+            name = sts.CHOICE_KINDS[int(kind)]
+            if name == "SKIP":
+                continue
+            if name == "EVENT_OPTION" and task == 26:
+                obj = {"id": sts.STANCE_NAMES[int(encoded) - 1]}
+            elif name == "CARD":
+                obj = card((encoded, up))
+            else:
+                raise ValueError(f"Unsupported {name} in {prompt}")
+            if zone == "offer":
+                ref = (zone, len(state[zone]))
+                state[zone].append(obj)
+            else:
+                ref = (zone, slot)
+                visible = state[zone][slot]
+                if (visible["id"], visible["upgrades"]) != (obj["id"], obj["upgrades"]):
+                    raise ValueError(f"Choice {slot} disagrees with {zone}")
+            if picked:
+                state[zone][ref[1]]["selected"] = True
+            if legal:
+                refs[slot] = ref
+    candidates = []
     for native in map(int, env.mask().nonzero()[0]):
-        if normal and sts.ACT_PLAY <= native < sts.ACT_POTION:
-            slot, target = divmod(native - sts.ACT_PLAY, 5)
-            option = f"play {slot} {target}" if hand[slot, 4] else f"play {slot}"
-        elif normal and native == sts.ACT_END_TURN:
-            option = "end"
-        elif headbutt and sts.ACT_CHOOSE <= native < sts.ACT_CONFIRM:
-            slot = native - sts.ACT_CHOOSE
-            kind, encoded, upgraded, _, _, legal = choices[slot]
-            discard = state["discard"][slot]
-            if (not legal or sts.CHOICE_KINDS[int(kind)] != "CARD" or
-                    (sts.CARD_IDS[int(encoded) - 1], int(upgraded)) != (discard["id"], discard["upgrades"])):
-                raise ValueError(f"Headbutt choice {slot} disagrees with the visible discard pile")
-            option = f"retrieve {slot}"
+        if sts.ACT_PLAY <= native < sts.ACT_POTION:
+            slot, t = divmod(native - sts.ACT_PLAY, 5)
+            c = Candidate(native, "play", ("hand", slot), ("enemy", t) if hand[slot, 4] else None)
+        elif native < sts.ACT_DISCARD:
+            slot, t = divmod(native - sts.ACT_POTION, 5)
+            targeted = player["potions"][slot] in TARGET_POTIONS
+            c = Candidate(native, "potion", ("potion", slot), ("enemy", t) if targeted else None)
+        elif native < sts.ACT_END_TURN:
+            c = Candidate(native, "discard_potion", ("potion", native - sts.ACT_DISCARD))
+        elif native == sts.ACT_END_TURN:
+            c = Candidate(native, "end")
+        elif native == sts.ACT_CONFIRM:
+            c = Candidate(native, "confirm")
         else:
-            raise ValueError(f"Unsupported legal fork action {native} in this Headbutt integration")
-        if option in actions:
-            raise ValueError(f"Ambiguous native mapping for {option}")
-        actions[option] = native
-    if not actions:
+            slot = native - sts.ACT_CHOOSE
+            if sts.CHOICE_KINDS[int(choices[slot, 0])] == "SKIP":
+                c = Candidate(native, "skip")
+            else:
+                c = Candidate(native, "select", refs[slot])
+        candidates.append(c)
+    if not candidates:
         raise ValueError("No legal combat decision")
-    return Decision(state, actions)
+    return CombatDecision(state, prompt, candidates)

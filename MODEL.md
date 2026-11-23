@@ -146,3 +146,9 @@ For the long-term model I want to hand back outcomes: survival, HP left and even
 I had two Defends, Madness and Headbutt. The small Spike Slime had 14 HP and showed a 6-damage attack. The medium Acid Slime had 27 HP and showed a debuff. I wanted the model to be able to pick either target in the same decision as playing Headbutt. With the old checkpoint it picked the small slime. Its HP went to 5. Only then did the fork ask which card to put back.
 
 I tried scoring the discard cards with the same weights that read a card in hand. This time the source row says discard, the prompt says what I'm choosing, and there's no enemy target. It picked Strike over Defend. I ended the turn and Strike was the first card drawn. From the same post-hit position I tried Defend instead, and the first draw changed to Defend. That answers one question I had about the wiring. I still don't know whether it would pick Defend when that's the draw that keeps me alive. [Replay the two decisions](experiments/headbutt/README.md)
+
+## 22 Nov 2026 - Can I watch it play the whole hand?
+
+Why translate a discard slot into a command string if the game has already given me its action number? I kept that number with each candidate and gave the model the prompt, the card and its target. For Discovery, the three offered cards get their own rows. I kept the card encoder fixed and gave the scorer 32 more fights with Discovery and Headbutt in the deck. It sampled 86 card selections. I haven't compared its win rate before and after this change.
+
+In the seed 8 replay I can follow the whole fight. On turn one it played Headbutt on the medium slime and put Strike on top. On turn three it played Discovery, picked Sword Boomerang and played it for zero energy to finish the fight. I can step back one decision and see the other cards it was offered. [Watch a complete fork battle](experiments/combat/README.md#watch-a-complete-fork-battle)
