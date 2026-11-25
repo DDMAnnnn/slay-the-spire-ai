@@ -74,14 +74,46 @@ PLAY = "Play a combat action"
 TARGET_POTIONS = {"Fear Potion", "Fire Potion", "Poison Potion", "Weak Potion"}
 
 
+def event_decision(obs, mask):
+    """Score the offered event buttons. Inventory management is a separate decision."""
+    g = block(obs, "global")[0]
+    if g[7] or sts.SCREEN_NAMES[int(g[6])] != "EVENT" or g[9] <= 0:
+        raise ValueError("Expected a public event screen")
+    player = dict(current_hp=int(g[0]), max_hp=int(g[1]), gold=int(g[2]),
+                  floor=int(g[3]), ascension=int(g[5]),
+                  relics=[{"id": sts.RELIC_NAMES[int(r[0]) - 1],
+                           **({"counter": int(r[1]) - 1} if r[1] else {})}
+                          for r in block(obs, "relics") if r[0]],
+                  potions=[sts.POTION_NAMES[int(v) - 1] if v else "Potion Slot"
+                           for v in g[17:17 + int(g[16])]])
+    player["class"] = sts.CHARACTERS[int(block(obs, "class")[0, 0]) - 1]
+    candidates = []
+    for slot, row in enumerate(block(obs, "choices")):
+        native = sts.ACT_CHOOSE + slot
+        if mask[native]:
+            if not row[5]:
+                raise ValueError(f"Event button {slot} missing from public choices")
+            candidates.append(Candidate(native, "select", ("event_option", slot)))
+    if not candidates:
+        raise ValueError("Event has no legal buttons")
+    state = {"event_id": int(g[9]) - 1, "player": player,
+             "deck": [card(r) for r in block(obs, "deck") if r[0]],
+             "event_options": [c.source[1] for c in candidates]}
+    return CombatDecision(state, "Choose an event option", candidates)
+
+
 def read(env):
     if sts.OBS_VERSION != 3:
         raise ValueError(f"Unsupported fork observation version {sts.OBS_VERSION}")
     obs = env.observe()
     g = block(obs, "global")[0]
     cls = block(obs, "class")[0]
-    if not g[7] or sts.CHARACTERS[int(cls[0]) - 1] != "IRONCLAD":
-        raise ValueError("This adapter expects an Ironclad combat decision")
+    if sts.CHARACTERS[int(cls[0]) - 1] != "IRONCLAD":
+        raise ValueError("This adapter expects Ironclad")
+    if not g[7] and sts.SCREEN_NAMES[int(g[6])] == "EVENT":
+        return event_decision(obs, env.mask())
+    if not g[7]:
+        raise ValueError("Expected combat or an event screen")
     p = block(obs, "player")[0]
     normal = int(p[7]) == 1
     task = int(g[26])

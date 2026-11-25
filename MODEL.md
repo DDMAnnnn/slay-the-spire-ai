@@ -152,3 +152,9 @@ I tried scoring the discard cards with the same weights that read a card in hand
 Why translate a discard slot into a command string if the game has already given me its action number? I kept that number with each candidate and gave the model the prompt, the card and its target. For Discovery, the three offered cards get their own rows. I kept the card encoder fixed and gave the scorer 32 more fights with Discovery and Headbutt in the deck. It sampled 86 card selections. I haven't compared its win rate before and after this change.
 
 In the seed 8 replay I can follow the whole fight. On turn one it played Headbutt on the medium slime and put Strike on top. On turn three it played Discovery, picked Sword Boomerang and played it for zero energy to finish the fight. I can step back one decision and see the other cards it was offered. [Watch a complete fork battle](experiments/combat/README.md#watch-a-complete-fork-battle)
+
+## 25 Nov 2026 - Can it learn an event from its buttons?
+
+At We Meet Again! the player saw four buttons. I wanted to see how far I could get by giving it their IDs, the event ID and the current run state. On test seed 40007 it picked button 2. From copies of that same position the scripted player got to floor 16 with button 2 and floor 14 with each of the others. I didn't give the network a description of any button.
+
+My simpler comparison was to remember the average result for each button within each event. Across 65 fresh event starts only 20 gave different floor or clear outcomes. Both methods picked a best button 14 times on those 20. In another 16 runs with the combat model playing the fights, the neural event choices got zero Act 1 clears and the lookup got one. For now I'd keep the IDs and the lookup comparison. I still don't know whether the run state improves these choices. [Event results](experiments/events/README.md)

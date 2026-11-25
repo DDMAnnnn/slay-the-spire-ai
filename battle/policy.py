@@ -102,10 +102,16 @@ def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
     actor.words.extend([player.get("class", ""), player.get("stance", "")])
     if state.get("selection") == "headbutt":
         actor.words.append("Headbutt choose discard to draw pile top")
-    actor.numbers.update(energy=state["energy"], turn=state["turn"],
-                         enemy_count=len(state["monsters"]), potion_slots=len(player["potions"]))
+    actor.numbers["potion_slots"] = len(player["potions"])
+    if "event_id" in state:
+        actor.words.append(f"event_{state['event_id']}")
+        for option in state["event_options"]:
+            row = add("event_option", {}, ("event_option", option))
+            row.words.append(f"event_{state['event_id']}_option_{option}")
+    else:
+        actor.numbers.update(energy=state["energy"], turn=state["turn"], enemy_count=len(state["monsters"]))
     powers(actor, player)
-    for zone in (*ZONES, *(("offer",) if "offer" in state else ())):
+    for zone in (z for z in (*ZONES, "offer", "deck") if z in state):
         cards = state[zone]
         actor.numbers[zone + "_count"] = len(cards)
         for slot, card in enumerate(cards):
@@ -129,7 +135,7 @@ def observation_rows(state, reader, use_catalog=True, card_input="catalog"):
             for symbol, key in (("D", "base_damage"), ("B", "base_block"), ("M", "base_magic")):
                 if key in card:
                     row.numbers[symbol] = card[key]
-    for slot, monster in enumerate(state["monsters"]):
+    for slot, monster in enumerate(state.get("monsters", [])):
         row = add("enemy", monster, ("enemy", slot))
         intent = monster.get("intent", "hidden")
         row.words.extend([monster["id"], intent])
