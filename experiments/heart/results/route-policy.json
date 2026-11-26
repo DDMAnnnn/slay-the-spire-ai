@@ -1,0 +1,362 @@
+{
+  "fits": [
+    {
+      "epoch": 4,
+      "heldout_pair_mse": 0.9639690518379211,
+      "train_choices": 39254,
+      "validation_choices": 4948
+    },
+    {
+      "epoch": 4,
+      "heldout_pair_mse": 0.9599584937095642,
+      "train_choices": 59246,
+      "validation_choices": 4948
+    }
+  ],
+  "training_starts": [
+    124000000,
+    127000000
+  ],
+  "validation_start": 125000000,
+  "scale_validation_starts": [
+    126000000,
+    128000000
+  ],
+  "rounds": [
+    [
+      {
+        "scales": [
+          20,
+          20
+        ],
+        "runs": 3072,
+        "mean_floor": 23.475,
+        "best_floor": 56,
+        "act2": 1926,
+        "act3": 170,
+        "act4": 2,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          126000553
+        ],
+        "first_boss": 24
+      },
+      {
+        "scales": [
+          80,
+          80
+        ],
+        "runs": 3072,
+        "mean_floor": 23.272,
+        "best_floor": 55,
+        "act2": 1921,
+        "act3": 144,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 20
+      },
+      {
+        "scales": [
+          250,
+          250
+        ],
+        "runs": 3072,
+        "mean_floor": 22.893,
+        "best_floor": 52,
+        "act2": 1885,
+        "act3": 130,
+        "act4": 0,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 25
+      },
+      {
+        "scales": [
+          160,
+          40
+        ],
+        "runs": 3072,
+        "mean_floor": 23.051,
+        "best_floor": 55,
+        "act2": 1884,
+        "act3": 147,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 27
+      },
+      {
+        "scales": [
+          40,
+          160
+        ],
+        "runs": 3072,
+        "mean_floor": 23.446,
+        "best_floor": 55,
+        "act2": 1950,
+        "act3": 153,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 21
+      }
+    ],
+    [
+      {
+        "scales": [
+          20,
+          20
+        ],
+        "runs": 3072,
+        "mean_floor": 23.564,
+        "best_floor": 56,
+        "act2": 1955,
+        "act3": 147,
+        "act4": 4,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          128002334
+        ],
+        "first_boss": 25
+      },
+      {
+        "scales": [
+          80,
+          80
+        ],
+        "runs": 3072,
+        "mean_floor": 23.593,
+        "best_floor": 56,
+        "act2": 1989,
+        "act3": 136,
+        "act4": 2,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          128002334
+        ],
+        "first_boss": 22
+      },
+      {
+        "scales": [
+          250,
+          250
+        ],
+        "runs": 3072,
+        "mean_floor": 23.006,
+        "best_floor": 55,
+        "act2": 1899,
+        "act3": 105,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 19
+      },
+      {
+        "scales": [
+          160,
+          40
+        ],
+        "runs": 3072,
+        "mean_floor": 23.362,
+        "best_floor": 55,
+        "act2": 1944,
+        "act3": 135,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 17
+      },
+      {
+        "scales": [
+          40,
+          160
+        ],
+        "runs": 3072,
+        "mean_floor": 23.624,
+        "best_floor": 55,
+        "act2": 1999,
+        "act3": 124,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [],
+        "first_boss": 20
+      }
+    ]
+  ],
+  "finalist_start": 129000000,
+  "finalist_results": {
+    "first": {
+      "runs": 8192,
+      "mean_floor": 23.551,
+      "best_floor": 56,
+      "act2": 5236,
+      "act3": 447,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        129002853,
+        129005849,
+        129007053
+      ]
+    },
+    "second": {
+      "runs": 8192,
+      "mean_floor": 23.78,
+      "best_floor": 56,
+      "act2": 5353,
+      "act3": 446,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        129002853
+      ]
+    }
+  },
+  "selected": "first",
+  "scales": [
+    20,
+    20
+  ],
+  "test": {
+    "130000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 22.871,
+        "best_floor": 56,
+        "act2": 19814,
+        "act3": 1564,
+        "act4": 7,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          130001074,
+          130004522,
+          130009225,
+          130011546,
+          130020118,
+          130031639
+        ],
+        "first_boss": 189,
+        "second_boss": 47
+      },
+      "route_and_rest": {
+        "runs": 32768,
+        "mean_floor": 23.528,
+        "best_floor": 56,
+        "act2": 20894,
+        "act3": 1740,
+        "act4": 6,
+        "hearts": 1,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          130001517,
+          130004270,
+          130016661
+        ],
+        "first_boss": 241,
+        "second_boss": 65
+      }
+    },
+    "131000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 22.952,
+        "best_floor": 56,
+        "act2": 19822,
+        "act3": 1648,
+        "act4": 8,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          131002200,
+          131003057,
+          131008061
+        ],
+        "first_boss": 205,
+        "second_boss": 54
+      },
+      "route_and_rest": {
+        "runs": 32768,
+        "mean_floor": 23.539,
+        "best_floor": 56,
+        "act2": 20838,
+        "act3": 1781,
+        "act4": 11,
+        "hearts": 1,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          131002615,
+          131003057,
+          131023255,
+          131025392,
+          131025773,
+          131027467
+        ],
+        "first_boss": 236,
+        "second_boss": 71
+      }
+    }
+  },
+  "components": {
+    "map": {
+      "runs": 32768,
+      "mean_floor": 23.335,
+      "best_floor": 56,
+      "act2": 20293,
+      "act3": 1727,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        130004270,
+        130031639
+      ],
+      "first_boss": 257,
+      "second_boss": 63
+    },
+    "rest": {
+      "runs": 32768,
+      "mean_floor": 23.06,
+      "best_floor": 56,
+      "act2": 20419,
+      "act3": 1576,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        130001074,
+        130004522,
+        130009225,
+        130020118
+      ],
+      "first_boss": 192,
+      "second_boss": 47
+    }
+  },
+  "verified_wins": [
+    {
+      "seed": 130016661,
+      "actions": 601,
+      "hp": 15
+    },
+    {
+      "seed": 131002615,
+      "actions": 762,
+      "hp": 69
+    }
+  ],
+  "checkpoint_sha256": "aec3413453bab86ced939c9cdd4895ac1de5e04698560544ae0bf68e1cfa43bd"
+}

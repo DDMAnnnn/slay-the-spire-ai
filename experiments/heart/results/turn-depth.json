@@ -1,0 +1,110 @@
+{
+  "checkpoint_sha256": "8a927f2928d661288aabd1eb1c90782cd10644c8759ca7a09b52b99cbe0af23a",
+  "variant": "first",
+  "threads": 10,
+  "validation_start": 56000000,
+  "validation": {
+    "1": {
+      "runs": 8192,
+      "mean_floor": 21.182,
+      "best_floor": 50,
+      "act2": 4509,
+      "act3": 129,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 2.349,
+      "gained_act3": 45,
+      "lost_act3": 163,
+      "changed_act2": 1270
+    },
+    "2": {
+      "runs": 8192,
+      "mean_floor": 22.407,
+      "best_floor": 51,
+      "act2": 4925,
+      "act3": 247,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 2.92,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0
+    },
+    "3": {
+      "runs": 8192,
+      "mean_floor": 22.76,
+      "best_floor": 52,
+      "act2": 5040,
+      "act3": 280,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 3.84,
+      "gained_act3": 89,
+      "lost_act3": 56,
+      "changed_act2": 529
+    },
+    "4": {
+      "runs": 8192,
+      "mean_floor": 22.862,
+      "best_floor": 52,
+      "act2": 5071,
+      "act3": 286,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 5.68,
+      "gained_act3": 101,
+      "lost_act3": 62,
+      "changed_act2": 566
+    },
+    "5": {
+      "runs": 8192,
+      "mean_floor": 22.87,
+      "best_floor": 52,
+      "act2": 5072,
+      "act3": 297,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 10.057,
+      "gained_act3": 110,
+      "lost_act3": 60,
+      "changed_act2": 571
+    }
+  },
+  "selected_depth": 5,
+  "test_start": 57000000,
+  "test": {
+    "2": {
+      "runs": 32768,
+      "mean_floor": 22.314,
+      "best_floor": 55,
+      "act2": 19449,
+      "act3": 943,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 3,
+      "seconds": 10.443,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0
+    },
+    "5": {
+      "runs": 32768,
+      "mean_floor": 22.79,
+      "best_floor": 56,
+      "act2": 20077,
+      "act3": 1109,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 1,
+      "seconds": 38.433,
+      "gained_act3": 414,
+      "lost_act3": 248,
+      "changed_act2": 2442
+    }
+  }
+}

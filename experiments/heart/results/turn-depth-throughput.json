@@ -1,0 +1,82 @@
+{
+  "start": 58000000,
+  "threads": 10,
+  "results": {
+    "1": {
+      "runs": 16384,
+      "mean_floor": 21.12,
+      "best_floor": 51,
+      "act2": 8812,
+      "act3": 307,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 2,
+      "seconds": 4.526,
+      "gained_act3": 101,
+      "lost_act3": 269,
+      "changed_act2": 2569,
+      "act3_per_minute": 4069.8
+    },
+    "2": {
+      "runs": 16384,
+      "mean_floor": 22.233,
+      "best_floor": 51,
+      "act2": 9631,
+      "act3": 475,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 1,
+      "seconds": 5.406,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0,
+      "act3_per_minute": 5271.9
+    },
+    "3": {
+      "runs": 16384,
+      "mean_floor": 22.585,
+      "best_floor": 56,
+      "act2": 9855,
+      "act3": 548,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 7.214,
+      "gained_act3": 187,
+      "lost_act3": 114,
+      "changed_act2": 1122,
+      "act3_per_minute": 4557.8
+    },
+    "4": {
+      "runs": 16384,
+      "mean_floor": 22.666,
+      "best_floor": 56,
+      "act2": 9899,
+      "act3": 565,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 10.768,
+      "gained_act3": 211,
+      "lost_act3": 121,
+      "changed_act2": 1192,
+      "act3_per_minute": 3148.2
+    },
+    "5": {
+      "runs": 16384,
+      "mean_floor": 22.67,
+      "best_floor": 56,
+      "act2": 9894,
+      "act3": 569,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "seconds": 20.586,
+      "gained_act3": 217,
+      "lost_act3": 123,
+      "changed_act2": 1191,
+      "act3_per_minute": 1658.4
+    }
+  },
+  "checkpoint_sha256": "8a927f2928d661288aabd1eb1c90782cd10644c8759ca7a09b52b99cbe0af23a"
+}

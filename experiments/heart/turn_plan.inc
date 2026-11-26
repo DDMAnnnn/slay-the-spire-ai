@@ -3,6 +3,8 @@
 struct Position {
     std::array<double,5> hp{}, vulnerable{};
     double block=0, strength=0;
+    double hpChange=0, strengthGrowth=0, passiveBlock=0, temporaryStrength=0;
+    std::array<double,5> weak{}, disarm{};
     int energy=0, used=0;
 };
 Position start_turn() const {
@@ -79,6 +81,18 @@ double resolve(Position &s,int a) const {
     if(getCardType(id)==CardType::SKILL && enemy(0)[MONSTER_BASE+int(MonsterStatus::ENRAGE)]) gain-=12;
     if(id==C::IMPERVIOUS && incoming_after-s.block+block<7) gain-=11;
     if(id==C::REAPER && !missing) gain-=5;
+    if(forecast_settings[0]>0) {
+        s.hpChange-=f[6];
+        if(id==C::BITE) s.hpChange+=std::min(double(o[1]-o[0]),double(f[7]));
+        if(id==C::DEMON_FORM) s.strengthGrowth+=u?3:2;
+        if(id==C::METALLICIZE) s.passiveBlock+=u?4:3;
+        if(id==C::FLEX) s.temporaryStrength+=u?4:2;
+        for(int k=0;k<5;++k) if((f[1] || k==t || id==C::SHOCKWAVE) &&
+                !enemy(k)[MONSTER_BASE+int(MS::ARTIFACT)]) {
+            s.weak[k]+=std::max(0,int(f[33]));
+            if(id==C::DISARM) s.disarm[k]+=u?3:2;
+        }
+    }
     return gain;
 }
 double continuation(const Position &s,const uint8_t *mask,int depth) const {
@@ -96,8 +110,40 @@ double continuation(const Position &s,const uint8_t *mask,int depth) const {
     }
     return best;
 }
-void all_scores(const uint8_t *mask,double *out) const {
-    for(int i=0;i<N_ACTIONS;++i) out[i]=mask[i]?score(i):-1e30;
+#include "forecast_plan.inc"
+void base_scores(const uint8_t *mask,double *out) const {
+    if(use_actor && !teacher_scale && o[7] && mask[ACT_END_TURN]) {
+        direct_scores(mask,out);
+        return;
+    }
+    for(int i=0;i<N_ACTIONS;++i) {
+        bool learned_drink=learned_drinks && mask[ACT_END_TURN] && i>=ACT_POTION && i<ACT_DISCARD;
+        out[i]=mask[i] && !learned_drink?score(i):-1e30;
+    }
+    if(learned_draft && draft_skip(mask)>=0) {
+        auto features=deck_features();
+        for(int i=0;i<N_CHOICES;++i) if(mask[ACT_CHOOSE+i]) {
+            auto c=o+OBS_CHOICES+i*CHOICE_W;
+            if(ChoiceKind(int(c[0]))!=ChoiceKind::CARD) continue;
+            auto x=offered_features(features,c);
+            auto &coefs=draft_table[int(c[1])-1];
+            out[ACT_CHOOSE+i]=std::inner_product(x.begin(),x.end(),coefs.begin(),0.);
+        }
+    }
+    if(use_recovery && o[4]<=2 && draft_skip(mask)>=0) {
+        for(int j=0;j<N_CHOICES;++j) if(mask[ACT_CHOOSE+j]) {
+            auto c=o+OBS_CHOICES+j*CHOICE_W;
+            if(ChoiceKind(int(c[0]))!=ChoiceKind::CARD) continue;
+            int id=int(c[1])-1;
+            const auto &bonus=recovery_draft[id];
+            out[ACT_CHOOSE+j]+=bonus[0]+bonus[1]*(deck[id]>0)+bonus[2]*(c[2]>0);
+        }
+    }
+    if(use_edits && !o[7]) score_edits(mask,out);
+    if(!inventory_tokens.empty() && !o[7]) inventory_scores(mask,out);
+    if(use_expert && !o[7]) apply_expert_prior(mask,out);
+    if(!boss_draft_weights.empty() && !o[7]) apply_boss_draft(mask,out);
+    if((route_scale[0] || route_scale[1]) && !o[7]) route_scores(mask,out);
     if(!o[7] || !mask[ACT_END_TURN]) return;
     double before=*std::max_element(out,out+ACT_POTION);
     auto start=start_turn();
@@ -106,9 +152,31 @@ void all_scores(const uint8_t *mask,double *out) const {
         auto now=resolve(next,i);
         // End turn and potions compete on a comparable one-action scale.
         // Lookahead only changes relative scores among the currently playable cards.
-        out[i]+=w[Lookahead]*(now+.94*continuation(next,mask,1));
+        out[i]+=w[Lookahead]*(now+.94*continuation(next,mask,turn_depth-1));
     }
     double after=*std::max_element(out,out+ACT_POTION);
     for(int i=0;i<ACT_POTION;++i) if(mask[i]) out[i]+=reaction(i)-(after-before);
     apply_combat_head(mask,out);
+    if(late_combat_scale && o[4]>=2 && o[4]<=late_combat_last_act) apply_late_combat(mask,out);
+    if(learned_drinks) {
+        // Each prediction is a difference from taking the best non-drink move now.
+        double hold=std::max(out[ACT_END_TURN],*std::max_element(out,out+ACT_POTION));
+        for(int a=ACT_POTION;a<ACT_DISCARD;++a) if(mask[a]) {
+            int id=int(o[17+(a-ACT_POTION)/5])-1;
+            auto x=drink_features(a);
+            double advantage=std::inner_product(x.begin(),x.end(),drink_table[id].begin(),0.);
+            out[a]=hold+advantage-drink_margin;
+        }
+    }
+    if(forecast_settings[0]>0) forecast_scores(mask,out,start);
+    if(scenario_draws && o[4]>=scenario_from && scenario_scores(mask,out)) return;
+    if((use_boss_tactics || use_recovery) && o[4]==2 && Room(int(o[8])-1)==Room::BOSS) apply_boss_tactics(mask,out);
+    if(opening_draws && !opening_branch && simulated_tactic<0 && o[4]<=2 && p[4]==0)
+        opening_scores(mask,out);
+    if(use_actor && teacher_scale && o[4]<=2) {
+        std::array<double,N_ACTIONS> residual;
+        direct_scores(mask,residual.data());
+        for(int a=0;a<=ACT_END_TURN;++a) if(mask[a] && (a<ACT_DISCARD || a==ACT_END_TURN))
+            out[a]+=teacher_scale*residual[a];
+    }
 }

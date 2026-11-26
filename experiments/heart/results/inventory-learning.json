@@ -1,0 +1,560 @@
+{
+  "data": {
+    "train": {
+      "start": 159000000,
+      "families": 6144,
+      "profiles": 30720,
+      "standalone_fights": 368640,
+      "human_profiles": 66
+    },
+    "valid": {
+      "start": 166000000,
+      "families": 1024,
+      "profiles": 5120,
+      "standalone_fights": 61440,
+      "human_profiles": 17
+    }
+  },
+  "validation": [
+    {
+      "runs": 3072,
+      "mean_floor": 23.685,
+      "best_floor": 55,
+      "act2": 1990,
+      "act3": 159,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 26,
+      "second_boss": 11,
+      "scales": [
+        30,
+        30,
+        30,
+        0.3
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.598,
+      "best_floor": 55,
+      "act2": 1973,
+      "act3": 166,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 23,
+      "second_boss": 10,
+      "scales": [
+        90,
+        90,
+        90,
+        0.6
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.477,
+      "best_floor": 51,
+      "act2": 1952,
+      "act3": 166,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [],
+      "first_boss": 21,
+      "second_boss": 3,
+      "scales": [
+        200,
+        200,
+        200,
+        1.0
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 22.402,
+      "best_floor": 51,
+      "act2": 1739,
+      "act3": 131,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 19,
+      "second_boss": 3,
+      "scales": [
+        500,
+        500,
+        500,
+        1.0
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.531,
+      "best_floor": 56,
+      "act2": 1978,
+      "act3": 162,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        167002045
+      ],
+      "first_boss": 31,
+      "second_boss": 9,
+      "scales": [
+        200,
+        50,
+        500,
+        0.4
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.693,
+      "best_floor": 56,
+      "act2": 1975,
+      "act3": 167,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        167000199
+      ],
+      "first_boss": 30,
+      "second_boss": 7,
+      "scales": [
+        40,
+        150,
+        300,
+        1.5
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 22.635,
+      "best_floor": 55,
+      "act2": 1829,
+      "act3": 123,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 25,
+      "second_boss": 6,
+      "scales": [
+        350,
+        180,
+        60,
+        0.1
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.473,
+      "best_floor": 55,
+      "act2": 1939,
+      "act3": 160,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 26,
+      "second_boss": 9,
+      "scales": [
+        100,
+        300,
+        120,
+        2.0
+      ]
+    }
+  ],
+  "selection": [
+    {
+      "runs": 8192,
+      "mean_floor": 23.299,
+      "best_floor": 56,
+      "act2": 5080,
+      "act3": 498,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        168001035,
+        168007129
+      ],
+      "first_boss": 71,
+      "second_boss": 17,
+      "scales": [
+        40,
+        150,
+        300,
+        1.5
+      ]
+    },
+    {
+      "runs": 8192,
+      "mean_floor": 23.275,
+      "best_floor": 56,
+      "act2": 5133,
+      "act3": 497,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        168003354
+      ],
+      "first_boss": 69,
+      "second_boss": 15,
+      "scales": [
+        200,
+        50,
+        500,
+        0.4
+      ]
+    },
+    {
+      "runs": 8192,
+      "mean_floor": 23.369,
+      "best_floor": 56,
+      "act2": 5155,
+      "act3": 480,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        168000024,
+        168003354,
+        168005261
+      ],
+      "first_boss": 54,
+      "second_boss": 13,
+      "scales": [
+        30,
+        30,
+        30,
+        0.3
+      ]
+    }
+  ],
+  "test": {
+    "169000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.605,
+        "best_floor": 56,
+        "act2": 21134,
+        "act3": 1851,
+        "act4": 5,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          169025144
+        ],
+        "first_boss": 239,
+        "second_boss": 59
+      },
+      "inventory": {
+        "runs": 32768,
+        "mean_floor": 23.551,
+        "best_floor": 56,
+        "act2": 20958,
+        "act3": 1898,
+        "act4": 4,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          169016266,
+          169027001
+        ],
+        "first_boss": 257,
+        "second_boss": 66
+      },
+      "add": {
+        "runs": 32768,
+        "mean_floor": 23.594,
+        "best_floor": 56,
+        "act2": 21139,
+        "act3": 1869,
+        "act4": 3,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          169027001
+        ],
+        "first_boss": 229,
+        "second_boss": 58
+      },
+      "edit": {
+        "runs": 32768,
+        "mean_floor": 23.556,
+        "best_floor": 56,
+        "act2": 20975,
+        "act3": 1882,
+        "act4": 6,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          169025144
+        ],
+        "first_boss": 253,
+        "second_boss": 62
+      },
+      "relic": {
+        "runs": 32768,
+        "mean_floor": 23.62,
+        "best_floor": 56,
+        "act2": 21135,
+        "act3": 1856,
+        "act4": 6,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          169016266,
+          169025144
+        ],
+        "first_boss": 267,
+        "second_boss": 71
+      }
+    },
+    "170000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.622,
+        "best_floor": 56,
+        "act2": 21172,
+        "act3": 1966,
+        "act4": 12,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          170008235,
+          170008683,
+          170012795,
+          170014714,
+          170016207,
+          170021717,
+          170023255,
+          170023974,
+          170030979
+        ],
+        "first_boss": 266,
+        "second_boss": 65
+      },
+      "inventory": {
+        "runs": 32768,
+        "mean_floor": 23.572,
+        "best_floor": 56,
+        "act2": 21014,
+        "act3": 1970,
+        "act4": 13,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          170005319,
+          170008235,
+          170011037,
+          170011438,
+          170021102,
+          170022075,
+          170023255,
+          170023974,
+          170025597,
+          170027429,
+          170028325,
+          170030979
+        ],
+        "first_boss": 289,
+        "second_boss": 67
+      }
+    },
+    "171000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.607,
+        "best_floor": 56,
+        "act2": 21061,
+        "act3": 1963,
+        "act4": 6,
+        "hearts": 1,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          171011511,
+          171031455
+        ],
+        "first_boss": 251,
+        "second_boss": 50
+      },
+      "inventory": {
+        "runs": 32768,
+        "mean_floor": 23.588,
+        "best_floor": 56,
+        "act2": 21013,
+        "act3": 1985,
+        "act4": 9,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          171019568,
+          171022248,
+          171023314,
+          171023661
+        ],
+        "first_boss": 257,
+        "second_boss": 68
+      }
+    }
+  },
+  "fit": [
+    {
+      "epoch": 1,
+      "mse": 0.05284382030367851,
+      "paired_mse": 0.01993260160088539,
+      "paired_correlation": 0.09051534153246399,
+      "zero_difference_mse": 0.020169757306575775
+    },
+    {
+      "epoch": 4,
+      "mse": 0.031414955854415894,
+      "paired_mse": 0.019649118185043335,
+      "paired_correlation": 0.14317028257598596,
+      "zero_difference_mse": 0.020169757306575775
+    },
+    {
+      "epoch": 12,
+      "mse": 0.02868914231657982,
+      "paired_mse": 0.01955476589500904,
+      "paired_correlation": 0.16250696985399563,
+      "zero_difference_mse": 0.020169757306575775
+    },
+    {
+      "epoch": 24,
+      "mse": 0.027930956333875656,
+      "paired_mse": 0.019558116793632507,
+      "paired_correlation": 0.16643672502425627,
+      "zero_difference_mse": 0.020169757306575775
+    },
+    {
+      "epoch": 48,
+      "mse": 0.02778051421046257,
+      "paired_mse": 0.019638344645500183,
+      "paired_correlation": 0.1640381686180409,
+      "zero_difference_mse": 0.020169757306575775
+    }
+  ],
+  "chosen_epoch": 24,
+  "scales": [
+    30,
+    30,
+    30,
+    0.3
+  ],
+  "replayed_example": {
+    "seed": 169016266,
+    "first_divergence": 2,
+    "parent": {
+      "decision": {
+        "act": 1,
+        "floor": 0,
+        "screen": "REWARDS",
+        "hp": 68,
+        "max_hp": 75,
+        "gold": 99,
+        "action": "Strawberry",
+        "keys": [
+          false,
+          false,
+          false
+        ],
+        "options": [
+          [
+            "Strawberry",
+            50.0
+          ],
+          [
+            "Molten Egg",
+            50.0
+          ],
+          [
+            "Captains Wheel",
+            50.0
+          ],
+          [
+            "Skip",
+            0.0
+          ]
+        ]
+      },
+      "terminal": {
+        "floor": 46,
+        "act": 3,
+        "room": "MONSTER",
+        "event": "",
+        "fought": true,
+        "encounter": "Transient",
+        "hp_before": 33,
+        "hp_after": 0,
+        "max_hp": 82,
+        "turns": 4
+      },
+      "actions": 517
+    },
+    "inventory": {
+      "decision": {
+        "act": 1,
+        "floor": 0,
+        "screen": "REWARDS",
+        "hp": 68,
+        "max_hp": 75,
+        "gold": 99,
+        "action": "Captains Wheel",
+        "keys": [
+          false,
+          false,
+          false
+        ],
+        "options": [
+          [
+            "Captains Wheel",
+            50.94
+          ],
+          [
+            "Strawberry",
+            50.08
+          ],
+          [
+            "Molten Egg",
+            49.9
+          ],
+          [
+            "Skip",
+            0.0
+          ]
+        ]
+      },
+      "terminal": {
+        "floor": 56,
+        "act": 4,
+        "room": "BOSS",
+        "event": "",
+        "fought": true,
+        "encounter": "The Heart",
+        "hp_before": 62,
+        "hp_after": 0,
+        "max_hp": 82,
+        "turns": 5
+      },
+      "actions": 751
+    }
+  },
+  "paired_encounters": {
+    "inventory_only": 14,
+    "parent_only": 8,
+    "both": 4,
+    "exact_two_sided_p": 0.28627872467041016
+  }
+}

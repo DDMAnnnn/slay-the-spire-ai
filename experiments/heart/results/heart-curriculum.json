@@ -1,0 +1,53 @@
+{
+  "training_start": 78000000,
+  "training_starts": 65536,
+  "training_bank_sizes": [
+    512,
+    298
+  ],
+  "validation_start": 79000000,
+  "validation_starts": 32768,
+  "validation_bank_sizes": [
+    512,
+    132
+  ],
+  "generations": 12,
+  "test_start": 80000000,
+  "test": {
+    "reference": {
+      "runs": 32768,
+      "mean_floor": 22.324,
+      "best_floor": 56,
+      "act2": 19426,
+      "act3": 945,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        80017435
+      ]
+    },
+    "staged": {
+      "runs": 32768,
+      "mean_floor": 22.676,
+      "best_floor": 55,
+      "act2": 19521,
+      "act3": 1294,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": []
+    },
+    "curriculum": {
+      "runs": 32768,
+      "mean_floor": 22.671,
+      "best_floor": 55,
+      "act2": 19521,
+      "act3": 1294,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": []
+    }
+  }
+}

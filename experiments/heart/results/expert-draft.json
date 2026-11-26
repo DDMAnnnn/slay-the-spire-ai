@@ -1,0 +1,574 @@
+{
+  "source_commit": "097aaf3564c2247835162d267cbc7c55d2c9039e",
+  "games": [
+    {
+      "200-rotating-sample": 46,
+      "chegs": 39,
+      "panacea-ironclad-sample": 43
+    },
+    {
+      "200-rotating-sample": 4,
+      "chegs": 7,
+      "panacea-ironclad-sample": 8
+    }
+  ],
+  "omitted": {
+    "incomplete opening": 4,
+    "card:Singing Bowl": 96
+  },
+  "fit": {
+    "card": {
+      "train": 2968,
+      "valid": 421,
+      "agreement": 0.6437054872512817,
+      "random_agreement": 0.23883609473705292,
+      "logloss": 0.8216241002082825,
+      "l2": 1
+    },
+    "relic": {
+      "train": 205,
+      "valid": 32,
+      "agreement": 0.6875,
+      "random_agreement": 0.25,
+      "logloss": 0.962920069694519,
+      "l2": 1
+    },
+    "neow": {
+      "train": 124,
+      "valid": 19,
+      "agreement": 0.5789473652839661,
+      "random_agreement": 0.25,
+      "logloss": 0.7853430509567261,
+      "l2": 1
+    }
+  },
+  "validation": [
+    {
+      "runs": 3072,
+      "mean_floor": 21.911,
+      "best_floor": 55,
+      "act2": 1655,
+      "act3": 106,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 10,
+      "second_boss": 3,
+      "scales": [
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 21.275,
+      "best_floor": 51,
+      "act2": 1546,
+      "act3": 89,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 5,
+      "second_boss": 3,
+      "scales": [
+        8,
+        8,
+        3
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 20.55,
+      "best_floor": 51,
+      "act2": 1446,
+      "act3": 81,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 5,
+      "second_boss": 3,
+      "scales": [
+        20,
+        15,
+        3
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 19.945,
+      "best_floor": 50,
+      "act2": 1356,
+      "act3": 60,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 5,
+      "second_boss": 0,
+      "scales": [
+        50,
+        30,
+        6
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 19.439,
+      "best_floor": 50,
+      "act2": 1293,
+      "act3": 47,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 2,
+      "second_boss": 0,
+      "scales": [
+        100,
+        60,
+        6
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 20.447,
+      "best_floor": 51,
+      "act2": 1402,
+      "act3": 73,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 7,
+      "second_boss": 2,
+      "scales": [
+        30,
+        6,
+        1
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 20.774,
+      "best_floor": 51,
+      "act2": 1502,
+      "act3": 84,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 6,
+      "second_boss": 3,
+      "scales": [
+        12,
+        25,
+        1
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 19.558,
+      "best_floor": 51,
+      "act2": 1295,
+      "act3": 51,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 3,
+      "second_boss": 1,
+      "scales": [
+        100,
+        20,
+        1
+      ]
+    }
+  ],
+  "selection": [
+    {
+      "runs": 8192,
+      "mean_floor": 22.262,
+      "best_floor": 56,
+      "act2": 4486,
+      "act3": 304,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        150006331
+      ],
+      "first_boss": 43,
+      "second_boss": 6,
+      "scales": [
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "runs": 8192,
+      "mean_floor": 20.873,
+      "best_floor": 55,
+      "act2": 4007,
+      "act3": 182,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 17,
+      "second_boss": 6,
+      "scales": [
+        12,
+        25,
+        1
+      ]
+    },
+    {
+      "runs": 8192,
+      "mean_floor": 21.42,
+      "best_floor": 55,
+      "act2": 4170,
+      "act3": 213,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 27,
+      "second_boss": 8,
+      "scales": [
+        8,
+        8,
+        3
+      ]
+    }
+  ],
+  "selected": [
+    3,
+    3,
+    1
+  ],
+  "test": {
+    "151000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.69,
+        "best_floor": 56,
+        "act2": 21224,
+        "act3": 1936,
+        "act4": 9,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          151003746,
+          151005136,
+          151026835,
+          151028321
+        ],
+        "first_boss": 250,
+        "second_boss": 70
+      },
+      "expert": {
+        "runs": 32768,
+        "mean_floor": 22.247,
+        "best_floor": 56,
+        "act2": 17970,
+        "act3": 1149,
+        "act4": 8,
+        "hearts": 1,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          151002716,
+          151007641,
+          151026835
+        ],
+        "first_boss": 144,
+        "second_boss": 46
+      }
+    },
+    "152000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.614,
+        "best_floor": 56,
+        "act2": 21202,
+        "act3": 1887,
+        "act4": 11,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          152005781,
+          152006516,
+          152006539,
+          152010712,
+          152020564,
+          152025476,
+          152027984
+        ],
+        "first_boss": 248,
+        "second_boss": 61
+      },
+      "expert": {
+        "runs": 32768,
+        "mean_floor": 22.185,
+        "best_floor": 56,
+        "act2": 17884,
+        "act3": 1153,
+        "act4": 4,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          152009481,
+          152018882
+        ],
+        "first_boss": 141,
+        "second_boss": 37
+      }
+    }
+  },
+  "components": {
+    "cards": {
+      "runs": 32768,
+      "mean_floor": 23.215,
+      "best_floor": 56,
+      "act2": 20628,
+      "act3": 1625,
+      "act4": 8,
+      "hearts": 1,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        151009848,
+        151016387,
+        151024253,
+        151028321
+      ],
+      "first_boss": 195,
+      "second_boss": 55
+    },
+    "boss_relics": {
+      "runs": 32768,
+      "mean_floor": 23.667,
+      "best_floor": 56,
+      "act2": 21224,
+      "act3": 1904,
+      "act4": 11,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        151005136,
+        151006571,
+        151010797,
+        151016412,
+        151020852,
+        151026835,
+        151031573
+      ],
+      "first_boss": 238,
+      "second_boss": 67
+    },
+    "opening": {
+      "runs": 32768,
+      "mean_floor": 22.698,
+      "best_floor": 56,
+      "act2": 18725,
+      "act3": 1472,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        151003628,
+        151005136,
+        151011862,
+        151022604
+      ],
+      "first_boss": 197,
+      "second_boss": 55
+    }
+  },
+  "verified_win": {
+    "seed": 151007641,
+    "actions": 1045,
+    "hp": 2,
+    "max_hp": 89
+  },
+  "checkpoint_sha256": "882908e3b8e0381cfc4cb05145931f12d8bb24af83be845288eaeba7c469a1c7",
+  "source_url": "https://github.com/MaT1g3R/Slay-the-Spire-data/tree/097aaf3564c2247835162d267cbc7c55d2c9039e",
+  "confirmation": {
+    "153000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.604,
+        "best_floor": 56,
+        "act2": 21129,
+        "act3": 1916,
+        "act4": 14,
+        "hearts": 1,
+        "truncated": 2,
+        "heart_encounter_seeds": [
+          153005923,
+          153006503,
+          153015317,
+          153016949,
+          153023662,
+          153024220,
+          153025902,
+          153028688,
+          153028990,
+          153032592
+        ],
+        "first_boss": 242,
+        "second_boss": 68
+      },
+      "boss_relics": {
+        "runs": 32768,
+        "mean_floor": 23.595,
+        "best_floor": 56,
+        "act2": 21129,
+        "act3": 1898,
+        "act4": 15,
+        "hearts": 1,
+        "truncated": 2,
+        "heart_encounter_seeds": [
+          153006503,
+          153012305,
+          153015317,
+          153016949,
+          153024220,
+          153025902,
+          153028688,
+          153028938,
+          153028990
+        ],
+        "first_boss": 231,
+        "second_boss": 62
+      },
+      "combined": {
+        "runs": 32768,
+        "mean_floor": 23.763,
+        "best_floor": 56,
+        "act2": 21609,
+        "act3": 1984,
+        "act4": 9,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          153014742,
+          153024477,
+          153028698,
+          153032201
+        ],
+        "first_boss": 274,
+        "second_boss": 67
+      },
+      "boss_draft": {
+        "runs": 32768,
+        "mean_floor": 23.77,
+        "best_floor": 56,
+        "act2": 21609,
+        "act3": 2020,
+        "act4": 11,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          153014220,
+          153024477,
+          153032201,
+          153032592
+        ],
+        "first_boss": 249,
+        "second_boss": 68
+      }
+    },
+    "154000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.626,
+        "best_floor": 56,
+        "act2": 21130,
+        "act3": 1906,
+        "act4": 9,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          154015411,
+          154016970,
+          154022091,
+          154023356,
+          154023539,
+          154024082,
+          154028099
+        ],
+        "first_boss": 239,
+        "second_boss": 68
+      },
+      "boss_relics": {
+        "runs": 32768,
+        "mean_floor": 23.602,
+        "best_floor": 56,
+        "act2": 21130,
+        "act3": 1884,
+        "act4": 12,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          154015411,
+          154016970,
+          154022091,
+          154023144,
+          154023356,
+          154023539,
+          154024082,
+          154025112,
+          154028099
+        ],
+        "first_boss": 240,
+        "second_boss": 71
+      },
+      "combined": {
+        "runs": 32768,
+        "mean_floor": 23.749,
+        "best_floor": 56,
+        "act2": 21594,
+        "act3": 1969,
+        "act4": 10,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          154016175,
+          154023144,
+          154023356,
+          154023539,
+          154024082,
+          154025112,
+          154027756
+        ],
+        "first_boss": 252,
+        "second_boss": 57
+      },
+      "boss_draft": {
+        "runs": 32768,
+        "mean_floor": 23.774,
+        "best_floor": 56,
+        "act2": 21594,
+        "act3": 1996,
+        "act4": 10,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          154016175,
+          154023356,
+          154023539,
+          154024082,
+          154026486,
+          154027756,
+          154029796
+        ],
+        "first_boss": 262,
+        "second_boss": 61
+      }
+    }
+  }
+}

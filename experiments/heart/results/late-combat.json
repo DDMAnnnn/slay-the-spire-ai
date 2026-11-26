@@ -1,0 +1,107 @@
+{
+  "training_rows": 234193,
+  "training_positions": 44292,
+  "training_by_act": {
+    "2": 37447,
+    "3": 6675,
+    "4": 0
+  },
+  "paired_validation": {
+    "1": {
+      "positions": 2416,
+      "changed": 31,
+      "mean_gain": -0.004850991535931826,
+      "better": 6,
+      "worse": 10
+    },
+    "5": {
+      "positions": 2416,
+      "changed": 133,
+      "mean_gain": 0.0383443720638752,
+      "better": 22,
+      "worse": 30
+    },
+    "15": {
+      "positions": 2416,
+      "changed": 282,
+      "mean_gain": -0.003038081107661128,
+      "better": 48,
+      "worse": 52
+    }
+  },
+  "validation_start": 75000000,
+  "test_start": 76000000,
+  "validation": {
+    "1": {
+      "runs": 8192,
+      "mean_floor": 22.185,
+      "best_floor": 51,
+      "act2": 4799,
+      "act3": 219,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "5": {
+      "runs": 8192,
+      "mean_floor": 22.236,
+      "best_floor": 51,
+      "act2": 4799,
+      "act3": 234,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "15": {
+      "runs": 8192,
+      "mean_floor": 22.294,
+      "best_floor": 51,
+      "act2": 4799,
+      "act3": 253,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    }
+  },
+  "selected_scale": 15,
+  "test": {
+    "previous": {
+      "runs": 65536,
+      "mean_floor": 22.288,
+      "best_floor": 56,
+      "act2": 38671,
+      "act3": 1880,
+      "act4": 8,
+      "hearts": 0,
+      "truncated": 0,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0,
+      "heart_encounter_seeds": [
+        76001884,
+        76017763,
+        76025713,
+        76058358,
+        76065135
+      ]
+    },
+    "specialist": {
+      "runs": 65536,
+      "mean_floor": 22.47,
+      "best_floor": 56,
+      "act2": 38671,
+      "act3": 2115,
+      "act4": 7,
+      "hearts": 0,
+      "truncated": 0,
+      "gained_act3": 736,
+      "lost_act3": 501,
+      "changed_act2": 0,
+      "heart_encounter_seeds": [
+        76001884,
+        76008810,
+        76025713
+      ]
+    }
+  }
+}

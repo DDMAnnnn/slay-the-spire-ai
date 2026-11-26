@@ -1,0 +1,152 @@
+{
+  "training_start": 108000000,
+  "validation_position_start": 109000000,
+  "validation_game_start": 110000000,
+  "test_start": 111000000,
+  "training_boss_rooms": 3072,
+  "training_positions": 11461,
+  "card_trials": 73728,
+  "validation_rooms": 768,
+  "validation_positions": 2798,
+  "epoch_validation": {
+    "1": {
+      "runs": 4096,
+      "mean_floor": 22.512,
+      "best_floor": 56,
+      "act2": 2490,
+      "act3": 142,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        110004094
+      ],
+      "matched_tactical_gain": -0.012688843533396721
+    },
+    "4": {
+      "runs": 4096,
+      "mean_floor": 22.524,
+      "best_floor": 56,
+      "act2": 2490,
+      "act3": 148,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        110003064,
+        110004094
+      ],
+      "matched_tactical_gain": -0.007332457695156336
+    },
+    "16": {
+      "runs": 4096,
+      "mean_floor": 22.537,
+      "best_floor": 56,
+      "act2": 2490,
+      "act3": 158,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        110004094
+      ],
+      "matched_tactical_gain": 0.0005283355712890625
+    },
+    "64": {
+      "runs": 4096,
+      "mean_floor": 22.535,
+      "best_floor": 56,
+      "act2": 2490,
+      "act3": 148,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        110004094
+      ],
+      "matched_tactical_gain": 0.001959181157872081
+    },
+    "128": {
+      "runs": 4096,
+      "mean_floor": 22.529,
+      "best_floor": 56,
+      "act2": 2490,
+      "act3": 151,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        110003064,
+        110004094
+      ],
+      "matched_tactical_gain": -0.002478410489857197
+    }
+  },
+  "selected_epoch": 128,
+  "test": {
+    "previous_specialist": {
+      "runs": 32768,
+      "mean_floor": 22.594,
+      "best_floor": 56,
+      "act2": 19780,
+      "act3": 1076,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        111007436,
+        111011500,
+        111014913,
+        111021389
+      ]
+    },
+    "combined": {
+      "runs": 32768,
+      "mean_floor": 22.633,
+      "best_floor": 56,
+      "act2": 19960,
+      "act3": 1250,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": [
+        111011500,
+        111015967
+      ]
+    }
+  },
+  "gained_act3": 617,
+  "lost_act3": 443,
+  "exploratory_components": {
+    "combat_only": {
+      "runs": 32768,
+      "mean_floor": 22.577,
+      "best_floor": 56,
+      "act2": 19780,
+      "act3": 1011,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        111011500,
+        111021389
+      ]
+    },
+    "draft_only": {
+      "runs": 32768,
+      "mean_floor": 22.652,
+      "best_floor": 56,
+      "act2": 19960,
+      "act3": 1318,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": [
+        111007436,
+        111011500,
+        111015967,
+        111030167
+      ]
+    }
+  }
+}

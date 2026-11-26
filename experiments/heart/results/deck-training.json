@@ -1,0 +1,265 @@
+{
+  "train_start": 113000000,
+  "training": {
+    "15": {
+      "entries": 1600,
+      "paired_edits": 90043
+    },
+    "32": {
+      "entries": 1800,
+      "paired_edits": 119057
+    },
+    "49": {
+      "entries": 158,
+      "paired_edits": 16125
+    }
+  },
+  "training_funnel": {
+    "act3": 1292,
+    "first_boss": 158,
+    "second_boss": 36,
+    "act4": 6
+  },
+  "distribution": [
+    89184,
+    35890,
+    47528,
+    52623
+  ],
+  "search_size": 24,
+  "late_validation_start": 114000000,
+  "late_validation_size": 500,
+  "selection_start": 116000000,
+  "selection_runs": 8192,
+  "test_start": 117000000,
+  "validation": [
+    {
+      "summary": {
+        "runs": 8192,
+        "mean_floor": 22.889,
+        "best_floor": 56,
+        "act2": 4905,
+        "act3": 413,
+        "act4": 2,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          116006590
+        ]
+      },
+      "multipliers": [
+        35.180043896430085,
+        62.7073727033023,
+        74.70160359330536,
+        28.27380270040728
+      ],
+      "transfer": 0.36792214120320343
+    },
+    {
+      "summary": {
+        "runs": 8192,
+        "mean_floor": 22.722,
+        "best_floor": 51,
+        "act2": 4972,
+        "act3": 356,
+        "act4": 0,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": []
+      },
+      "multipliers": [
+        172.77624822226906,
+        24.847640330479813,
+        84.4624278368285,
+        15.592378770820037
+      ],
+      "transfer": 0.6473380784892364
+    },
+    {
+      "summary": {
+        "runs": 8192,
+        "mean_floor": 22.931,
+        "best_floor": 56,
+        "act2": 4943,
+        "act3": 407,
+        "act4": 3,
+        "hearts": 1,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          116006892
+        ]
+      },
+      "multipliers": [
+        28.622785133917564,
+        44.39155240184635,
+        42.49066498685622,
+        16.40535441557144
+      ],
+      "transfer": 0.25483317633214686
+    }
+  ],
+  "selected": {
+    "multipliers": [
+      28.622785133917564,
+      44.39155240184635,
+      42.49066498685622,
+      16.40535441557144
+    ],
+    "transfer": 0.25483317633214686
+  },
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 22.714,
+      "best_floor": 56,
+      "act2": 20047,
+      "act3": 1323,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117006747
+      ],
+      "first_boss": 141,
+      "second_boss": 30
+    },
+    "edits": {
+      "runs": 32768,
+      "mean_floor": 22.92,
+      "best_floor": 56,
+      "act2": 19786,
+      "act3": 1644,
+      "act4": 8,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117000290,
+        117012597,
+        117019138,
+        117019559,
+        117028754,
+        117031632
+      ],
+      "first_boss": 213,
+      "second_boss": 43
+    }
+  },
+  "confirmation": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 22.701,
+      "best_floor": 56,
+      "act2": 20013,
+      "act3": 1341,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": [
+        118002805,
+        118012525
+      ],
+      "first_boss": 158,
+      "second_boss": 29
+    },
+    "edits": {
+      "runs": 32768,
+      "mean_floor": 22.837,
+      "best_floor": 56,
+      "act2": 19764,
+      "act3": 1641,
+      "act4": 8,
+      "hearts": 0,
+      "truncated": 2,
+      "heart_encounter_seeds": [
+        118000546,
+        118009268,
+        118014449,
+        118015542,
+        118019458,
+        118026802
+      ],
+      "first_boss": 230,
+      "second_boss": 62
+    }
+  },
+  "components": {
+    "add": {
+      "runs": 32768,
+      "mean_floor": 22.757,
+      "best_floor": 56,
+      "act2": 20057,
+      "act3": 1397,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117014132,
+        117032510
+      ],
+      "first_boss": 159,
+      "second_boss": 36
+    },
+    "upgrade": {
+      "runs": 32768,
+      "mean_floor": 22.635,
+      "best_floor": 56,
+      "act2": 19361,
+      "act3": 1459,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117000290,
+        117006747,
+        117013409,
+        117018829,
+        117028754
+      ],
+      "first_boss": 171,
+      "second_boss": 34
+    },
+    "remove": {
+      "runs": 32768,
+      "mean_floor": 22.848,
+      "best_floor": 56,
+      "act2": 20167,
+      "act3": 1420,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117030504
+      ],
+      "first_boss": 170,
+      "second_boss": 43
+    },
+    "potion": {
+      "runs": 32768,
+      "mean_floor": 22.844,
+      "best_floor": 56,
+      "act2": 20356,
+      "act3": 1349,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        117006747
+      ],
+      "first_boss": 151,
+      "second_boss": 28
+    }
+  },
+  "training_fight_logs": {
+    "start": 113000000,
+    "starts": 32768,
+    "replayed": 158,
+    "endings": {
+      "Awakened One": 63,
+      "Time Eater": 48,
+      "Shield And Spear": 4,
+      "Donu And Deca": 41,
+      "The Heart": 2
+    },
+    "act3_clear_without_act4": 0
+  }
+}

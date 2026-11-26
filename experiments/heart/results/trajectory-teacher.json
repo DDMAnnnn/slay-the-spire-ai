@@ -1,0 +1,363 @@
+{
+  "paths": 24,
+  "data": {
+    "train": {
+      "start": 138000000,
+      "runs": 2048,
+      "fights": 8622,
+      "parent_clears": 7142,
+      "teacher_clears": 7784,
+      "improved_fights": 5433,
+      "decisions": 53429
+    },
+    "valid": {
+      "start": 139000000,
+      "runs": 256,
+      "fights": 1077,
+      "parent_clears": 879,
+      "teacher_clears": 952,
+      "improved_fights": 664,
+      "decisions": 6717
+    }
+  },
+  "validation": [
+    {
+      "epoch": 2,
+      "teacher_agreement": 0.5198749303817749,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1325,
+      "lost": 414,
+      "scale": 4,
+      "runs": 2048,
+      "mean_floor": 23.803,
+      "best_floor": 56,
+      "act2": 1352,
+      "act3": 131,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        140002042
+      ],
+      "first_boss": 11,
+      "second_boss": 3
+    },
+    {
+      "epoch": 2,
+      "teacher_agreement": 0.5198749303817749,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1325,
+      "lost": 414,
+      "scale": 12,
+      "runs": 2048,
+      "mean_floor": 20.586,
+      "best_floor": 51,
+      "act2": 947,
+      "act3": 87,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 7,
+      "second_boss": 2
+    },
+    {
+      "epoch": 2,
+      "teacher_agreement": 0.5198749303817749,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1325,
+      "lost": 414,
+      "scale": 24,
+      "runs": 2048,
+      "mean_floor": 13.084,
+      "best_floor": 48,
+      "act2": 251,
+      "act3": 16,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 12,
+      "heart_encounter_seeds": [],
+      "first_boss": 0,
+      "second_boss": 0
+    },
+    {
+      "epoch": 6,
+      "teacher_agreement": 0.530296266078949,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1470,
+      "lost": 489,
+      "scale": 4,
+      "runs": 2048,
+      "mean_floor": 23.695,
+      "best_floor": 56,
+      "act2": 1325,
+      "act3": 117,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        140002042
+      ],
+      "first_boss": 5,
+      "second_boss": 4
+    },
+    {
+      "epoch": 6,
+      "teacher_agreement": 0.530296266078949,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1470,
+      "lost": 489,
+      "scale": 12,
+      "runs": 2048,
+      "mean_floor": 22.197,
+      "best_floor": 51,
+      "act2": 1127,
+      "act3": 125,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 8,
+      "second_boss": 3
+    },
+    {
+      "epoch": 6,
+      "teacher_agreement": 0.530296266078949,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1470,
+      "lost": 489,
+      "scale": 24,
+      "runs": 2048,
+      "mean_floor": 13.605,
+      "best_floor": 51,
+      "act2": 422,
+      "act3": 31,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 17,
+      "heart_encounter_seeds": [],
+      "first_boss": 5,
+      "second_boss": 2
+    },
+    {
+      "epoch": 12,
+      "teacher_agreement": 0.5352091789245605,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1584,
+      "lost": 570,
+      "scale": 4,
+      "runs": 2048,
+      "mean_floor": 23.397,
+      "best_floor": 56,
+      "act2": 1297,
+      "act3": 131,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        140002042
+      ],
+      "first_boss": 10,
+      "second_boss": 6
+    },
+    {
+      "epoch": 12,
+      "teacher_agreement": 0.5352091789245605,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1584,
+      "lost": 570,
+      "scale": 12,
+      "runs": 2048,
+      "mean_floor": 21.1,
+      "best_floor": 56,
+      "act2": 1045,
+      "act3": 92,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [
+        140002042
+      ],
+      "first_boss": 9,
+      "second_boss": 5
+    },
+    {
+      "epoch": 12,
+      "teacher_agreement": 0.5352091789245605,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1584,
+      "lost": 570,
+      "scale": 24,
+      "runs": 2048,
+      "mean_floor": 11.896,
+      "best_floor": 56,
+      "act2": 336,
+      "act3": 20,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 12,
+      "heart_encounter_seeds": [
+        140002042
+      ],
+      "first_boss": 2,
+      "second_boss": 2
+    },
+    {
+      "epoch": 24,
+      "teacher_agreement": 0.5365490317344666,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1612,
+      "lost": 589,
+      "scale": 4,
+      "runs": 2048,
+      "mean_floor": 23.16,
+      "best_floor": 51,
+      "act2": 1268,
+      "act3": 117,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 10,
+      "second_boss": 3
+    },
+    {
+      "epoch": 24,
+      "teacher_agreement": 0.5365490317344666,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1612,
+      "lost": 589,
+      "scale": 12,
+      "runs": 2048,
+      "mean_floor": 21.258,
+      "best_floor": 55,
+      "act2": 1079,
+      "act3": 80,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 1,
+      "heart_encounter_seeds": [],
+      "first_boss": 6,
+      "second_boss": 4
+    },
+    {
+      "epoch": 24,
+      "teacher_agreement": 0.5365490317344666,
+      "parent_agreement": 0.38424891233444214,
+      "corrected": 1612,
+      "lost": 589,
+      "scale": 24,
+      "runs": 2048,
+      "mean_floor": 13.129,
+      "best_floor": 51,
+      "act2": 375,
+      "act3": 18,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 21,
+      "heart_encounter_seeds": [],
+      "first_boss": 2,
+      "second_boss": 1
+    }
+  ],
+  "test": {
+    "141000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.5,
+        "best_floor": 56,
+        "act2": 20854,
+        "act3": 1829,
+        "act4": 4,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          141000085,
+          141006483,
+          141007678
+        ],
+        "first_boss": 256,
+        "second_boss": 60
+      },
+      "student": {
+        "runs": 32768,
+        "mean_floor": 23.632,
+        "best_floor": 56,
+        "act2": 21228,
+        "act3": 1946,
+        "act4": 6,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          141006483,
+          141007678,
+          141010654
+        ],
+        "first_boss": 251,
+        "second_boss": 66
+      }
+    },
+    "142000000": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.49,
+        "best_floor": 56,
+        "act2": 20815,
+        "act3": 1709,
+        "act4": 8,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          142024291,
+          142030593
+        ],
+        "first_boss": 218,
+        "second_boss": 55
+      },
+      "student": {
+        "runs": 32768,
+        "mean_floor": 23.589,
+        "best_floor": 56,
+        "act2": 21244,
+        "act3": 1780,
+        "act4": 9,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          142017319,
+          142030593
+        ],
+        "first_boss": 215,
+        "second_boss": 51
+      }
+    }
+  },
+  "selected": {
+    "epoch": 2,
+    "teacher_agreement": 0.5198749303817749,
+    "parent_agreement": 0.38424891233444214,
+    "corrected": 1325,
+    "lost": 414,
+    "scale": 4,
+    "runs": 2048,
+    "mean_floor": 23.803,
+    "best_floor": 56,
+    "act2": 1352,
+    "act3": 131,
+    "act4": 1,
+    "hearts": 0,
+    "truncated": 1,
+    "heart_encounter_seeds": [
+      140002042
+    ],
+    "first_boss": 11,
+    "second_boss": 3
+  },
+  "checkpoint_sha256": "aa6582b71e69f8e45a7392a498921050971f7130c76ac3e6b91b8ac67252f26a",
+  "verified_trace": {
+    "seed": 141010654,
+    "steps": 638,
+    "encounter": true,
+    "won": false
+  }
+}

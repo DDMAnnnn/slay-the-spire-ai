@@ -1,0 +1,86 @@
+{
+  "start": 112000000,
+  "full_validation_runs": 4096,
+  "training_rows": 268473,
+  "epochs": {
+    "1": {
+      "runs": 4096,
+      "mean_floor": 20.087,
+      "best_floor": 51,
+      "act2": 1939,
+      "act3": 52,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7223024368286133,
+      "single_move_gain": 0.18540127575397491
+    },
+    "4": {
+      "runs": 4096,
+      "mean_floor": 20.875,
+      "best_floor": 55,
+      "act2": 2089,
+      "act3": 83,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7175572514533997,
+      "single_move_gain": 0.3075675368309021
+    },
+    "8": {
+      "runs": 4096,
+      "mean_floor": 20.871,
+      "best_floor": 51,
+      "act2": 2087,
+      "act3": 91,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7367444038391113,
+      "single_move_gain": 0.3040231168270111
+    },
+    "13": {
+      "runs": 4096,
+      "mean_floor": 20.929,
+      "best_floor": 51,
+      "act2": 2083,
+      "act3": 71,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7121931314468384,
+      "single_move_gain": 0.3674602806568146
+    },
+    "16": {
+      "runs": 4096,
+      "mean_floor": 21.047,
+      "best_floor": 51,
+      "act2": 2121,
+      "act3": 88,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7363317608833313,
+      "single_move_gain": 0.3134351074695587
+    },
+    "32": {
+      "runs": 4096,
+      "mean_floor": 21.194,
+      "best_floor": 55,
+      "act2": 2182,
+      "act3": 85,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "agreement": 0.7262223958969116,
+      "single_move_gain": 0.3133443295955658
+    }
+  },
+  "epoch13_max_weight_difference_from_archived": 0.0
+}

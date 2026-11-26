@@ -1,0 +1,219 @@
+{
+  "train_start": 94000000,
+  "training_runs": 12288,
+  "training_positions": 7232,
+  "validation_start": 95000000,
+  "validation_runs": 4096,
+  "validation_positions": 2450,
+  "policies": [
+    "reference",
+    "staged",
+    "joint",
+    "deeper_search"
+  ],
+  "validation": [
+    {
+      "mean_utility": 1.8224744897959184,
+      "choices": [
+        386,
+        1266,
+        108,
+        690
+      ],
+      "runs": 2450,
+      "mean_floor": 27.991,
+      "best_floor": 51,
+      "act2": 2450,
+      "act3": 145,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    },
+    {
+      "mean_utility": 1.8236989795918368,
+      "choices": [
+        359,
+        1316,
+        95,
+        680
+      ],
+      "runs": 2450,
+      "mean_floor": 27.997,
+      "best_floor": 51,
+      "act2": 2450,
+      "act3": 147,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    },
+    {
+      "mean_utility": 1.8278061224489797,
+      "choices": [
+        281,
+        1459,
+        45,
+        665
+      ],
+      "runs": 2450,
+      "mean_floor": 28.082,
+      "best_floor": 51,
+      "act2": 2450,
+      "act3": 146,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    }
+  ],
+  "constant_validation": [
+    {
+      "mean_utility": 1.78375,
+      "choices": [
+        2450,
+        0,
+        0,
+        0
+      ],
+      "runs": 2450,
+      "mean_floor": 27.587,
+      "best_floor": 55,
+      "act2": 2450,
+      "act3": 118,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    },
+    {
+      "mean_utility": 1.8244897959183672,
+      "choices": [
+        0,
+        2450,
+        0,
+        0
+      ],
+      "runs": 2450,
+      "mean_floor": 28.075,
+      "best_floor": 50,
+      "act2": 2450,
+      "act3": 141,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    },
+    {
+      "mean_utility": 1.662372448979592,
+      "choices": [
+        0,
+        0,
+        2450,
+        0
+      ],
+      "runs": 2450,
+      "mean_floor": 25.795,
+      "best_floor": 51,
+      "act2": 2450,
+      "act3": 81,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    },
+    {
+      "mean_utility": 1.8113520408163266,
+      "choices": [
+        0,
+        0,
+        0,
+        2450
+      ],
+      "runs": 2450,
+      "mean_floor": 27.898,
+      "best_floor": 55,
+      "act2": 2450,
+      "act3": 133,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "encounters": 0
+    }
+  ],
+  "selected_penalty": 1500,
+  "selected_constant": "staged",
+  "test_start": 96000000,
+  "hashes": {
+    "reference": "8a927f2928d661288aabd1eb1c90782cd10644c8759ca7a09b52b99cbe0af23a",
+    "staged": "36bff9a6773260b68c3351385a7b4bda9f149fbdf8e199b581613832281cf441",
+    "joint": "c2c7ecf23547531691569aa7c92d419f8c67d9a886a4ee45d0d48441a7d0db8c",
+    "deeper_search": "a97792d24601095e1e485e805fd57537f6e8231416102facf53b4555dba52724"
+  },
+  "selector": {
+    "runs": 32768,
+    "mean_floor": 22.518,
+    "best_floor": 55,
+    "act2": 19397,
+    "act3": 1111,
+    "act4": 2,
+    "hearts": 0,
+    "truncated": 2,
+    "encounters": 0
+  },
+  "choices": [
+    2012,
+    11290,
+    362,
+    5733
+  ],
+  "encounter_seeds": [],
+  "fixed_suffix": {
+    "reference": {
+      "runs": 32768,
+      "mean_floor": 22.326,
+      "best_floor": 56,
+      "act2": 19397,
+      "act3": 967,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 3,
+      "encounters": 2
+    },
+    "staged": {
+      "runs": 32768,
+      "mean_floor": 22.552,
+      "best_floor": 55,
+      "act2": 19397,
+      "act3": 1066,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 2,
+      "encounters": 0
+    },
+    "joint": {
+      "runs": 32768,
+      "mean_floor": 21.323,
+      "best_floor": 56,
+      "act2": 19397,
+      "act3": 730,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 3,
+      "encounters": 1
+    },
+    "deeper_search": {
+      "runs": 32768,
+      "mean_floor": 22.486,
+      "best_floor": 56,
+      "act2": 19397,
+      "act3": 1058,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 3,
+      "encounters": 1
+    }
+  },
+  "any_suffix_encounter": 4,
+  "any_suffix_act3": 2072
+}

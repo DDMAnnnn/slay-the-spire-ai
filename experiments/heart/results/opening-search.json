@@ -1,0 +1,316 @@
+{
+  "validation_start": 133000000,
+  "selection_start": 134000000,
+  "audit_start": 135000000,
+  "audit_runs": 160,
+  "eligible_states": 353,
+  "matched_states": 309,
+  "accepted_draws": 614,
+  "changed_actions": 43,
+  "candidates": [
+    {
+      "runs": 1536,
+      "mean_floor": 24.003,
+      "best_floor": 51,
+      "act2": 1020,
+      "act3": 87,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 10,
+      "second_boss": 4,
+      "settings": [
+        2,
+        0,
+        2
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.031,
+      "best_floor": 51,
+      "act2": 1020,
+      "act3": 86,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 10,
+      "second_boss": 4,
+      "settings": [
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.043,
+      "best_floor": 51,
+      "act2": 1022,
+      "act3": 86,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 10,
+      "second_boss": 4,
+      "settings": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 23.95,
+      "best_floor": 51,
+      "act2": 1018,
+      "act3": 85,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 7,
+      "second_boss": 3,
+      "settings": [
+        4,
+        0,
+        6
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.148,
+      "best_floor": 51,
+      "act2": 1018,
+      "act3": 90,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 8,
+      "second_boss": 3,
+      "settings": [
+        4,
+        1,
+        6
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.174,
+      "best_floor": 51,
+      "act2": 1021,
+      "act3": 90,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 8,
+      "second_boss": 3,
+      "settings": [
+        4,
+        2,
+        6
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.384,
+      "best_floor": 55,
+      "act2": 1026,
+      "act3": 106,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 9,
+      "second_boss": 3,
+      "settings": [
+        6,
+        1,
+        15
+      ]
+    },
+    {
+      "runs": 1536,
+      "mean_floor": 24.382,
+      "best_floor": 55,
+      "act2": 1027,
+      "act3": 104,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 9,
+      "second_boss": 3,
+      "settings": [
+        6,
+        2,
+        15
+      ]
+    }
+  ],
+  "finalists": [
+    {
+      "runs": 3072,
+      "mean_floor": 23.995,
+      "best_floor": 51,
+      "act2": 1969,
+      "act3": 211,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 24,
+      "second_boss": 6,
+      "settings": [
+        6,
+        1,
+        15
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 24.025,
+      "best_floor": 51,
+      "act2": 1972,
+      "act3": 212,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "first_boss": 23,
+      "second_boss": 6,
+      "settings": [
+        6,
+        2,
+        15
+      ]
+    },
+    {
+      "runs": 3072,
+      "mean_floor": 23.632,
+      "best_floor": 56,
+      "act2": 1929,
+      "act3": 192,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        134001211
+      ],
+      "first_boss": 27,
+      "second_boss": 6,
+      "settings": [
+        2,
+        0,
+        2
+      ]
+    }
+  ],
+  "selected": [
+    2,
+    0,
+    2
+  ],
+  "test": {
+    "136000000": {
+      "route_parent": {
+        "runs": 32768,
+        "mean_floor": 23.542,
+        "best_floor": 56,
+        "act2": 20885,
+        "act3": 1748,
+        "act4": 7,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          136014762,
+          136021164,
+          136028806
+        ],
+        "first_boss": 229,
+        "second_boss": 53,
+        "seconds": 17.96
+      },
+      "opening_search": {
+        "runs": 32768,
+        "mean_floor": 23.662,
+        "best_floor": 56,
+        "act2": 21118,
+        "act3": 1783,
+        "act4": 7,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          136005151,
+          136017087,
+          136021164,
+          136028806
+        ],
+        "first_boss": 231,
+        "second_boss": 54,
+        "seconds": 45.5
+      }
+    },
+    "137000000": {
+      "route_parent": {
+        "runs": 32768,
+        "mean_floor": 23.513,
+        "best_floor": 56,
+        "act2": 20737,
+        "act3": 1849,
+        "act4": 10,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          137002100,
+          137011718,
+          137023684,
+          137024353,
+          137027379,
+          137031025,
+          137031236
+        ],
+        "first_boss": 246,
+        "second_boss": 66,
+        "seconds": 19.3
+      },
+      "opening_search": {
+        "runs": 32768,
+        "mean_floor": 23.621,
+        "best_floor": 56,
+        "act2": 20942,
+        "act3": 1871,
+        "act4": 10,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          137002100,
+          137011718,
+          137023684,
+          137024353,
+          137027379,
+          137031025
+        ],
+        "first_boss": 242,
+        "second_boss": 64,
+        "seconds": 45.27
+      }
+    }
+  },
+  "example": {
+    "seed": 135000000,
+    "decision": 125,
+    "floor": 12,
+    "hp": 57,
+    "prior": "Anger \u2192 SENTRY",
+    "searched": "Sword Boomerang",
+    "draw_pile_size": 14,
+    "max_abs_score_delta": 0.0
+  },
+  "checkpoint_sha256": "7331a5f047f1eeed7efd319067a7c79afb2033a124c9191e24de650f2914f6fb"
+}

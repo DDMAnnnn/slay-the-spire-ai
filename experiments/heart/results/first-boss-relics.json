@@ -1,0 +1,164 @@
+{
+  "train_start": 53000000,
+  "validation_start": 54000000,
+  "test_start": 55001000,
+  "train_runs": 12288,
+  "chests": 7275,
+  "offers": 21825,
+  "estimates": {
+    "Ectoplasm": {
+      "count": 938,
+      "advantage": 3.3068181818181817
+    },
+    "Philosophers Stone": {
+      "count": 1028,
+      "advantage": 1.72117202268431
+    },
+    "Runic Cube": {
+      "count": 1062,
+      "advantage": 1.2326007326007327
+    },
+    "Runic Dome": {
+      "count": 1019,
+      "advantage": 1.238322211630124
+    },
+    "Runic Pyramid": {
+      "count": 1038,
+      "advantage": 1.149812734082397
+    },
+    "Sacred Bark": {
+      "count": 1027,
+      "advantage": 0.718070009460738
+    },
+    "Snecko Eye": {
+      "count": 1001,
+      "advantage": 7.048496605237633
+    },
+    "Sozu": {
+      "count": 1032,
+      "advantage": 2.6779661016949152
+    },
+    "Velvet Choker": {
+      "count": 1034,
+      "advantage": 3.656015037593985
+    },
+    "Busted Crown": {
+      "count": 1036,
+      "advantage": 3.5403377110694185
+    },
+    "Coffee Dripper": {
+      "count": 1055,
+      "advantage": 1.896774193548387
+    },
+    "Cursed Key": {
+      "count": 1007,
+      "advantage": 3.6133076181292187
+    },
+    "Fusion Hammer": {
+      "count": 1026,
+      "advantage": 4.058712121212121
+    },
+    "Mark Of Pain": {
+      "count": 1003,
+      "advantage": 2.5227492739593416
+    },
+    "Slavers Collar": {
+      "count": 1047,
+      "advantage": 0.6471680594243269
+    },
+    "Astrolabe": {
+      "count": 1029,
+      "advantage": 1.6213408876298394
+    },
+    "Black Star": {
+      "count": 1062,
+      "advantage": 0.0347985347985348
+    },
+    "Calling Bell": {
+      "count": 1094,
+      "advantage": 2.0622775800711746
+    },
+    "Empty Cage": {
+      "count": 1087,
+      "advantage": 0.7699194270367055
+    },
+    "Pandoras Box": {
+      "count": 1080,
+      "advantage": 1.8567567567567567
+    },
+    "Tiny House": {
+      "count": 1120,
+      "advantage": 2.0521739130434784
+    }
+  },
+  "validation": {
+    "0": {
+      "runs": 4096,
+      "mean_floor": 21.906,
+      "best_floor": 56,
+      "act2": 2462,
+      "act3": 105,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "1": {
+      "runs": 4096,
+      "mean_floor": 22.255,
+      "best_floor": 56,
+      "act2": 2462,
+      "act3": 125,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "4": {
+      "runs": 4096,
+      "mean_floor": 22.386,
+      "best_floor": 56,
+      "act2": 2462,
+      "act3": 128,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "16": {
+      "runs": 4096,
+      "mean_floor": 22.511,
+      "best_floor": 56,
+      "act2": 2462,
+      "act3": 136,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0
+    }
+  },
+  "selected_scale": 16,
+  "test": {
+    "first": {
+      "runs": 32768,
+      "mean_floor": 21.739,
+      "best_floor": 56,
+      "act2": 19281,
+      "act3": 748,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 1
+    },
+    "challenger": {
+      "runs": 32768,
+      "mean_floor": 22.222,
+      "best_floor": 56,
+      "act2": 19281,
+      "act3": 911,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 1
+    },
+    "paired": {
+      "gained_act3": 276,
+      "lost_act3": 113,
+      "changed_act2": 0
+    }
+  }
+}

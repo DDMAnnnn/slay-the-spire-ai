@@ -13,15 +13,160 @@ REFERENCE = ROOT / "results"
 VARIANTS = {"first": (40150942, False), "synergies": (41105607, True)}
 
 
-def load_model(variant):
-    with gzip.open(REFERENCE/"checkpoint.json.gz","rt",encoding="utf8") as f:
+def set_combat_preferences(preferences):
+    engine.set_play_base(preferences.get("play_base", engine.initial_play_base()))
+    if "drink_table" in preferences:
+        engine.set_drinks(preferences["drink_table"], preferences["margin"])
+    else:
+        engine.reset_drinks()
+
+
+def set_actor(params):
+    if params is None:
+        engine.reset_actor()
+    else:
+        engine.set_actor(*params)
+
+
+def set_inventory_value(config):
+    if config:
+        engine.set_inventory_value(*config)
+    else:
+        engine.reset_inventory_value()
+
+
+def set_curriculum(config):
+    if config:
+        engine.set_curriculum(*config[:6])
+        engine.set_curriculum_scope(config[6] if len(config)>6 else 0)
+    else:
+        engine.reset_curriculum()
+
+
+def set_expert(config):
+    if config:
+        engine.set_expert(*config)
+    else:
+        engine.reset_expert()
+
+
+def set_teacher(config):
+    engine.set_teacher_scale(config[1] if config else 0.)
+    if config:
+        set_actor(config[0])
+
+
+def set_late_combat(head):
+    if head is None:
+        engine.reset_late_combat()
+    else:
+        engine.set_late_combat(*head)
+
+
+def set_final_weights(weights):
+    if weights is None:
+        engine.reset_final_weights()
+    else:
+        engine.set_final_weights(weights)
+
+
+def set_opening(table):
+    if table is None:
+        engine.reset_neow()
+    else:
+        engine.set_neow(table)
+
+
+def set_draft(table):
+    if table is None:
+        engine.reset_draft()
+    else:
+        engine.set_draft(table)
+
+
+def load_model(variant, checkpoint=REFERENCE/"checkpoint.json.gz"):
+    with gzip.open(checkpoint,"rt",encoding="utf8") as f:
         model=json.load(f)
+    return apply_model(variant, model)
+
+
+def set_forecast(params):
+    if params is None:
+        engine.reset_forecast()
+    else:
+        engine.set_forecast(params["intents"], params["settings"])
+
+
+def set_boss_tactics(params):
+    if params is None:
+        engine.reset_boss_tactics()
+    else:
+        engine.set_boss_tactics(params)
+
+
+def apply_model(variant, model):
+    set_opening_search(model.get("opening_search"))
+    set_route(model.get("route"))
+    set_edits(model.get("deck_edits"))
+    set_recovery(model.get("recovery"))
+    set_forecast(model.get("forecast"))
+    set_boss_tactics(model.get("boss_tactics"))
     engine.set_event_table(model["events"])
     engine.set_choice_table(model["choices"])
     engine.set_head(*model["combat"])
     engine.set_late(model["late"]["act"],model["late"]["weights"])
-    engine.set_synergies(VARIANTS[variant][1])
+    engine.set_synergies(model.get("policy_synergies", VARIANTS[variant][1]))
+    engine.set_first_boss_bonus(model.get("first_boss_relics", [0.] * engine.relic_count))
+    engine.set_turn_depth(model.get("turn_depth", 2))
+    set_combat_preferences(model.get("combat_preferences", {}))
+    set_opening(model.get("neow"))
+    set_draft(model.get("draft_context"))
+    set_late_combat(model.get("late_combat"))
+    engine.set_late_combat_last_act(model.get("late_combat_last_act",4))
+    set_final_weights(model.get("final_weights"))
+    set_actor(model.get("direct_actor"))
+    set_teacher(model.get("trajectory_teacher"))
+    set_expert(model.get("expert_prior"))
+    set_curriculum(model.get("curriculum_actor"))
+    set_inventory_value(model.get("inventory_value"))
+    engine.set_boss_draft(model.get("boss_draft",[]))
+    set_scenarios(model.get("scenarios"))
     return model["weights"]
+
+
+def set_scenarios(params):
+    if params is None:
+        engine.reset_scenarios()
+    else:
+        engine.set_scenarios(*params)
+
+
+def set_route(params):
+    if params is None:
+        engine.reset_route()
+    else:
+        engine.set_route(*params)
+
+
+def set_opening_search(params):
+    if params is None:
+        engine.reset_opening_search()
+    else:
+        engine.set_opening_search(*params)
+
+
+def set_recovery(params):
+    if params is None:
+        engine.reset_recovery()
+    else:
+        engine.set_recovery(*params)
+
+
+def set_edits(table):
+    if table is None:
+        engine.reset_edits()
+    else:
+        engine.set_edits(table)
 
 
 def rows(obs, key):
@@ -50,7 +195,7 @@ def label(obs,a):
     index=a-sts.ACT_CHOOSE
     c=rows(obs,"choices")[index]
     kind=sts.CHOICE_KINDS[int(c[0])]
-    if kind=="CARD": return card_name(c)
+    if kind=="CARD": return card_name(c[1:])
     if kind=="RELIC": return sts.RELIC_NAMES[int(c[1])-1]
     if kind=="POTION": return sts.POTION_NAMES[int(c[1])-1]
     if kind=="GOLD": return f"Take {int(c[1])} gold"
@@ -61,10 +206,30 @@ def label(obs,a):
     return kind.replace("_"," ").title()
 
 
-def replay(variant,seed):
-    w=load_model(variant)
+def heart_encounters(weights, start, panel):
+    """Count actual combat entries, including a subsequent loss or truncation."""
+    found = []
+    for index in np.flatnonzero(panel[:, 1] == 4):
+        seed = start + int(index)
+        env = sts.Env()
+        env.reset(seed, 20, final_act=True, character="ironclad")
+        for action in engine.trace(weights, seed):
+            obs = env.observe()
+            if obs[7] and obs[4] == 4 and any(
+                sts.MONSTER_NAMES[int(m[0])-1] == "CORRUPT_HEART"
+                for m in rows(obs, "monsters") if m[6]
+            ):
+                found.append(seed)
+                break
+            if not env.step(action):
+                raise RuntimeError("Heart encounter replay diverged")
+    return found
+
+
+def replay(variant,seed,checkpoint=None):
+    w=load_model(variant) if checkpoint is None else load_model(variant,checkpoint)
     expected=REFERENCE/f"{seed}.json"
-    reference=json.loads(expected.read_text()) if expected.exists() else None
+    reference=json.loads(expected.read_text()) if checkpoint is None and expected.exists() else None
     env=sts.Env()
     env.reset(seed,20,final_act=True,character="ironclad")
     frames=[]
@@ -107,10 +272,11 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--variant",choices=VARIANTS,default="first")
     parser.add_argument("--seed",type=int)
+    parser.add_argument("--checkpoint",type=Path)
     parser.add_argument("--out",type=Path,default=Path("build/heart-replay.html"))
     args=parser.parse_args()
     seed=VARIANTS[args.variant][0] if args.seed is None else args.seed
-    episode,frames,keys=replay(args.variant,seed)
+    episode,frames,keys=replay(args.variant,seed,args.checkpoint)
     template=(ROOT/"replay.html").read_text(encoding="utf8")
     info=dict(seed=seed,won=episode["won"] and episode["act"]==4,hp=episode["hp"],
               max_hp=episode["max_hp"],frames=frames)

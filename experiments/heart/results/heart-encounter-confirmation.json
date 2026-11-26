@@ -1,0 +1,28 @@
+{
+  "reference": {
+    "start": 71000000,
+    "count": 131072,
+    "planned": 131072,
+    "mean_floor": 22.33782196044922,
+    "max_floor": 56,
+    "act2": 77995,
+    "act3": 3853,
+    "act4": 16,
+    "hearts": 0,
+    "heart_encounters": 11,
+    "truncated": 1
+  },
+  "cards": {
+    "start": 71000000,
+    "count": 131072,
+    "planned": 131072,
+    "mean_floor": 21.738693237304688,
+    "max_floor": 56,
+    "act2": 74037,
+    "act3": 3675,
+    "act4": 15,
+    "hearts": 1,
+    "heart_encounters": 9,
+    "truncated": 1
+  }
+}

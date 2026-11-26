@@ -1,0 +1,140 @@
+{
+  "train_examples": [
+    24148,
+    23377
+  ],
+  "validation_examples": [
+    2932,
+    3006
+  ],
+  "potion_rmse": 6.066903796748316,
+  "potion_id_only_rmse": 6.057484834002132,
+  "validation_start": 62000000,
+  "test_start": 63000000,
+  "validation": {
+    "0.0": {
+      "runs": 4096,
+      "mean_floor": 21.804,
+      "best_floor": 51,
+      "act2": 2313,
+      "act3": 120,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "0.5": {
+      "runs": 4096,
+      "mean_floor": 21.189,
+      "best_floor": 51,
+      "act2": 2175,
+      "act3": 95,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "1.0": {
+      "runs": 4096,
+      "mean_floor": 20.843,
+      "best_floor": 51,
+      "act2": 2089,
+      "act3": 92,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "2.0": {
+      "runs": 4096,
+      "mean_floor": 20.013,
+      "best_floor": 51,
+      "act2": 1906,
+      "act3": 62,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "4.0": {
+      "runs": 4096,
+      "mean_floor": 19.941,
+      "best_floor": 51,
+      "act2": 1896,
+      "act3": 57,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    }
+  },
+  "test": {
+    "previous": {
+      "runs": 32768,
+      "mean_floor": 22.326,
+      "best_floor": 56,
+      "act2": 19555,
+      "act3": 945,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 1,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0,
+      "heart_encounter_seeds": [
+        63000629,
+        63028790
+      ]
+    },
+    "cards": {
+      "runs": 32768,
+      "mean_floor": 21.702,
+      "best_floor": 56,
+      "act2": 18460,
+      "act3": 892,
+      "act4": 8,
+      "hearts": 0,
+      "truncated": 3,
+      "gained_act3": 347,
+      "lost_act3": 400,
+      "changed_act2": 5951,
+      "heart_encounter_seeds": [
+        63000629,
+        63012816,
+        63016539,
+        63023797,
+        63028790,
+        63029726
+      ]
+    },
+    "drinks": {
+      "runs": 32768,
+      "mean_floor": 21.824,
+      "best_floor": 56,
+      "act2": 18320,
+      "act3": 961,
+      "act4": 4,
+      "hearts": 0,
+      "truncated": 1,
+      "gained_act3": 391,
+      "lost_act3": 375,
+      "changed_act2": 5373,
+      "heart_encounter_seeds": [
+        63000629,
+        63029004
+      ]
+    },
+    "combined": {
+      "runs": 32768,
+      "mean_floor": 21.247,
+      "best_floor": 56,
+      "act2": 17511,
+      "act3": 860,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 4,
+      "gained_act3": 428,
+      "lost_act3": 513,
+      "changed_act2": 7498,
+      "heart_encounter_seeds": [
+        63000629
+      ]
+    }
+  },
+  "selected_margin": 0.0
+}

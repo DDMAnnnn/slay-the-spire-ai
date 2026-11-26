@@ -16,6 +16,7 @@
 #include "constants/Events.h"
 #include "constants/RelicPotionFacts.h"
 #include "env/Env.h"
+#include "sim/search/BattleScumSearcher2.h"
 
 namespace py = pybind11;
 using namespace sts;
@@ -28,13 +29,19 @@ enum Weight { Defense, Kill, Focus, Scaling, Draw, Debuff, Elite, Rest, ShopVisi
               Swap, EndgameDraft, EnergyRelic, Finisher, Lookahead, Count };
 using Weights = std::array<double, Count>;
 static Weights late_weights{};
+static Weights final_act_weights{};
+static bool use_final_weights=false;
 static int late_from=5;
 using EventTable = std::array<std::array<double,16>,std::size(eventGameNames)>;
 static EventTable event_values{};
 constexpr int CARD_COUNT=std::size(cardNames);
 constexpr int CHOICE_FEATURES=CARD_COUNT+16*std::size(eventGameNames);
+using BossDraftInput=std::array<float,32+CARD_COUNT>;
+static std::vector<BossDraftInput> boss_draft_weights;
 using ChoiceTable=std::array<std::array<double,CHOICE_FEATURES>,3>;
 static ChoiceTable learned_values{};
+using BossRelicTable = std::array<double,std::size(relicNames)>;
+static BossRelicTable first_boss_bonus{};
 constexpr int UNITS=16;
 using Hidden=std::array<float,UNITS>;
 using Cards=std::array<Hidden,CARD_COUNT+1>;
@@ -45,7 +52,114 @@ static Enemies head_enemies{};
 static Matrix head_weights{};
 static Hidden head_bias{},head_out{};
 static double head_scale=0;
+static Cards late_cards{},late_hand{};
+static Enemies late_enemies{};
+static Matrix late_features{};
+static Hidden late_bias{},late_output{};
+static double late_combat_scale=0;
+static int late_combat_last_act=4;
 static bool synergy_enabled=true;
+static int turn_depth=2; // Includes the first card being scored.
+using IntentForecast=std::array<std::array<std::array<float,3>,18>,std::size(monsterIdStrings)+1>;
+static IntentForecast intent_forecast{};
+// Strength of the planner, cost of HP, value of unspent enemy HP, future discount.
+using ForecastSettings=std::array<double,4>;
+static ForecastSettings forecast_settings{};
+using BossTactics=std::array<std::array<double,18>,3>;
+static BossTactics boss_tactics{};
+static bool use_boss_tactics=false;
+using RecoveryInput=std::array<float,40>;
+using RecoveryHidden=std::array<float,32>;
+using RecoveryMenu=std::array<BossTactics,16>;
+using RecoveryLayer=std::array<RecoveryInput,32>;
+using RecoveryReadout=std::array<RecoveryHidden,16>;
+static RecoveryMenu recovery_menu{};
+static RecoveryLayer recovery_layer{};
+static RecoveryHidden recovery_bias{};
+static RecoveryReadout recovery_readout{};
+static std::array<float,16> recovery_offset{};
+using RecoveryDraft=std::array<std::array<float,3>,CARD_COUNT>;
+static RecoveryDraft recovery_draft{};
+static bool use_recovery=false;
+enum Edit { AddCard, UpgradeCard, RemoveCard, GainPotion, EditCount };
+using EditWeights=std::array<float,4>;
+using EditTable=std::array<std::array<std::array<EditWeights,CARD_COUNT>,EditCount>,3>;
+static EditTable edit_values{};
+static bool use_edits=false;
+constexpr int ROUTE_INPUT=65, ROUTE_WIDTH=48;
+using RouteInput=std::array<float,ROUTE_INPUT>;
+using RouteHidden=std::array<float,ROUTE_WIDTH>;
+using RouteLayer=std::array<RouteInput,ROUTE_WIDTH>;
+static RouteLayer route_layer{};
+static RouteHidden route_bias{},route_output{};
+static std::array<double,2> route_scale{};
+using ScenarioMenu=std::array<std::array<double,18>,12>;
+static ScenarioMenu scenario_menu{};
+static int scenario_draws=0, scenario_from=3;
+static unsigned scenario_version=0;
+static thread_local int simulated_tactic=-1;
+static int opening_draws=0, opening_scope=0;
+static double opening_scale=0.;
+static thread_local bool opening_branch=false;
+using OpeningAudit=std::array<int,4>;
+static thread_local OpeningAudit *opening_audit=nullptr;
+using PlayBase = std::array<double,CARD_COUNT>;
+PlayBase initial_play_base() {
+    PlayBase base{};
+    base[int(C::OFFERING)]=base[int(C::APOTHEOSIS)]=35.;
+    return base;
+}
+static PlayBase play_base=initial_play_base();
+using DrinkFeatures = std::array<double,17>;
+using DrinkTable = std::array<DrinkFeatures,std::size(potionNames)>;
+static DrinkTable drink_table{};
+static bool learned_drinks=false;
+static double drink_margin=0;
+using NeowTable=std::array<std::array<double,std::size(Neow::drawbackStrings)>,std::size(Neow::bonusStrings)>;
+static NeowTable neow_values{},expert_neow{};
+using ExpertCards=std::array<std::array<std::array<double,2>,CARD_COUNT>,3>;
+using ExpertRelics=std::array<BossRelicTable,2>;
+static ExpertCards expert_cards{};
+static ExpertRelics expert_relics{};
+static bool use_expert=false;
+static bool learned_neow=false;
+using DraftFeatures=std::array<double,17>;
+using DraftTable=std::array<DraftFeatures,CARD_COUNT>;
+static DraftTable draft_table{};
+static bool learned_draft=false;
+constexpr int ACTOR_WIDTH=32, ACTOR_INPUT=40;
+using ActorVector=std::array<float,ACTOR_WIDTH>;
+using ActorFeatures=std::array<float,ACTOR_INPUT>;
+using ActorItems=std::array<ActorVector,CARD_COUNT+1+std::size(potionNames)>;
+using ActorTargets=std::array<ActorVector,std::size(monsterIdStrings)+1>;
+using ActorWeights=std::array<ActorFeatures,ACTOR_WIDTH>;
+static ActorItems actor_items{},actor_hand{};
+static ActorTargets actor_targets{};
+static ActorWeights actor_weights{};
+static ActorVector actor_bias{},actor_out{};
+static bool use_actor=false;
+static double teacher_scale=0.;
+constexpr int CURRICULUM_INPUT=58,CURRICULUM_WIDTH=20;
+constexpr double CURRICULUM_TEMP=6.;
+using CurriculumFeatures=std::array<float,CURRICULUM_INPUT>;
+using CurriculumHidden=std::array<float,CURRICULUM_WIDTH>;
+using CurriculumLayer=std::array<CurriculumFeatures,CURRICULUM_WIDTH>;
+using CurriculumItems=std::array<CurriculumHidden,CARD_COUNT+1+std::size(potionNames)+std::size(relicNames)+320>;
+using CurriculumFoes=std::array<CurriculumHidden,std::size(monsterIdStrings)+1>;
+static CurriculumLayer curriculum_layer{};
+static CurriculumHidden curriculum_bias{},curriculum_out{};
+static CurriculumItems curriculum_items{};
+static CurriculumFoes curriculum_foes{};
+static double curriculum_scale=0.;
+static int curriculum_scope=0;
+constexpr int INVENTORY_WIDTH=48;
+using InventoryHidden=std::array<float,INVENTORY_WIDTH>;
+using InventoryTokens=std::vector<InventoryHidden>;
+using InventoryHeads=std::array<InventoryHidden,4>;
+static InventoryTokens inventory_tokens;
+static InventoryHidden inventory_bias{};
+static InventoryHeads inventory_heads{};
+static std::array<double,4> inventory_intercept{},inventory_settings{};
 
 double card_prior(C id) {
     switch (id) {
@@ -74,7 +188,8 @@ struct View {
     double missing, incoming = 0;
     int live = 0;
     const Weights &w;
-    View(const float *obs, const Weights &weights): o(obs), p(obs+OBS_PLAYER), w(int(obs[4])>=late_from?late_weights:weights) {
+    View(const float *obs, const Weights &weights): o(obs), p(obs+OBS_PLAYER),
+        w(use_final_weights && obs[4]>=3?final_act_weights:int(obs[4])>=late_from?late_weights:weights) {
         missing = 1. - o[0] / std::max(1.f, o[1]);
         for (int i=0; i<MAX_DECK; ++i) {
             int id = int(o[OBS_DECK + i*CARD_W])-1;
@@ -202,7 +317,7 @@ struct View {
         if (id==C::SPOT_WEAKNESS && m[8]>0) score+=w[Scaling]*10;
         if (id==C::LIMIT_BREAK && str>0) score+=w[Scaling]*(4+str*2);
         if (getCardType(id)==CardType::POWER) score+=w[Scaling]*(8+card_prior(id))*(p[4]<5?1.:.75);
-        if (id==C::OFFERING || id==C::APOTHEOSIS) score+=35;
+        score+=play_base[int(id)];
         if (id==C::REAPER) score+=std::min(double(o[1]-o[0]),dmg*live)*1.4;
         if (id==C::FEED && dmg>=targetHp) score+=18;
         if (id==C::ARMAMENTS && up && p[5]>2) score+=10;
@@ -258,6 +373,20 @@ struct View {
         case R::RUNIC_DOME: return -18;
         default: return 6;
         }
+    }
+    DrinkFeatures drink_features(int a) const {
+        int slot=(a-ACT_POTION)/5;
+        auto id=Potion(int(o[17+slot])-1);
+        auto m=enemy((a-ACT_POTION)%5);
+        bool targeted=potionRequiresTarget(id);
+        int occupied=0;
+        for(int j=0;j<5;++j) occupied+=o[17+j]>0;
+        auto room=Room(int(o[8])-1);
+        return {1., missing, o[0]/80., p[2]/30., p[3]/4., p[5]/7.,
+                incoming/40., std::max(0.,incoming-p[2])/std::max(1.f,o[0]),
+                live/3., p[4]/8., o[4]/4., double(room==Room::ELITE), double(room==Room::BOSS),
+                occupied/std::max(1.f,o[16]), targeted?m[1]/80.:0.,
+                targeted?m[3]/20.:0., targeted?m[8]*m[9]/30.:0.};
     }
     double potion(int a) const {
         if(a>=ACT_DISCARD) return -80;
@@ -316,7 +445,10 @@ struct View {
         auto screen=ScreenState(int(o[6]));
         switch(screen) {
         case ScreenState::EVENT_SCREEN:
-            if(kind==ChoiceKind::NEOW_OPTION) return i==3 ? w[Swap]-1 : -.001*i;
+            if(kind==ChoiceKind::NEOW_OPTION) {
+                if(learned_neow) return neow_values.at(int(c[1])-1).at(int(c[2])-1);
+                return i==3 ? w[Swap]-1 : -.001*i;
+            }
             if(kind==ChoiceKind::EVENT_OPTION && i<16)
                 return learned(i)+event_values.at(int(o[9])-1)[i] - .0001*i;
             return -.001*i;
@@ -327,7 +459,11 @@ struct View {
             if(synergy_enabled && i==1 && num(C::SEARING_BLOW) && missing<.68 && !relic(R::FUSION_HAMMER)) return 42;
             return i==1?8.:i==3?8.5:2.;
         case ScreenState::TREASURE_ROOM: return 4-i;
-        case ScreenState::BOSS_RELIC_REWARDS: return kind==ChoiceKind::RELIC?relic_value(R(int(c[1])-1)):0.;
+        case ScreenState::BOSS_RELIC_REWARDS: {
+            if(kind!=ChoiceKind::RELIC) return 0.;
+            int id=int(c[1])-1;
+            return relic_value(R(id))+(o[4]==1?first_boss_bonus.at(id):0.);
+        }
         case ScreenState::CARD_SELECT: {
             C id=C(int(c[1])-1);
             bool remove=int(o[26])==1 || int(o[26])==2 || int(o[26])==4 || int(o[26])==8;
@@ -364,17 +500,36 @@ struct View {
         }
     }
 #include "combat_head.inc"
+#include "direct_actor.inc"
+#include "draft_context.inc"
+#include "boss_draft.inc"
+#include "expert_prior.inc"
+#include "deck_edits.inc"
+#include "inventory_value.inc"
+#include "route_value.inc"
+#include "boss_tactics.inc"
+    bool scenario_scores(const uint8_t *mask,double *out) const;
+    void opening_scores(const uint8_t *mask,double *out) const;
 #include "turn_plan.inc"
+#include "curriculum_actor.inc"
 };
 
-struct Result { int floor=0, act=0, keys=0, steps=0; bool heart=false, truncated=false; };
-Result advance(Env &e,const Weights &w,std::vector<int>* trace=nullptr,int stopAct=0) {
+#include "scenario.inc"
+#include "opening_search.inc"
+struct Result { int floor=0, act=0, keys=0, steps=0; bool heart=false, truncated=false, encounter=false; };
+Result advance(Env &e,const Weights &w,std::vector<int>* trace=nullptr,int stopAct=0,
+               bool stopAtFirstChest=false,int stopFloor=0,int stepLimit=3500) {
     std::array<float,OBS_SIZE> obs{};
     std::array<uint8_t,N_ACTIONS> mask{};
     Result r;
-    for (;r.steps<3500 && !e.done();++r.steps) {
+    for (;r.steps<stepLimit && !e.done();++r.steps) {
         e.observe(obs.data());
         if(stopAct && obs[4]>=stopAct) break;
+        if(stopFloor && obs[3]>=stopFloor) break;
+        if(obs[7] && obs[4]==4 && obs[OBS_MONSTERS]==1+int(MonsterId::CORRUPT_HEART) && obs[OBS_MONSTERS+6])
+            r.encounter=true;
+        if(stopAtFirstChest && obs[4]==1 && !obs[7] &&
+           ScreenState(int(obs[6]))==ScreenState::BOSS_RELIC_REWARDS) break;
         e.mask(mask.data());
         View v(obs.data(),w);
         std::array<double,N_ACTIONS> utilities;
@@ -402,6 +557,20 @@ Result run(const Weights &w,uint64_t seed,std::vector<int>* trace=nullptr) {
 // the scorer still receives exactly the public observation used in fresh runs.
 struct Bank {
     std::vector<Env> states;
+    Bank()=default;
+    Bank(const Weights &w,const std::vector<uint64_t> &seeds,int floor,int threads) {
+        if(floor<1 || floor>56 || seeds.empty() || threads<1) throw std::invalid_argument("invalid floor bank");
+        states.resize(seeds.size());
+        std::vector<int> reached(seeds.size());
+        #pragma omp parallel for num_threads(threads) schedule(dynamic,4)
+        for(int i=0;i<int(seeds.size());++i) {
+            auto &e=states[i]; e.record=false; e.reset(seeds[i],20,true,CharacterClass::IRONCLAD);
+            auto r=advance(e,w,nullptr,0,false,floor);
+            reached[i]=!e.done() && r.floor>=floor;
+        }
+        if(std::find(reached.begin(),reached.end(),0)!=reached.end())
+            throw std::invalid_argument("seed did not reach the requested floor with this policy");
+    }
     Bank(const Weights &w,uint64_t seed,int limit,int count,int act) {
         if(count<1 || limit<1 || act<2 || act>4) throw std::invalid_argument("curriculum range");
         for(int i=0;i<limit && int(states.size())<count;++i) {
@@ -419,12 +588,171 @@ struct Bank {
         }
         return rows;
     }
+    std::vector<std::array<int,5>> progress(const Weights &w,int threads) const {
+        if(threads<1) throw std::invalid_argument("positive threads required");
+        std::vector<std::array<int,5>> rows(states.size());
+        #pragma omp parallel for num_threads(threads) schedule(dynamic,4)
+        for(int i=0;i<int(states.size());++i) {
+            Env e=states[i]; auto r=advance(e,w);
+            rows[i]={r.floor,r.act,int(r.encounter),int(r.heart),int(r.truncated)};
+        }
+        return rows;
+    }
 };
 
+#include "stage_policy.inc"
 #include "choice_learning.inc"
+#include "boss_relic_practice.inc"
 #include "combat_practice.inc"
+#include "late_combat_practice.inc"
+#include "combat_preferences.inc"
+#include "neow_practice.inc"
+#include "draft_practice.inc"
+#include "actor_practice.inc"
+#include "trajectory_teacher.inc"
+#include "curriculum_practice.inc"
+#include "inventory_benchmark.inc"
+#include "inventory_practice.inc"
+#include "boss_draft_practice.inc"
+#include "intent_practice.inc"
+#include "boss_drill.inc"
+#include "recovery_drill.inc"
+#include "edit_practice.inc"
+#include "route_practice.inc"
+
+std::vector<std::array<int,5>> tactic_progress(const Bank &bank,const Weights &w,int choice,int threads) {
+    if(threads<1 || choice<0 || choice>=int(scenario_menu.size()) || !scenario_draws)
+        throw std::invalid_argument("configure practice tactics first");
+    std::vector<std::array<int,5>> rows(bank.states.size());
+    #pragma omp parallel for num_threads(threads) schedule(dynamic,4)
+    for(int i=0;i<int(bank.states.size());++i) {
+        Env e=bank.states[i];
+        simulated_tactic=choice;
+        auto r=advance(e,w);
+        simulated_tactic=-1;
+        rows[i]={r.floor,r.act,int(r.encounter),int(r.heart),int(r.truncated)};
+    }
+    return rows;
+}
 
 PYBIND11_MODULE(heart_native,m) {
+    m.def("set_opening_search",[](int draws,int scope,double scale){
+        if(draws<1 || draws>16 || scope<0 || scope>2 || !std::isfinite(scale) || scale<0)
+            throw std::invalid_argument("invalid opening search");
+        opening_draws=draws;opening_scope=scope;opening_scale=scale;
+    });
+    m.def("reset_opening_search",[](){opening_draws=0;});
+    m.def("opening_audit",[](const Weights &w,uint64_t start,int n){
+        if(n<1) throw std::invalid_argument("positive audit count required");
+        OpeningAudit result{};
+        struct Guard { ~Guard(){opening_audit=nullptr;} } guard;
+        opening_audit=&result;
+        for(int i=0;i<n;++i) run(w,start+i);
+        return result;
+    });
+    m.def("route_practice",&route_practice);
+    m.def("set_route",[](const RouteLayer &layer,const RouteHidden &bias,const RouteHidden &out,
+                         const std::array<double,2> &scale) {
+        route_layer=layer;route_bias=bias;route_output=out;route_scale=scale;
+    });
+    m.def("reset_route",[](){route_scale={};});
+    m.def("set_scenarios",[](const ScenarioMenu &menu,int draws,int act){
+        if(draws<1 || draws>64 || act<1 || act>4) throw std::invalid_argument("invalid scenario horizon");
+        scenario_menu=menu; scenario_draws=draws; scenario_from=act; ++scenario_version;
+    });
+    m.def("reset_scenarios",[](){scenario_draws=0;++scenario_version;});
+    m.def("set_edits",[](const EditTable &table){edit_values=table;use_edits=true;});
+    m.def("reset_edits",[](){use_edits=false;});
+    m.def("set_recovery",[](const RecoveryMenu &menu,const RecoveryLayer &layer,const RecoveryHidden &bias,
+              const RecoveryReadout &readout,const std::array<float,16> &offset,const RecoveryDraft &draft) {
+        recovery_menu=menu; recovery_layer=layer; recovery_bias=bias; recovery_readout=readout;
+        recovery_offset=offset; recovery_draft=draft; use_recovery=true;
+    });
+    m.def("reset_recovery",[](){use_recovery=false;});
+    m.def("set_boss_tactics",[](const BossTactics &t){boss_tactics=t;use_boss_tactics=true;});
+    m.def("reset_boss_tactics",[](){use_boss_tactics=false;});
+    m.def("intent_practice",&intent_practice);
+    m.def("set_forecast",[](const IntentForecast &table,const ForecastSettings &settings){
+        intent_forecast=table; forecast_settings=settings;
+    });
+    m.def("reset_forecast",[](){forecast_settings={};});
+    m.attr("actor_items")=actor_items.size();
+    m.def("boss_draft_practice",&boss_draft_practice);
+    m.def("reset_expert",[](){use_expert=false;});
+    m.def("set_expert",[](const ExpertCards &cards,const ExpertRelics &relics,const NeowTable &neow){
+        expert_cards=cards;expert_relics=relics;expert_neow=neow;use_expert=true;
+    });
+    m.def("set_boss_draft",[](std::vector<BossDraftInput> table){
+        if(!table.empty() && table.size()!=CARD_COUNT) throw std::invalid_argument("invalid card table");
+        boss_draft_weights=std::move(table);
+    });
+    m.def("trajectory_practice",&trajectory_practice);
+    m.def("grade_inventories",&grade_inventories);
+    m.def("set_inventory_value",[](InventoryTokens tokens,const InventoryHidden &bias,
+            const InventoryHeads &heads,const std::array<double,4> &offset,const std::array<double,4> &settings){
+        if(tokens.size()!=2*CARD_COUNT+std::size(relicNames)) throw std::invalid_argument("invalid inventory tokens");
+        inventory_tokens=std::move(tokens);inventory_bias=bias;inventory_heads=heads;
+        inventory_intercept=offset;inventory_settings=settings;
+    });
+    m.def("reset_inventory_value",[](){inventory_tokens.clear();});
+    m.def("inventory_benchmark",&inventory_benchmark);
+    m.def("bank_inventories",&bank_inventories);
+    m.attr("curriculum_items")=curriculum_items.size();
+    m.attr("curriculum_foes")=curriculum_foes.size();
+    m.def("curriculum_practice",&curriculum_practice);
+    m.def("set_curriculum",[](const CurriculumItems &items,const CurriculumFoes &foes,
+                                const CurriculumLayer &layer,const CurriculumHidden &bias,
+                                const CurriculumHidden &out,double scale){
+        curriculum_items=items;curriculum_foes=foes;curriculum_layer=layer;
+        curriculum_bias=bias;curriculum_out=out;curriculum_scale=scale;
+    });
+    m.def("set_curriculum_scope",[](int scope){
+        if(scope<0 || scope>2) throw std::invalid_argument("curriculum scope must be 0, 1 or 2");
+        curriculum_scope=scope;
+    });
+    m.def("reset_curriculum",[](){curriculum_scale=0.;curriculum_scope=0;});
+    m.def("set_teacher_scale",[](double scale){teacher_scale=scale;});
+    m.def("actor_practice",&actor_practice);
+    m.def("set_actor",[](const ActorItems &items,const ActorItems &hand,const ActorTargets &targets,
+                         const ActorWeights &weights,const ActorVector &bias,const ActorVector &out){
+        actor_items=items; actor_hand=hand; actor_targets=targets;
+        actor_weights=weights; actor_bias=bias; actor_out=out; use_actor=true;
+    });
+    m.def("reset_actor",[](){use_actor=false;});
+    m.def("late_combat_practice",&late_combat_practice);
+    m.def("set_late_combat",[](const Cards &cards,const Cards &hand,const Enemies &enemies,
+                               const Matrix &features,const Hidden &bias,const Hidden &output,double scale){
+        late_cards=cards; late_hand=hand; late_enemies=enemies; late_features=features;
+        late_bias=bias; late_output=output; late_combat_scale=scale;
+    });
+    m.def("reset_late_combat",[](){late_combat_scale=0.;});
+    m.def("set_late_combat_last_act",[](int act){
+        if(act<2 || act>4) throw std::invalid_argument("expected act 2 through 4");
+        late_combat_last_act=act;
+    });
+    m.def("set_final_weights",[](const Weights &w){final_act_weights=w;use_final_weights=true;});
+    m.def("reset_final_weights",[](){use_final_weights=false;});
+    m.def("set_draft",[](const DraftTable &t){draft_table=t;learned_draft=true;});
+    m.def("reset_draft",[](){learned_draft=false;});
+    m.def("draft_practice",&draft_practice);
+    m.def("set_neow",[](const NeowTable &t){neow_values=t;learned_neow=true;});
+    m.def("reset_neow",[](){learned_neow=false;});
+    m.def("neow_practice",&neow_practice);
+    m.attr("neow_shape")=py::make_tuple(std::size(Neow::bonusStrings),std::size(Neow::drawbackStrings));
+    m.def("initial_play_base",&initial_play_base);
+    m.def("set_play_base",[](const PlayBase &base){play_base=base;});
+    m.def("set_drinks",[](const DrinkTable &table,double margin){
+        drink_table=table; drink_margin=margin; learned_drinks=true;
+    });
+    m.def("reset_drinks",[](){learned_drinks=false;});
+    m.def("preference_practice",&preference_practice);
+    m.def("set_turn_depth",[](int depth){
+        if(depth<1 || depth>10) throw std::invalid_argument("turn depth must be 1 to 10 cards");
+        turn_depth=depth;
+    });
+    m.def("set_first_boss_bonus",[](const BossRelicTable &table){first_boss_bonus=table;});
+    m.attr("relic_count")=first_boss_bonus.size();
+    m.def("practice_first_boss",&practice_first_boss);
     m.def("set_choice_table",[](const ChoiceTable &t){learned_values=t;});
     m.def("set_synergies",[](bool enabled){synergy_enabled=enabled;});
     m.attr("feature_count")=CHOICE_FEATURES;
@@ -436,7 +764,20 @@ PYBIND11_MODULE(heart_native,m) {
     m.def("set_head",[](const Cards &cards,const Enemies &enemies,const Matrix &weights,const Hidden &bias,const Hidden &out,double scale){
         head_cards=cards; head_enemies=enemies; head_weights=weights; head_bias=bias; head_out=out; head_scale=scale;
     });
+    py::class_<ActOpening>(m,"ActOpening")
+        .def(py::init<const Weights&,uint64_t,int,int>())
+        .def_readonly("prefix",&ActOpening::prefix)
+        .def_readonly("arrivals",&ActOpening::arrivals)
+        .def("features",&ActOpening::features)
+        .def("finish",&ActOpening::finish);
     py::class_<Bank>(m,"Bank").def(py::init<const Weights&,uint64_t,int,int,int>())
+        .def(py::init<const Weights&,const std::vector<uint64_t>&,int,int>())
+        .def("progress",&Bank::progress)
+        .def("boss_results",&boss_results)
+        .def("recovery_phase",&recovery_phase).def("recovery_features",&recovery_features)
+        .def("recovery_card_trials",&recovery_card_trials)
+        .def("edit_practice",&edit_practice)
+        .def("tactic_progress",&tactic_progress)
         .def("batch",&Bank::evaluate).def("__len__",[](const Bank &b){return b.states.size();});
     m.def("set_event_table",[](const EventTable &table){event_values=table;});
     m.def("batch",[](const Weights &w,uint64_t seed,int n,int threads){
@@ -450,6 +791,26 @@ PYBIND11_MODULE(heart_native,m) {
         return out;
     });
     m.def("trace",[](const Weights &w,uint64_t seed){std::vector<int> a;run(w,seed,&a);return a;});
+    m.def("teacher_batch",[](const Weights &weights,
+            py::array_t<float,py::array::c_style> observations,
+            py::array_t<uint8_t,py::array::c_style> masks,int threads) {
+        if(observations.ndim()!=2 || observations.shape(1)!=OBS_SIZE || masks.ndim()!=2 ||
+           masks.shape(0)!=observations.shape(0) || masks.shape(1)!=N_ACTIONS || threads<1)
+            throw std::invalid_argument("invalid batched observations or masks");
+        int n=int(observations.shape(0));
+        py::array_t<int32_t> actions(n);
+        const float *obs=observations.data();
+        const uint8_t *mask=masks.data();
+        auto result=actions.mutable_data();
+        #pragma omp parallel for schedule(static) num_threads(threads)
+        for(int i=0;i<n;++i) {
+            std::array<double,N_ACTIONS> scores;
+            View v(obs+i*OBS_SIZE,weights);
+            v.all_scores(mask+i*N_ACTIONS,scores.data());
+            result[i]=int(std::max_element(scores.begin(),scores.end())-scores.begin());
+        }
+        return actions;
+    });
     m.def("scores",[](const Weights &w,py::array_t<float,py::array::c_style|py::array::forcecast> obs,
                       py::array_t<uint8_t,py::array::c_style|py::array::forcecast> mask) {
         if(obs.size()!=OBS_SIZE || mask.size()!=N_ACTIONS) throw std::invalid_argument("observation or mask size");

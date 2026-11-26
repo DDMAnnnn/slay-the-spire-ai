@@ -34,3 +34,31 @@ void apply_combat_head(const uint8_t *mask,double *out) const {
         out[a]+=head_scale*v;
     }
 }
+
+void apply_late_combat(const uint8_t *mask,double *out) const {
+    Hidden hand{};
+    int n=int(p[5]);
+    for(int i=0;i<n;++i) {
+        auto &embedding=late_hand[int(o[OBS_HAND+i*HAND_W])];
+        for(int j=0;j<UNITS;++j) hand[j]+=embedding[j]/n;
+    }
+    double top=std::max(out[ACT_END_TURN],*std::max_element(out,out+ACT_POTION));
+    double new_top=-1e30;
+    for(int a=0;a<=ACT_END_TURN;++a) {
+        if(!mask[a] || (a>=ACT_POTION && a!=ACT_END_TURN)) continue;
+        auto x=combat_features(a,out[a]-top);
+        auto &card=late_cards[card_index(a)];
+        auto &target=late_enemies[enemy_index(a)];
+        double value=0;
+        for(int j=0;j<UNITS;++j) {
+            float z=hand[j]+card[j]+target[j]+late_bias[j];
+            for(size_t i=0;i<x.size();++i) z+=late_features[j][i]*x[i];
+            value+=std::max(0.f,z)*late_output[j];
+        }
+        out[a]+=late_combat_scale*value;
+        new_top=std::max(new_top,out[a]);
+    }
+    // Preserve the original best score relative to drinking a potion.
+    for(int a=0;a<=ACT_END_TURN;++a)
+        if(mask[a] && (a<ACT_POTION || a==ACT_END_TURN)) out[a]+=top-new_top;
+}

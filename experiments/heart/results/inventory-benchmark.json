@@ -1,0 +1,313 @@
+{
+  "source_commit": "097aaf3564c2247835162d267cbc7c55d2c9039e",
+  "human_inventories": 83,
+  "omitted": {},
+  "draws": 12,
+  "paired_native_seeds": [
+    159027689,
+    159024618,
+    159025876,
+    159019924,
+    159020761,
+    159028369,
+    159018652,
+    159005228,
+    159020479,
+    159021977,
+    159018612,
+    159003911,
+    159010043,
+    159011692,
+    159010428,
+    159000478,
+    159016076,
+    159006254,
+    159009398,
+    159016474,
+    159030139,
+    159009630,
+    159016547,
+    159003266,
+    159003724,
+    159008119,
+    159032568,
+    159010356,
+    159015308,
+    159024597,
+    159015012,
+    159019522,
+    159026141,
+    159015148,
+    159015828,
+    159003284,
+    159010497,
+    159001136,
+    159015123,
+    159028792,
+    159030171,
+    159001741,
+    159031959,
+    159022042,
+    159027325,
+    159018014,
+    159021526,
+    159028137,
+    159019673,
+    159031434,
+    159029631,
+    159022389,
+    159020094,
+    159008672,
+    159030523,
+    159005159,
+    159022243,
+    159013924,
+    159007541,
+    159024125,
+    159017185,
+    159010713,
+    159008978,
+    159032262,
+    159015197,
+    159012706,
+    159014299,
+    159025841,
+    159020554,
+    159002621,
+    159031800,
+    159010389,
+    159021989,
+    159021920,
+    159012074,
+    159019038,
+    159017754,
+    159007075,
+    159011010,
+    159004201,
+    159001249,
+    159016422,
+    159002553
+  ],
+  "practice_seed_offset": 11721,
+  "results": {
+    "native": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 267,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 6.215863453815261
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 112,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 2.3122489959839356
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 216,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 4.60140562248996
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 240,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 5.495983935742972
+      }
+    },
+    "human_deck": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 383,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 13.540160642570282
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 241,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 8.688755020080322
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 480,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 17.978915662650603
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 308,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 10.289156626506024
+      }
+    },
+    "human_relics": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 208,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 4.552208835341365
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 78,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 1.3704819277108433
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 134,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 3.0502008032128516
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 162,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 3.6987951807228914
+      }
+    },
+    "human_both": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 632,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 24.43273092369478
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 442,
+        "truncated": 2,
+        "mean_remaining_hp_including_losses": 16.096385542168676
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 756,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 32.2429718875502
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 514,
+        "truncated": 1,
+        "mean_remaining_hp_including_losses": 18.627510040160644
+      }
+    },
+    "shuffled_human_a": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 536,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 20.01706827309237
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 356,
+        "truncated": 2,
+        "mean_remaining_hp_including_losses": 12.95281124497992
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 645,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 28.072289156626507
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 457,
+        "truncated": 1,
+        "mean_remaining_hp_including_losses": 14.802208835341366
+      }
+    },
+    "shuffled_human_b": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 465,
+        "truncated": 1,
+        "mean_remaining_hp_including_losses": 18.15863453815261
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 315,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 11.668674698795181
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 556,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 22.820281124497992
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 416,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 13.973895582329318
+      }
+    },
+    "shuffled_native": {
+      "time_eater": {
+        "fights": 996,
+        "clears": 276,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 6.813253012048193
+      },
+      "awakened_one": {
+        "fights": 996,
+        "clears": 141,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 2.752008032128514
+      },
+      "donu_deca": {
+        "fights": 996,
+        "clears": 203,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 4.413654618473895
+      },
+      "shield_spear": {
+        "fights": 996,
+        "clears": 239,
+        "truncated": 0,
+        "mean_remaining_hp_including_losses": 5.3453815261044175
+      }
+    }
+  },
+  "paired_differences": {
+    "deck": {
+      "mean": 0.1448293172690763,
+      "paired_bootstrap_95": [
+        0.09135918674698794,
+        0.19854417670682728
+      ]
+    },
+    "relics": {
+      "mean": -0.06350401606425701,
+      "paired_bootstrap_95": [
+        -0.11195406626506026,
+        -0.01380522088353413
+      ]
+    },
+    "both": {
+      "mean": 0.3787650602409638,
+      "paired_bootstrap_95": [
+        0.3125,
+        0.44302208835341367
+      ]
+    },
+    "matched_vs_shuffled_human": {
+      "mean": 0.11822289156626505,
+      "paired_bootstrap_95": [
+        0.0554718875502008,
+        0.18323606927710837
+      ]
+    },
+    "matched_vs_shuffled_native": {
+      "mean": -0.006024096385542172,
+      "paired_bootstrap_95": [
+        -0.05095381526104418,
+        0.04066265060240963
+      ]
+    }
+  }
+}

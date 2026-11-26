@@ -1,0 +1,75 @@
+{
+  "train_start": 64000000,
+  "train_runs": 16384,
+  "validation": {
+    "0": {
+      "runs": 4096,
+      "mean_floor": 22.469,
+      "best_floor": 56,
+      "act2": 2390,
+      "act3": 119,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "40": {
+      "runs": 4096,
+      "mean_floor": 22.39,
+      "best_floor": 56,
+      "act2": 2410,
+      "act3": 122,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "160": {
+      "runs": 4096,
+      "mean_floor": 22.39,
+      "best_floor": 56,
+      "act2": 2410,
+      "act3": 122,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0
+    }
+  },
+  "validation_start": 65000000,
+  "selected": 40,
+  "test_start": 66000000,
+  "test": {
+    "previous": {
+      "runs": 32768,
+      "mean_floor": 22.308,
+      "best_floor": 56,
+      "act2": 19432,
+      "act3": 919,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 2,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0,
+      "heart_encounter_seeds": [
+        66008542,
+        66031057
+      ]
+    },
+    "opening": {
+      "runs": 32768,
+      "mean_floor": 22.324,
+      "best_floor": 56,
+      "act2": 19388,
+      "act3": 910,
+      "act4": 3,
+      "hearts": 0,
+      "truncated": 2,
+      "gained_act3": 26,
+      "lost_act3": 35,
+      "changed_act2": 522,
+      "heart_encounter_seeds": [
+        66008542,
+        66031057
+      ]
+    }
+  }
+}

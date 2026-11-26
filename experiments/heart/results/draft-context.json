@@ -1,0 +1,131 @@
+{
+  "train_start": 68000000,
+  "train_runs": 8192,
+  "examples": 73168,
+  "validation_start": 69000000,
+  "validation": {
+    "id_only": {
+      "candidates": {
+        "-1.0": {
+          "runs": 4096,
+          "mean_floor": 22.417,
+          "best_floor": 51,
+          "act2": 2456,
+          "act3": 131,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        },
+        "0.0": {
+          "runs": 4096,
+          "mean_floor": 22.531,
+          "best_floor": 51,
+          "act2": 2447,
+          "act3": 143,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        },
+        "1.0": {
+          "runs": 4096,
+          "mean_floor": 21.602,
+          "best_floor": 51,
+          "act2": 2228,
+          "act3": 107,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        }
+      },
+      "cost": 0.0
+    },
+    "context": {
+      "candidates": {
+        "-1.0": {
+          "runs": 4096,
+          "mean_floor": 22.325,
+          "best_floor": 51,
+          "act2": 2422,
+          "act3": 129,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        },
+        "0.0": {
+          "runs": 4096,
+          "mean_floor": 22.668,
+          "best_floor": 50,
+          "act2": 2476,
+          "act3": 155,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        },
+        "1.0": {
+          "runs": 4096,
+          "mean_floor": 21.88,
+          "best_floor": 51,
+          "act2": 2301,
+          "act3": 109,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0
+        }
+      },
+      "cost": 0.0
+    }
+  },
+  "test_start": 70000000,
+  "test": {
+    "previous": {
+      "runs": 32768,
+      "mean_floor": 22.347,
+      "best_floor": 56,
+      "act2": 19390,
+      "act3": 970,
+      "act4": 4,
+      "hearts": 1,
+      "truncated": 0,
+      "gained_act3": 0,
+      "lost_act3": 0,
+      "changed_act2": 0,
+      "heart_encounter_seeds": [
+        70031312,
+        70032468
+      ]
+    },
+    "id_only": {
+      "runs": 32768,
+      "mean_floor": 22.459,
+      "best_floor": 56,
+      "act2": 19406,
+      "act3": 1162,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "gained_act3": 735,
+      "lost_act3": 543,
+      "changed_act2": 5760,
+      "heart_encounter_seeds": [
+        70013792
+      ]
+    },
+    "context": {
+      "runs": 32768,
+      "mean_floor": 22.396,
+      "best_floor": 56,
+      "act2": 19409,
+      "act3": 1038,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "gained_act3": 636,
+      "lost_act3": 568,
+      "changed_act2": 6135,
+      "heart_encounter_seeds": [
+        70008412,
+        70023972
+      ]
+    }
+  }
+}

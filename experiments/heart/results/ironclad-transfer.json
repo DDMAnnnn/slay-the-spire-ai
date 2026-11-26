@@ -1,0 +1,231 @@
+{
+  "start": 158000000,
+  "selection": "Heart, Act 4, Act 3, Act 2 on validation starts",
+  "parent": {
+    "runs": 1024,
+    "mean_floor": 24.207,
+    "best_floor": 51,
+    "act2": 683,
+    "act3": 68,
+    "act4": 0,
+    "hearts": 0,
+    "truncated": 0,
+    "heart_encounter_seeds": []
+  },
+  "updates": {
+    "cloning": 16,
+    "ppo": 48
+  },
+  "results": {
+    "frozen": {
+      "runs": 1024,
+      "seconds": 19.71,
+      "active_steps": 146604,
+      "mean_floor": 10.9248046875,
+      "act2": 54,
+      "act3": 0,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0,
+      "checkpoint_sha256": "6a7249de1d73ad3db7b00f7c48fc11942b03d387253e16c7240f6856ff61e697"
+    },
+    "cloning": {
+      "runs": 1024,
+      "seconds": 26.12,
+      "active_steps": 185216,
+      "mean_floor": 15.1455078125,
+      "act2": 306,
+      "act3": 1,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0,
+      "checkpoint_sha256": "55ebbbd0efb2334568c0e6409983ebf66212aaafd8abd7e28b7310ab6b3783f0"
+    },
+    "ppo": {
+      "runs": 1024,
+      "seconds": 25.97,
+      "active_steps": 207207,
+      "mean_floor": 16.787109375,
+      "act2": 358,
+      "act3": 7,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0,
+      "checkpoint_sha256": "e56b655d901d151f62c119be21938504fc0c3aa4199551925dbeaa6e435fc87f"
+    }
+  },
+  "zero_shot": {
+    "start": 155000000,
+    "runs": 512,
+    "character": "ironclad",
+    "device": "cpu",
+    "action_selection": "greedy",
+    "weights_sha256": "6a7249de1d73ad3db7b00f7c48fc11942b03d387253e16c7240f6856ff61e697",
+    "source_character": "defect",
+    "source_training_steps": 144179200,
+    "results": {
+      "all": {
+        "runs": 512,
+        "seconds": 13.19,
+        "active_steps": 72093,
+        "mean_floor": 10.859375,
+        "act2": 25,
+        "act3": 0,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      },
+      "combat": {
+        "runs": 512,
+        "seconds": 25.29,
+        "active_steps": 97468,
+        "mean_floor": 16.2265625,
+        "act2": 162,
+        "act3": 3,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 1
+      },
+      "macro": {
+        "runs": 512,
+        "seconds": 10.79,
+        "active_steps": 89116,
+        "mean_floor": 14.32421875,
+        "act2": 81,
+        "act3": 0,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      }
+    },
+    "parent": {
+      "runs": 512,
+      "mean_floor": 23.312,
+      "best_floor": 51,
+      "act2": 328,
+      "act3": 28,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": []
+    }
+  },
+  "source_control": {
+    "start": 155000000,
+    "runs": 256,
+    "character": "defect",
+    "device": "cuda",
+    "action_selection": "greedy",
+    "weights_sha256": "6a7249de1d73ad3db7b00f7c48fc11942b03d387253e16c7240f6856ff61e697",
+    "source_character": "defect",
+    "source_training_steps": 144179200,
+    "results": {
+      "all": {
+        "runs": 256,
+        "seconds": 18.49,
+        "active_steps": 79235,
+        "mean_floor": 23.1640625,
+        "act2": 177,
+        "act3": 10,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      }
+    }
+  },
+  "validation_checkpoints": [
+    {
+      "update": 16,
+      "path": "update-16.pt",
+      "runs": 256,
+      "seconds": 14.65,
+      "active_steps": 45961,
+      "mean_floor": 14.9609375,
+      "act2": 69,
+      "act3": 1,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    {
+      "update": 32,
+      "path": "update-32.pt",
+      "runs": 256,
+      "seconds": 13.64,
+      "active_steps": 47398,
+      "mean_floor": 15.43359375,
+      "act2": 79,
+      "act3": 0,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    {
+      "update": 48,
+      "path": "update-48.pt",
+      "runs": 256,
+      "seconds": 14.34,
+      "active_steps": 49627,
+      "mean_floor": 16.265625,
+      "act2": 84,
+      "act3": 1,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    {
+      "update": 64,
+      "path": "update-64.pt",
+      "runs": 256,
+      "seconds": 15.16,
+      "active_steps": 51496,
+      "mean_floor": 16.87890625,
+      "act2": 85,
+      "act3": 0,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    }
+  ],
+  "upstream": "https://github.com/bpblakely/sts-lightspeed-toolkit/tree/f46fed59175646254b284c27e677a9b32ca5b748/examples/defect_a20",
+  "training": {
+    "cloning": {
+      "updates": 32,
+      "steps": 131072,
+      "heart_entries": 0
+    },
+    "ppo": {
+      "updates": 32,
+      "steps": 131072,
+      "heart_entries": 0
+    }
+  },
+  "curriculum_scout": {
+    "start": 159000000,
+    "runs": 32768,
+    "reached_floor": {
+      "16": 29742,
+      "33": 8476,
+      "50": 255,
+      "55": 12,
+      "56": 3
+    }
+  },
+  "validation_checks": {
+    "scalar_vs_batch": 1040,
+    "equivalent_hand_actions": 176,
+    "native_vs_vector_starts": 20,
+    "matched_heart_seed": 151003746
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "validation_start": 85000000,
+  "test_start": 87000000,
+  "fit": {
+    "imitation": {
+      "epoch": 7,
+      "validation_positions": 4847,
+      "agreement": 0.8361873030662537,
+      "single_move_gain": -0.13694657385349274,
+      "training_positions": 51296,
+      "training_rows": 268473
+    },
+    "outcomes": {
+      "epoch": 13,
+      "validation_positions": 4847,
+      "agreement": 0.7121931314468384,
+      "single_move_gain": 0.3674602806568146,
+      "training_positions": 51296,
+      "training_rows": 268473
+    },
+    "second_round": {
+      "epoch": 10,
+      "validation_positions": 4847,
+      "agreement": 0.7353001832962036,
+      "single_move_gain": 0.3577594459056854,
+      "training_positions": 74958,
+      "training_rows": 391943
+    }
+  },
+  "validation": {
+    "imitation": {
+      "runs": 2048,
+      "mean_floor": 20.608,
+      "best_floor": 51,
+      "act2": 1030,
+      "act3": 43,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "outcomes": {
+      "runs": 2048,
+      "mean_floor": 20.625,
+      "best_floor": 51,
+      "act2": 1013,
+      "act3": 39,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    },
+    "second_round": {
+      "runs": 2048,
+      "mean_floor": 21.274,
+      "best_floor": 51,
+      "act2": 1093,
+      "act3": 42,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0
+    }
+  },
+  "test": {
+    "reference": {
+      "runs": 32768,
+      "mean_floor": 22.332,
+      "best_floor": 56,
+      "act2": 19474,
+      "act3": 987,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        87005961,
+        87010821,
+        87012563,
+        87031795
+      ]
+    },
+    "imitation": {
+      "runs": 32768,
+      "mean_floor": 20.815,
+      "best_floor": 51,
+      "act2": 17119,
+      "act3": 590,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": []
+    },
+    "outcomes": {
+      "runs": 32768,
+      "mean_floor": 20.879,
+      "best_floor": 51,
+      "act2": 16710,
+      "act3": 721,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": []
+    },
+    "second_round": {
+      "runs": 32768,
+      "mean_floor": 21.189,
+      "best_floor": 56,
+      "act2": 17668,
+      "act3": 728,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        87031795
+      ]
+    }
+  },
+  "selected": "imitation",
+  "collection_policy": "imitation"
+}
