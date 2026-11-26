@@ -1,0 +1,134 @@
+{
+  "fit": {
+    "models": {
+      "health": {
+        "validation": {
+          "states": 15119,
+          "fights": 981,
+          "mae": 12.553456775993217,
+          "rmse": 18.913963803870338
+        },
+        "test": {
+          "states": 12482,
+          "fights": 904,
+          "mae": 12.808685720901513,
+          "rmse": 19.28089480416947
+        }
+      },
+      "tactical": {
+        "validation": {
+          "states": 15119,
+          "fights": 981,
+          "mae": 8.44585729269817,
+          "rmse": 14.095262956910231
+        }
+      },
+      "wide": {
+        "validation": {
+          "states": 15119,
+          "fights": 981,
+          "mae": 8.198363191681311,
+          "rmse": 13.908561767613882
+        },
+        "test": {
+          "states": 12482,
+          "fights": 904,
+          "mae": 8.43082360460334,
+          "rmse": 14.238539653986267
+        }
+      }
+    },
+    "selected": "wide",
+    "export_max_error": 0.0,
+    "training_states": 114558,
+    "training_fights": 7996
+  },
+  "play": {
+    "validation": {
+      "0.0": {
+        "fights": 160,
+        "wins": 130,
+        "expert_wins": 139,
+        "exit_hp": 41.9125,
+        "expert_exit_hp": 44.94375,
+        "capped": 0,
+        "followups": 676,
+        "queries": 2727,
+        "changed": 0,
+        "compared": 0,
+        "gained": 0,
+        "lost": 0
+      },
+      "0.5": {
+        "fights": 160,
+        "wins": 124,
+        "expert_wins": 139,
+        "exit_hp": 40.525,
+        "expert_exit_hp": 44.94375,
+        "capped": 0,
+        "followups": 717,
+        "queries": 2946,
+        "changed": 486,
+        "compared": 2869,
+        "gained": 3,
+        "lost": 9
+      },
+      "1.5": {
+        "fights": 160,
+        "wins": 127,
+        "expert_wins": 139,
+        "exit_hp": 40.85625,
+        "expert_exit_hp": 44.94375,
+        "capped": 0,
+        "followups": 719,
+        "queries": 3057,
+        "changed": 869,
+        "compared": 2977,
+        "gained": 5,
+        "lost": 8
+      }
+    },
+    "test": {
+      "0.0": {
+        "fights": 179,
+        "wins": 143,
+        "expert_wins": 158,
+        "exit_hp": 40.497206703910614,
+        "expert_exit_hp": 43.70391061452514,
+        "capped": 0,
+        "followups": 622,
+        "queries": 2725,
+        "changed": 0,
+        "compared": 0,
+        "gained": 0,
+        "lost": 0
+      },
+      "1.5": {
+        "fights": 179,
+        "wins": 142,
+        "expert_wins": 158,
+        "exit_hp": 40.52513966480447,
+        "expert_exit_hp": 43.70391061452514,
+        "capped": 0,
+        "followups": 643,
+        "queries": 2926,
+        "changed": 734,
+        "compared": 2826,
+        "gained": 3,
+        "lost": 4
+      }
+    },
+    "banks": {
+      "train": 420,
+      "validation": 160,
+      "test": 179
+    },
+    "selected_weight": 1.5
+  },
+  "privacy": {
+    "compared": 48,
+    "games": 12,
+    "replaced_search_move": 2,
+    "attempts": 65
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "fit": {
+    "examples": 345966,
+    "games": 32536,
+    "splits": [
+      276895,
+      34727,
+      34344
+    ],
+    "selection": {
+      "(4.0, 0.0)": {
+        "rooms": 34727,
+        "nll": 1.007802108283375,
+        "death_brier": 0.021926520606008484
+      },
+      "(4.0, 0.25)": {
+        "rooms": 34727,
+        "nll": 1.1343425574890804,
+        "death_brier": 0.021962808091885104
+      },
+      "(16.0, 0.0)": {
+        "rooms": 34727,
+        "nll": 1.0040247644430278,
+        "death_brier": 0.021914811723537344
+      },
+      "(16.0, 0.25)": {
+        "rooms": 34727,
+        "nll": 1.1286758821201668,
+        "death_brier": 0.021955093957491473
+      },
+      "(64.0, 0.0)": {
+        "rooms": 34727,
+        "nll": 1.001344990292322,
+        "death_brier": 0.021997868645713733
+      },
+      "(64.0, 0.25)": {
+        "rooms": 34727,
+        "nll": 1.1159478443546345,
+        "death_brier": 0.022010360794021494
+      },
+      "(256.0, 0.0)": {
+        "rooms": 34727,
+        "nll": 1.0005597932325048,
+        "death_brier": 0.022203929275253973
+      },
+      "(256.0, 0.25)": {
+        "rooms": 34727,
+        "nll": 1.0910178753002957,
+        "death_brier": 0.022178021399439158
+      },
+      "pooled": {
+        "rooms": 34727,
+        "nll": 1.008637800008654,
+        "death_brier": 0.02259858949966277
+      },
+      "conditional-mortality": {
+        "rooms": 34727,
+        "nll": 1.0070676946281045,
+        "death_brier": 0.021997868645713733
+      }
+    },
+    "shrink": "(256.0, 0.0)",
+    "test": {
+      "rooms": 34344,
+      "nll": 1.0180635240841989,
+      "death_brier": 0.020170012972217828
+    },
+    "pooled_test": {
+      "rooms": 34344,
+      "nll": 1.0269155880791268,
+      "death_brier": 0.02053160847827437
+    },
+    "value_brier": 0.19876407868119048,
+    "act_only_value_brier": 0.20680345962367655
+  },
+  "play": {
+    "selection": {
+      "parent": {
+        "n": 32768,
+        "encounters": 27,
+        "wins": 0,
+        "act3": 1706,
+        "boss": 395,
+        "second": 155,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771
+      },
+      "short": {
+        "n": 32768,
+        "encounters": 24,
+        "wins": 1,
+        "act3": 1666,
+        "boss": 392,
+        "second": 146,
+        "act4": 35,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 7,
+        "lost": 10
+      },
+      "deep": {
+        "n": 32768,
+        "encounters": 25,
+        "wins": 1,
+        "act3": 1687,
+        "boss": 374,
+        "second": 143,
+        "act4": 40,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 11,
+        "lost": 13
+      },
+      "last_two": {
+        "n": 32768,
+        "encounters": 29,
+        "wins": 1,
+        "act3": 1763,
+        "boss": 401,
+        "second": 154,
+        "act4": 40,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 8,
+        "lost": 6
+      },
+      "act2": {
+        "n": 32768,
+        "encounters": 28,
+        "wins": 1,
+        "act3": 1779,
+        "boss": 384,
+        "second": 147,
+        "act4": 40,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 6,
+        "lost": 5
+      },
+      "act3": {
+        "n": 32768,
+        "encounters": 27,
+        "wins": 1,
+        "act3": 1706,
+        "boss": 427,
+        "second": 159,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 3,
+        "lost": 3
+      }
+    },
+    "test": {
+      "parent": {
+        "n": 32768,
+        "encounters": 19,
+        "wins": 0,
+        "act3": 1712,
+        "boss": 425,
+        "second": 183,
+        "act4": 30,
+        "truncated": 2,
+        "panel": 273771
+      },
+      "last_two": {
+        "n": 32768,
+        "encounters": 24,
+        "wins": 1,
+        "act3": 1811,
+        "boss": 454,
+        "second": 192,
+        "act4": 34,
+        "truncated": 2,
+        "panel": 273771,
+        "gained": 9,
+        "lost": 4
+      }
+    },
+    "audit": {
+      "maps": 84,
+      "changed": 2,
+      "max_error": 2.4303825583160688e-06
+    },
+    "selected": "last_two"
+  }
+}

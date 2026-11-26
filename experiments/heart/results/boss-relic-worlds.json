@@ -1,0 +1,15 @@
+{
+  "public_world_audit": {
+    "matched": [
+      "423775849636552258",
+      "6540498681967874724",
+      "17003072781819564004",
+      "11597403047851576646",
+      "6337394915462047430",
+      "13128475658333549275"
+    ],
+    "worlds": 2
+  },
+  "paired_future_seed": "hash of displayed inventory and current offers",
+  "fixed_world_pilot_complete_games": 34
+}

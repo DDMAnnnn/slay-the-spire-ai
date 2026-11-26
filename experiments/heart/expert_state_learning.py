@@ -19,9 +19,10 @@ def send(stream,value):
     stream.write(json.dumps(value,separators=(",",":"))+"\n");stream.flush()
 
 
-def play(worker,net,device,split,collect=None,search_budget=None,search_mode=-1):
+def play(worker,net,device,split,collect=None,search_budget=None,search_mode=-1,afterstate=None):
     request=dict(split=split,labels=collect is not None)
     if search_budget is not None:request.update(search_budget=search_budget,search_mode=search_mode)
+    if afterstate is not None:request["afterstate"]=afterstate
     send(worker.stdin,request)
     dtype=np.dtype([("obs","<i2",sts.OBS_SIZE),("legal","u1",81),("action","u1")])
     net.eval()

@@ -11,6 +11,7 @@ import sys
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from public_demo_export import combat_index, digest, public_row
+from combat_afterstate import choose as rank_afterstates
 
 
 def send(value):
@@ -79,6 +80,12 @@ def main():
         if "subset" in task:
             pool=random.Random(task["subset_seed"]).sample(pool,min(len(pool),task["subset"]))
         pool=[item for item in pool for _ in range(task.get("repeats",1))]
+        critic=None
+        if "afterstate" in task:
+            config=task["afterstate"]
+            critic=json.loads(Path(config["model"]).read_text(encoding="utf8"))
+            layout.update(critic_cards=critic["cards"],critic_enemies=critic["enemies"])
+            if config.get("correction"):critic["correction"]=json.loads(Path(config["correction"]).read_text())
         train=task.get("labels",False)
         rng=random.Random(239993)
         summaries=[]
@@ -102,7 +109,12 @@ def main():
                             if task.get("search_mode",-1)<0:
                                 bits=env.public_combat_search_action(task["search_budget"],4,seed)["action"].bits
                             else:
-                                bits=env._native.public_belief_combat_search_action(task["search_budget"],4,seed,task["search_mode"],True).action.bits
+                                search_result=env._native.public_belief_combat_search_action(task["search_budget"],4,seed,task["search_mode"],True)
+                                bits=search_result.action.bits
+                                if critic:
+                                    bits,compared=rank_afterstates(env,sts,state,search_result,seed,critic,layout,config["weight"],config["worlds"])
+                                    e["critic_compared"]=e.get("critic_compared",0)+int(compared)
+                                    e["critic_changed"]=e.get("critic_changed",0)+int(bits!=search_result.action.bits)
                             move=combat_index(bits)
                             if move not in index:raise ValueError("search chose an unavailable move")
                             actions[i]=index[move]

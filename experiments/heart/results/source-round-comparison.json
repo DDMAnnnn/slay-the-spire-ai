@@ -1,0 +1,176 @@
+{
+  "ordinary_starts_per_player": 256,
+  "seed_panel": 261991,
+  "goal": "enter the Corrupted Heart fight",
+  "arms": {
+    "four_particle_search": {
+      "act2": 207,
+      "act3": 33,
+      "act4": 7,
+      "encounters": 5,
+      "wins": 1,
+      "truncated": 0,
+      "simulator_searches": 44651,
+      "wins_on": [
+        "2290664653572843552"
+      ],
+      "entered_on": [
+        "6007661146750020527",
+        "10595862123905664654",
+        "2290664653572843552",
+        "8687107786849390508",
+        "10462385470178987986"
+      ]
+    },
+    "independent_trees": {
+      "act2": 198,
+      "act3": 42,
+      "act4": 4,
+      "encounters": 3,
+      "wins": 1,
+      "truncated": 0,
+      "simulator_searches": 45499,
+      "wins_on": [
+        "7872109382192335524"
+      ],
+      "entered_on": [
+        "7872109382192335524",
+        "10595862123905664654",
+        "5358487791503215159"
+      ],
+      "searched_followups": 0
+    },
+    "transferred_strategy": {
+      "act2": 196,
+      "act3": 41,
+      "act4": 3,
+      "encounters": 1,
+      "wins": 0,
+      "truncated": 0,
+      "simulator_searches": 44932,
+      "wins_on": [],
+      "entered_on": [
+        "6007661146750020527"
+      ],
+      "searched_followups": 0
+    },
+    "eight_particle_turns": {
+      "act2": 208,
+      "act3": 46,
+      "act4": 9,
+      "encounters": 9,
+      "wins": 0,
+      "truncated": 0,
+      "simulator_searches": 47117,
+      "wins_on": [],
+      "entered_on": [
+        "6007661146750020527",
+        "13357557186810941450",
+        "10595862123905664654",
+        "11832805204481841913",
+        "2165542645431886951",
+        "11672121411129568863",
+        "8678068162034295974",
+        "8687107786849390508",
+        "10462385470178987986"
+      ],
+      "searched_followups": 0,
+      "checked_moves": 0,
+      "corrected_moves": 0
+    },
+    "eight_particle_followups": {
+      "act2": 214,
+      "act3": 46,
+      "act4": 5,
+      "encounters": 5,
+      "wins": 0,
+      "truncated": 0,
+      "simulator_searches": 48787,
+      "wins_on": [],
+      "entered_on": [
+        "6007661146750020527",
+        "11832805204481841913",
+        "8678068162034295974",
+        "8687107786849390508",
+        "10462385470178987986"
+      ],
+      "searched_followups": 1351,
+      "checked_moves": 0,
+      "corrected_moves": 0
+    },
+    "relic_planning": {
+      "act2": 207,
+      "act3": 32,
+      "act4": 5,
+      "encounters": 2,
+      "wins": 0,
+      "truncated": 0,
+      "simulator_searches": 43772,
+      "wins_on": [],
+      "entered_on": [
+        "8687107786849390508",
+        "10462385470178987986"
+      ],
+      "searched_followups": 0,
+      "relic_decisions": 207,
+      "changed_relics": 71
+    },
+    "relic_planning_and_paired_moves": {
+      "act2": 207,
+      "act3": 36,
+      "act4": 5,
+      "encounters": 2,
+      "wins": 0,
+      "truncated": 0,
+      "simulator_searches": 44749,
+      "wins_on": [],
+      "entered_on": [
+        "8687107786849390508",
+        "10462385470178987986"
+      ],
+      "searched_followups": 0,
+      "checked_moves": 21382,
+      "corrected_moves": 503,
+      "relic_decisions": 207,
+      "changed_relics": 71
+    }
+  },
+  "paired": {
+    "independent_trees": {
+      "parent": "four_particle_search",
+      "gained": 2,
+      "lost": 4,
+      "shared": 1
+    },
+    "transferred_strategy": {
+      "parent": "four_particle_search",
+      "gained": 0,
+      "lost": 4,
+      "shared": 1
+    },
+    "eight_particle_turns": {
+      "parent": "four_particle_search",
+      "gained": 5,
+      "lost": 1,
+      "shared": 4
+    },
+    "eight_particle_followups": {
+      "parent": "eight_particle_turns",
+      "gained": 0,
+      "lost": 4,
+      "shared": 5
+    },
+    "relic_planning": {
+      "parent": "four_particle_search",
+      "gained": 0,
+      "lost": 3,
+      "shared": 2
+    },
+    "relic_planning_and_paired_moves": {
+      "parent": "relic_planning",
+      "gained": 0,
+      "lost": 0,
+      "shared": 2
+    }
+  }
+}

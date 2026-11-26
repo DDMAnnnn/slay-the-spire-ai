@@ -237,6 +237,10 @@ def apply_model(variant, model):
     set_route_worlds(None)
     set_human_events(None)
     set_strategic_apprentice(None)
+    if hasattr(engine,"reset_draft_plans"):
+        engine.reset_draft_plans()
+    if hasattr(engine,"reset_room_planner"):
+        engine.reset_room_planner()
     if hasattr(engine,"reset_encounter_forecast"):
         engine.reset_encounter_forecast()
     if hasattr(engine,"reset_resource_effects"):
@@ -251,6 +255,12 @@ def apply_model(variant, model):
     set_route_worlds(model.get("route_worlds"))
     set_human_events(model.get("human_events"))
     set_strategic_apprentice(model.get("strategic_apprentice"))
+    plans=model.get("draft_plans")
+    if plans:
+        engine.set_draft_plans(plans["gate"],plans["prior"],plans["item"],plans["scales"])
+    planner=model.get("room_planner")
+    if planner:
+        engine.set_room_planner(planner["transition"],planner["value"],planner["horizon"],planner["acts"],planner["gain"])
     encounter=model.get("encounter_forecast")
     if encounter:
         banks=[encounter["encounters"][str(a)] for a in (1,2,3)]

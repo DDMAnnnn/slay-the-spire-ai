@@ -1,0 +1,251 @@
+{
+  "pairs": 1452,
+  "independent_worlds_per_pair": 3,
+  "fit": {
+    "source_games": 397,
+    "train_states": 1197,
+    "validation": {
+      "ridge16": {
+        "0.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 47,
+          "mean_gain": -0.34688346883468835,
+          "random_same_fraction": -0.6109678982968693,
+          "gain_interval": [
+            -0.8639472222222222,
+            0.0014227642276418875
+          ]
+        },
+        "1.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 27,
+          "mean_gain": -0.3062330623306233,
+          "random_same_fraction": -0.35098155859607383,
+          "gain_interval": [
+            -0.7944926829268293,
+            0.005446325424331261
+          ]
+        },
+        "3.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 7,
+          "mean_gain": -0.06233062330623305,
+          "random_same_fraction": -0.0909952188952784,
+          "gain_interval": [
+            -0.18550394656952032,
+            0.024901859504132203
+          ]
+        },
+        "6.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 0,
+          "mean_gain": 0.0,
+          "random_same_fraction": -0.0,
+          "gain_interval": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "ridge128": {
+        "0.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 46,
+          "mean_gain": -0.29810298102981025,
+          "random_same_fraction": -0.5979685813118294,
+          "gain_interval": [
+            -0.8095333333333332,
+            0.0484204905608377
+          ]
+        },
+        "1.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 19,
+          "mean_gain": -0.0921409214092141,
+          "random_same_fraction": -0.24698702271575568,
+          "gain_interval": [
+            -0.24201578627808137,
+            0.05378861788617874
+          ]
+        },
+        "3.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 5,
+          "mean_gain": -0.07317073170731705,
+          "random_same_fraction": -0.06499658492519886,
+          "gain_interval": [
+            -0.1967213114754098,
+            0.007874015748031496
+          ]
+        },
+        "6.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 0,
+          "mean_gain": 0.0,
+          "random_same_fraction": -0.0,
+          "gain_interval": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "trees": {
+        "0.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 23,
+          "mean_gain": 0.010840108401084,
+          "random_same_fraction": -0.2989842906559147,
+          "gain_interval": [
+            -0.4404810298102981,
+            0.578593388429752
+          ]
+        },
+        "1.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 2,
+          "mean_gain": 0.16802168021680217,
+          "random_same_fraction": -0.025998633970079545,
+          "gain_interval": [
+            0.0,
+            0.5830071116330521
+          ]
+        },
+        "3.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 1,
+          "mean_gain": 0.0,
+          "random_same_fraction": -0.012999316985039772,
+          "gain_interval": [
+            0.0,
+            0.0
+          ]
+        },
+        "6.0": {
+          "states": 123,
+          "games": 34,
+          "replaced": 0,
+          "mean_gain": 0.0,
+          "random_same_fraction": -0.0,
+          "gain_interval": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "selected": "trees",
+    "threshold": 1.0,
+    "test": {
+      "states": 132,
+      "games": 36,
+      "replaced": 6,
+      "mean_gain": 0.08080808080808081,
+      "random_same_fraction": -0.06703397612488521,
+      "gain_interval": [
+        -0.18138654553320355,
+        0.44735857748295543
+      ]
+    },
+    "always_swap": {
+      "states": 132,
+      "games": 36,
+      "replaced": 132,
+      "mean_gain": -1.4747474747474747,
+      "random_same_fraction": -1.4747474747474747,
+      "gain_interval": [
+        -2.674606087296927,
+        -0.2610457328740924
+      ]
+    },
+    "original_critic": {
+      "states": 132,
+      "games": 36,
+      "replaced": 29,
+      "mean_gain": -0.5176767676767676,
+      "random_same_fraction": -0.3239975512702785,
+      "gain_interval": [
+        -1.2064664502164502,
+        0.030782886561334943
+      ]
+    }
+  },
+  "combat": {
+    "validation": {
+      "0.0": {
+        "fights": 160,
+        "wins": 130,
+        "expert_wins": 139,
+        "exit_hp": 41.9125,
+        "expert_exit_hp": 44.94375,
+        "capped": 0,
+        "followups": 676,
+        "queries": 2727,
+        "changed": 0,
+        "compared": 0,
+        "gained": 0,
+        "lost": 0
+      },
+      "1.0": {
+        "fights": 160,
+        "wins": 127,
+        "expert_wins": 139,
+        "exit_hp": 41.96875,
+        "expert_exit_hp": 44.94375,
+        "capped": 0,
+        "followups": 667,
+        "queries": 2777,
+        "changed": 200,
+        "compared": 2696,
+        "gained": 3,
+        "lost": 6
+      }
+    },
+    "test": {
+      "0.0": {
+        "fights": 179,
+        "wins": 143,
+        "expert_wins": 158,
+        "exit_hp": 40.497206703910614,
+        "expert_exit_hp": 43.70391061452514,
+        "capped": 0,
+        "followups": 622,
+        "queries": 2725,
+        "changed": 0,
+        "compared": 0,
+        "gained": 0,
+        "lost": 0
+      },
+      "1.0": {
+        "fights": 179,
+        "wins": 145,
+        "expert_wins": 158,
+        "exit_hp": 40.87709497206704,
+        "expert_exit_hp": 43.70391061452514,
+        "capped": 0,
+        "followups": 629,
+        "queries": 2740,
+        "changed": 209,
+        "compared": 2642,
+        "gained": 3,
+        "lost": 1
+      }
+    },
+    "banks": {
+      "train": 420,
+      "validation": 160,
+      "test": 179
+    },
+    "selected_weight": 1.0
+  }
+}

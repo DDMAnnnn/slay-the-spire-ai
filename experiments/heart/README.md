@@ -2,6 +2,23 @@
 
 A successful episode must start at Neow with the unmodified Ironclad starter deck, collect all three keys, reach Act 4 and defeat the Heart. An Act 3 victory and a truncation both count as misses. This experiment uses the pinned native simulator from the [combat setup](../headbutt/README.md).
 
+## Current ordinary-start benchmarks
+
+My current target is to **enter the Corrupted Heart fight on 20% of ordinary A20 Ironclad runs**. I record defeating it as a separate outcome. Every run in this table began at Neow with the starter deck.
+
+| Frozen player | Starts | Entered the Heart fight | Defeated the Heart |
+| --- | ---: | ---: | ---: |
+| Local simulator, human draft plus combat and reward search | 32,768 | 34 (0.104%) | 3 |
+| Same simulator, same seeds, learned map policy added | 32,768 | 60 (0.183%) | 3 |
+| Local simulator, independent panel, original / learned route / route plus learned campfires | 32,768 each | 29 / 55 / 59 | 1 / 6 / 6 |
+| Pinned source simulator, local strategic policy plus public shared-tree combat search | 256 | 5 (1.95%) | 1 |
+| Same source player, first 256 starts on the independent panel | 256 | 7 (2.73%) | 2 |
+| Higher-budget source search on ordinary combat turns, original seed panel | 256 | 9 (3.52%) | 0 |
+
+The first two rows isolate a route change. The source simulator uses a different set of seeds and a smaller panel. Across its two fixed samples the player reached the Heart 12 times in 512 starts (2.34%). The second sample is the first 256 of a planned 32,768 starts. That longer evaluation is paused with 327 complete seed records. The higher-budget search has one completed panel. [Local simulator comparison](results/combined-human-search.json) · [Source configuration, ordinary runs and verified win](results/reference-runtime.json)
+
+The frozen [native route checkpoint](results/learned-route-search.json.gz) reproduces seed 194002634. With the native extension on the Python path, run `python -m experiments.heart.replay --checkpoint experiments/heart/results/learned-route-search.json.gz --seed 194002634 --out build/learned-route-win.html`. For the pinned source simulator, the [strategic checkpoint](results/source-strategic-policy.json.gz) supplies the noncombat choices. After preparing both simulator bindings, run `python -m experiments.heart.strategic_source_play --model experiments/heart/results/source-strategic-policy.json.gz --mode 2 --early 384 --late 2048 --elite 2048 --boss 8192 --seed 2290664653572843552` to reproduce the verified ordinary win.
+
 The actor gives every legal action a score from the public observation. It reads card facts, hand costs, enemy intents, deck composition, relics, potions, HP, gold and the visible map. It estimates reachable future rooms along map edges to plan for the emerald key. Its initial action values include hand-authored Ironclad strategy. The full-run training loop fits the relative weights from episode returns by evaluating positive and negative perturbations on matching training seeds, averaging the stronger proposals and selecting on separate validation seeds. Ordinary event preferences come from the previous neural event checkpoint averaged over its original training starts. Other screens use the action scorer in `policy.cpp`. This is a separate full-run actor. The toolkit's published Defect policy supplies no actions or weights.
 
 Act 2 training snapshots are taken from natural, originally unmodified training runs. Each candidate resumes the same fights, with the real HP, inventory, and deck from those prefixes. The policy sees only the observation. Final evaluations always begin at Neow.
@@ -533,3 +550,61 @@ I replayed the public reference traces to their first Act 3 screen. With all 192
 I also compared two searches on individual held-out fights. At 384 simulations, a shared public-belief tree won 143 of 179 fights versus 133 for separate trees. Eleven fights switched to wins and one to a loss. At 2,048 simulations, the same shared-tree mode still won 143. I selected the mode using different games. The independent search then won 140 at that budget. These runs used the published simulator's public search without its strategic Heart checkpoint. [Matched source fights](results/shared-search-screen.json)
 
 On the retained campfire policy I repeated the 13-room Act 3 planning experiment. It reached 37 Hearts instead of 34 on 32,768 starts, with three kills instead of five. The first boss count increased from 395 to 460. Clearing the last two fights remains a separate bottleneck. [Late map replication](results/route-rollouts.json)
+
+### Does route learning still help when combat and reward search are both on?
+
+I changed only the map policy on the combined search and human-draft player. On the same 32,768 A20 starts, Heart entries rose from 34 to 60. Six seeds reached the Heart with both policies, 54 gained an encounter and 28 lost one. Both policies killed the Heart three times. The new route sent fewer games into Act 3 (2,664 vs 3,077), but more through both bosses and into Act 4 (80 vs 51). Only 8.1% of starts reached Act 3 at all. To reach my 20% Heart goal, I have to improve early and middle survival as well. [Same-seed route comparison](results/combined-human-search.json)
+
+I also tried predicting the distribution of HP after each visible room and carrying it through the map. I collected 345,966 room continuations across my training and evaluation splits and checked the unchanged branches against ordinary play. On a faster player, planning over the last two acts reached 29 Hearts against 27 on selection and 24 against 19 on fresh starts. The fresh panel contained nine gained encounters and four lost. These counts warrant replication on the stronger search player. [Room model and two full panels](results/room-transitions.json)
+
+### Can an accurate fight prediction tell me which reward to take?
+
+I split 11,680 fights by game, with 9,446 for training, 1,127 for validation and 1,107 for the test. Adding the actual inventory reduced held-out fight utility error from 0.03170 to 0.03028. I then used the model to compare the deck before and after a prospective reward against the same opponent distribution. On 32,768 fresh starts the player reached 16 Hearts against 29 for its parent. The dataset let me check predictions about decks that actually fought. It gave me much weaker evidence about the effect of adding a particular card to a particular deck. I left this scorer out of the player. [Forecast accuracy and decisions in full games](results/encounter-forecast.json)
+
+For resource use, I could make that comparison directly by replaying the same position at different HP or potion levels. Feeding those estimated costs into both the tactical search and the potion decision rescued 36 of 160 previously fatal fights against 35 for the original, and kept all 160 successful controls against 159. Seven fights improved and five got worse. That small net gain gives me little reason to spend a full panel on this change alone. [Matched fight test](results/resource-effects.json)
+
+### What did learning the next card-selection prompt buy me?
+
+I trained a separate scorer for the visible legal choices when a card asks for a follow-up. On held-out prompts it agreed with the recorded player 39.8% of the time versus 28.6% for picking the first legal option. On the same 192 earned Act 3 starts the scorer reached four Hearts and won twice, versus five Hearts and one win. On 256 ordinary starts neither reached the Heart. I also checked the public combat search on 48 Headbutt prompts from 17 games. Changing the concealed draw order while holding the displayed decision fixed preserved the chosen card, root visits and estimated root values on every tested prompt. [Follow-up training and privacy audit](results/public-followups.json) · [Full-game and earned-start comparisons](results/reference-runtime.json)
+
+### Did the stronger combat search help across a whole run?
+
+I gave the public shared tree four independent particles and 384 simulations on early ordinary moves, 2,048 on elites and late moves, and 8,192 on bosses. My strategic policy supplied the noncombat choices. Of 256 ordinary A20 Ironclad starts, 207 reached Act 2, 33 reached Act 3, seven reached Act 4, five entered the Heart fight and one won. Of the 174 runs that stopped in Act 2, 52 ended on the boss floor and 122 ended earlier. This gives me a reason to improve hallway and elite fights along with bosses. I launched a separate 32,768-start evaluation on fresh seeds. [Source-runtime results](results/reference-runtime.json)
+
+I also tried learning which search budget and rollout method to use from the public HP and floor when each fight starts. I could compare four methods from the exact same fight and train directly on the differences. I fitted on 160 development fights with folds grouped by game. On 179 held-out fights the learned choice won 141, versus 143 for always using the cheaper shared tree. Randomly assigning the same mix had an expected 141.8 wins. Even selecting the winner after seeing all four results would rescue only seven more fights (150 wins). I moved on to improving the play itself. [Paired outcomes and simulation counts](results/search-allocation.json)
+
+### Do completed decks teach me what to draft midway through Act 2?
+
+I clustered the final inventories in my human training games and used the clusters as auxiliary labels for learning draft decisions. At decision time the gate sees only the cards and relics already acquired. Validation chose 16 clusters. On held-out card choices the log loss moved from 0.826 to 0.823, with little change in accuracy. In 32,768 fresh games the strongest mixture reached 25 Hearts and killed two, versus 26 encounters and zero kills for its parent. A single-cluster control at the same scale reached 22 and killed two. I kept the parent for my encounter objective. [Human choice prediction and full-run comparison](results/latent-draft.json)
+
+### Can a mid-fight prediction choose between two plausible plays?
+
+I trained on 114,558 public decisions from 7,996 fights. Each fight had equal total training weight. I gave a surviving fight 35 points plus exit HP and a loss zero. On 904 fights from held-out games, using the displayed hand, intents, enemies and statuses reduced mean absolute error from 12.81 to 8.43 score points. My exported decision trees matched the training library's predictions exactly on the sampled test rows.
+
+I then compared two legal moves the search considered competitive. I played both across the same three independently sampled concealed futures and estimated the resulting position with the fitted trees. On 48 tested prompts, altering the real concealed draw order left both estimates and the selected move unchanged. Validation chose the stronger influence of the two settings I tried. On 179 held-out fights it changed 734 moves, rescued three fights and lost four, winning 142 versus 143. I kept the original combat search. The next experiment measures the effect of actually trying each candidate, directly supervising the decision instead of assuming that a good position forecast supplies that difference. [Prediction, privacy and fight outcomes](results/afterstate-critic.json)
+
+I also reproduced the source search player's ordinary win on seed 2290664653572843552. A fresh simulator accepted all 933 recorded actions and reproduced the terminal hash. It entered the Heart with 42 of 42 HP and finished with nine. It collected Sapphire on floor 9, Ruby on 23 and Emerald on 40. The deck that reached the Heart held Corruption, Dark Embrace+, three Apparitions and the Dead Branch relic. [Verified outcome](results/reference-runtime.json)
+
+### Can combat help choose the first boss relic?
+
+My first pilot reused the same three artificial seeds at every chest. I changed the seed source to a hash of the public inventory and the current offers, so different chests sample different possible Act 2 futures. All candidates at one chest still get the same three worlds. I started a fresh evaluation for this version. For every relic, including skipping, I used those same worlds and played the first three fights under a cheaper search. In the actual run I retained my draft choice unless the alternative gained more than three score points across these simulated futures on average. The three-fight horizon covers a risk my ordinary player often encountered early in Act 2. It can also underrate a relic whose value builds up later. For six archived games, changing the underlying unseen future left the computed branch values identical. Continuing the original replay after planning reproduced its terminal hash. [Public-world checks](results/boss-relic-worlds.json)
+
+I stopped an expensive late-boss search comparison after verifying the first 24 unchanged continuations. Only 631 of 32,768 benchmark starts had reached that switch point. Even winning from every one of those positions would put the encounter rate below 2% on that panel. I redirected compute toward decisions made earlier in the run. I have no comparative result for this stopped experiment.
+
+### Does measuring the effect of switching the move change what I learn?
+
+I saved 1,452 tactical decisions from 397 verified games. At each one I tried the searcher's move and one competitive alternative in three independently sampled futures, using the same chance realization for both. I played the fights to their end and trained on the difference in survival, exit HP and remaining potions. Replaying each original game still produced its recorded terminal hash.
+
+On 132 held-out decisions from 36 games, the fitted rule switched six times. Its measured advantage averaged 0.08 score points per decision. A game-level bootstrap interval ran from −0.18 to +0.45. In the fixed 179-fight test it changed 209 moves, rescued three fights and lost one, reaching 145 wins against 143. On the separate 160-fight validation bank it won 127 against 130. I am testing it together with boss-relic planning on ordinary starts, restricted to the 384-simulation combat turns used in training. I am keeping the parent available while that test runs. [Paired data, held-out effects and tactical outcomes](results/move-trials.json)
+
+On the fresh source panel, 222 of the first 256 ordinary starts reached Act 2, 53 reached Act 3, eight entered Act 4 and seven encountered the Heart. Two won. On the original 256 seeds, transferring the combined search player’s strategic choices increased Act 3 arrivals from 33 to 41 but reduced Heart entries from five to one and kills from one to zero. I kept the original strategic checkpoint for public shared-tree combat. [Same-seed macro test and independent tactical replication](results/reference-runtime.json)
+
+I finished the independent native test. On 32,768 identical starts the original combined player reached 29 Hearts and killed one, adding only the learned route reached 55 and killed six, and adding the learned campfire policy as well reached 59 and killed six. The campfire change gained 41 and lost 37 encounters relative to routing alone. Across both full panels, routing raised encounters from 63 to 115 over 65,536 starts and kills from four to nine. The large reproducible gain here is routing. [Full paired comparisons](results/combined-human-search.json)
+
+I also ran the source tree-sharing control on 256 ordinary starts. Both versions received identical sampled particles, rollout policy and total simulation budgets at each corresponding decision. Keeping a separate tree per particle reached three Hearts and killed one, against five encounters and one kill with a shared tree. Four seeds gained an encounter and two lost one. This isolates the search choice, although the number of Heart outcomes is small. [Source ablation](results/reference-runtime.json)
+
+### Which changes held up when I finished the round?
+
+I checked that all seven source variants used exactly the same 256 ordinary starting seeds. Every game ended within the action limit. Increasing the combat search budget on regular turns raised Act 3 arrivals from 33 to 46 and Heart encounters from five to nine. Five seeds gained an encounter and one lost it. The higher-budget player reached the Heart on all nine runs that entered Act 4 and lost all nine fights. Applying that same expensive search to follow-up prompts, such as which card to put on top with Headbutt, lost four of those encounters and gained none.
+
+Planning the first boss relic using three simulated fights reached two Hearts and won zero, against five encounters and one kill for the parent. Adding the learned move correction made choices differently, but the same two seeds still reached the Heart. I kept the four-particle player as the replicated benchmark. The higher-budget regular-turn search is the strongest candidate on this panel. I paused before running it on fresh seeds. [Stage counts and paired comparisons](results/source-round-comparison.json)

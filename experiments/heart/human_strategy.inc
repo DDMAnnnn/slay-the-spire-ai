@@ -53,4 +53,30 @@ void historical_menu(const uint8_t *mask,double *scores) const {
         scores[ACT_CHOOSE+i]+=weight*(value(token,upgraded)-base);
         if(!boss && token>=2) scores[ACT_CHOOSE+i]+=historical_gate[9+act];
     }
+    if(!plan_scale[boss]) return;
+    // Infer a distribution over possible winning deck styles from the present inventory.
+    // Each style has its own normalized distribution over this actual offer.
+    const size_t groups=plan_items.size();
+    auto log_prior=plan_prior[act];
+    for(int t=2;t<HISTORICAL_ITEMS;++t) if(counts[t])
+        for(size_t g=0;g<groups;++g) log_prior[g]+=counts[t]*plan_gate[t][g]/norm;
+    double largest=*std::max_element(log_prior.begin(),log_prior.end()),mass=0.;
+    for(auto &v:log_prior){v=std::exp(v-largest);mass+=v;}
+    std::vector<double> prior_value,prob(options.size(),0.);
+    size_t skip_slot=0;
+    for(size_t j=0;j<options.size();++j) {
+        auto [i,t]=options[j];
+        prior_value.push_back(value(t,!boss && t>=2 && o[OBS_CHOICES+i*CHOICE_W+2]>0));
+        if(!t) skip_slot=j;
+    }
+    for(size_t g=0;g<groups;++g) {
+        std::vector<double> z=prior_value;
+        for(size_t j=0;j<options.size();++j) z[j]+=plan_items[g][options[j].second];
+        double top=*std::max_element(z.begin(),z.end()),normalizer=0.;
+        for(auto &q:z){q=std::exp(q-top);normalizer+=q;}
+        for(size_t j=0;j<options.size();++j) prob[j]+=log_prior[g]/mass*z[j]/normalizer;
+    }
+    for(size_t j=0;j<options.size();++j)
+        scores[ACT_CHOOSE+options[j].first]+=plan_scale[boss]*(std::log(prob[j]/prob[skip_slot])-
+                                                              (prior_value[j]-prior_value[skip_slot]));
 }

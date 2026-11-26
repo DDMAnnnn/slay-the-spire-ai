@@ -45,7 +45,7 @@ def main():
     bucket=(seed.astype(np.int64)*2654435761 % 2**32)%10
     train=bucket<8;validation=bucket==8;test=bucket==9
     # Smooth rare cells toward adjacent HP levels and then toward the coarser act/room table.
-    def fit(shrink):
+    def fit(shrink,adjacent):
         counts=np.zeros((3,4,2,9,H,H+1))
         np.add.at(counts,(act[train],stage[train],p[train],tile[train],h[train],target[train]),1)
         # Unobserved room groups stay close to an identity HP transition.
@@ -53,8 +53,8 @@ def main():
         pooled=counts.sum((1,2))
         coarse=normalize(pooled,identity,3.)
         neighbors=counts.copy()
-        neighbors[...,1:,:]+=.25*counts[...,:-1,:]
-        neighbors[...,:-1,:]+=.25*counts[...,1:,:]
+        neighbors[...,1:,:]+=adjacent*counts[...,:-1,:]
+        neighbors[...,:-1,:]+=adjacent*counts[...,1:,:]
         trans=normalize(neighbors,coarse[:,None,None],shrink)
         # Use units from one natural root per sampled decision, regardless of how many alternatives it offered.
         m=train & (parent==1)
@@ -70,10 +70,16 @@ def main():
         y=target[selection]
         return dict(rooms=len(y),nll=float(-np.log(dist[np.arange(len(y)),y].clip(1.e-8)).mean()),
                     death_brier=float(np.mean((dist[:,0]-(y==0))**2)))
-    fits={k:fit(k) for k in (4.,16.,64.)}
+    fits={str((k,adj)):fit(k,adj) for k in (4.,16.,64.,256.) for adj in (0.,.25)}
+    full,value,coarse=fits[str((64.,0.))]
+    pooled=np.broadcast_to(coarse[:,None,None],full.shape)
+    fits["pooled"]=(pooled,value,coarse)
+    # Sparse cells can teach room mortality more reliably than the entire exit-HP distribution.
+    conditional=pooled[...,1:]/np.maximum(1.e-9,1.-pooled[...,:1])
+    hybrid=np.concatenate((full[...,:1],(1.-full[...,:1])*conditional),axis=-1)
+    fits["conditional-mortality"]=(hybrid,value,coarse)
     metrics={k:stats(v[0],validation) for k,v in fits.items()}
     selected=min(metrics,key=lambda k:metrics[k]["nll"]);trans,value,coarse=fits[selected]
-    pooled=np.broadcast_to(coarse[:,None,None],trans.shape)
     terminal=np.ones((3,4,2,2,H))
     for i in range(3):
         valid=train&(parent==1)&(act==i)

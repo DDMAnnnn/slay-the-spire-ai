@@ -1,0 +1,276 @@
+{
+  "fit": {
+    "fights": [
+      9446,
+      1127,
+      1107
+    ],
+    "games": [
+      802,
+      98,
+      94
+    ],
+    "models": {
+      "context": {
+        "epoch": 32,
+        "validation": [
+          {
+            "epoch": 1,
+            "win_nll": 0.23816612362861633,
+            "win_brier": 0.06810642033815384,
+            "survivor_hp_mae": 0.15858016908168793,
+            "utility_mse": 0.04751736670732498
+          },
+          {
+            "epoch": 2,
+            "win_nll": 0.19269110262393951,
+            "win_brier": 0.056538697332143784,
+            "survivor_hp_mae": 0.13497205078601837,
+            "utility_mse": 0.036597561091184616
+          },
+          {
+            "epoch": 4,
+            "win_nll": 0.17577451467514038,
+            "win_brier": 0.05355482175946236,
+            "survivor_hp_mae": 0.12433312088251114,
+            "utility_mse": 0.033343955874443054
+          },
+          {
+            "epoch": 8,
+            "win_nll": 0.1672278642654419,
+            "win_brier": 0.051956724375486374,
+            "survivor_hp_mae": 0.11762845516204834,
+            "utility_mse": 0.031609907746315
+          },
+          {
+            "epoch": 12,
+            "win_nll": 0.16405239701271057,
+            "win_brier": 0.05097012221813202,
+            "survivor_hp_mae": 0.11571905761957169,
+            "utility_mse": 0.031041665002703667
+          },
+          {
+            "epoch": 16,
+            "win_nll": 0.16018250584602356,
+            "win_brier": 0.04971151798963547,
+            "survivor_hp_mae": 0.11423669010400772,
+            "utility_mse": 0.03014077991247177
+          },
+          {
+            "epoch": 24,
+            "win_nll": 0.16305996477603912,
+            "win_brier": 0.05080867558717728,
+            "survivor_hp_mae": 0.11421001702547073,
+            "utility_mse": 0.031296536326408386
+          },
+          {
+            "epoch": 32,
+            "win_nll": 0.15684890747070312,
+            "win_brier": 0.04903162643313408,
+            "survivor_hp_mae": 0.1114346906542778,
+            "utility_mse": 0.029589790850877762
+          }
+        ],
+        "test": {
+          "win_nll": 0.16677424311637878,
+          "win_brier": 0.05105242133140564,
+          "survivor_hp_mae": 0.10825002193450928,
+          "utility_mse": 0.03169551491737366
+        }
+      },
+      "inventory": {
+        "epoch": 12,
+        "validation": [
+          {
+            "epoch": 1,
+            "win_nll": 0.24758906662464142,
+            "win_brier": 0.06972875446081161,
+            "survivor_hp_mae": 0.15656284987926483,
+            "utility_mse": 0.04855627939105034
+          },
+          {
+            "epoch": 2,
+            "win_nll": 0.19657041132450104,
+            "win_brier": 0.05792485550045967,
+            "survivor_hp_mae": 0.13004547357559204,
+            "utility_mse": 0.03691379353404045
+          },
+          {
+            "epoch": 4,
+            "win_nll": 0.17496691644191742,
+            "win_brier": 0.05345435440540314,
+            "survivor_hp_mae": 0.11874458193778992,
+            "utility_mse": 0.03337307646870613
+          },
+          {
+            "epoch": 8,
+            "win_nll": 0.16262295842170715,
+            "win_brier": 0.05121207982301712,
+            "survivor_hp_mae": 0.11515152454376221,
+            "utility_mse": 0.031836532056331635
+          },
+          {
+            "epoch": 12,
+            "win_nll": 0.15887214243412018,
+            "win_brier": 0.049674272537231445,
+            "survivor_hp_mae": 0.11031900346279144,
+            "utility_mse": 0.03049740567803383
+          },
+          {
+            "epoch": 16,
+            "win_nll": 0.16279418766498566,
+            "win_brier": 0.05080489069223404,
+            "survivor_hp_mae": 0.10968324542045593,
+            "utility_mse": 0.03095977194607258
+          },
+          {
+            "epoch": 24,
+            "win_nll": 0.19599179923534393,
+            "win_brier": 0.06155364587903023,
+            "survivor_hp_mae": 0.11382491141557693,
+            "utility_mse": 0.03844136372208595
+          },
+          {
+            "epoch": 32,
+            "win_nll": 0.18677103519439697,
+            "win_brier": 0.05641183257102966,
+            "survivor_hp_mae": 0.10754730552434921,
+            "utility_mse": 0.03397146239876747
+          }
+        ],
+        "test": {
+          "win_nll": 0.1635817438364029,
+          "win_brier": 0.0496278814971447,
+          "survivor_hp_mae": 0.10706274956464767,
+          "utility_mse": 0.03027532994747162
+        }
+      }
+    }
+  },
+  "play": {
+    "selection": {
+      "parent": {
+        "n": 32768,
+        "encounters": 27,
+        "wins": 0,
+        "act3": 1706,
+        "boss": 395,
+        "second": 155,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771
+      },
+      "future": {
+        "n": 32768,
+        "encounters": 20,
+        "wins": 2,
+        "act3": 1697,
+        "boss": 420,
+        "second": 184,
+        "act4": 36,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 17,
+        "lost": 24
+      },
+      "strong": {
+        "n": 32768,
+        "encounters": 17,
+        "wins": 1,
+        "act3": 1303,
+        "boss": 305,
+        "second": 119,
+        "act4": 24,
+        "truncated": 2,
+        "panel": 267771,
+        "gained": 12,
+        "lost": 22
+      },
+      "boss": {
+        "n": 32768,
+        "encounters": 13,
+        "wins": 2,
+        "act3": 1263,
+        "boss": 274,
+        "second": 100,
+        "act4": 18,
+        "truncated": 2,
+        "panel": 267771,
+        "gained": 11,
+        "lost": 25
+      },
+      "joint": {
+        "n": 32768,
+        "encounters": 11,
+        "wins": 2,
+        "act3": 1328,
+        "boss": 298,
+        "second": 114,
+        "act4": 17,
+        "truncated": 2,
+        "panel": 267771,
+        "gained": 9,
+        "lost": 25
+      },
+      "potion": {
+        "n": 32768,
+        "encounters": 34,
+        "wins": 3,
+        "act3": 1761,
+        "boss": 410,
+        "second": 172,
+        "act4": 49,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 18,
+        "lost": 11
+      }
+    },
+    "test": {
+      "parent": {
+        "n": 32768,
+        "encounters": 29,
+        "wins": 2,
+        "act3": 1666,
+        "boss": 384,
+        "second": 174,
+        "act4": 49,
+        "truncated": 2,
+        "panel": 269771
+      },
+      "potion": {
+        "n": 32768,
+        "encounters": 28,
+        "wins": 1,
+        "act3": 1717,
+        "boss": 418,
+        "second": 190,
+        "act4": 44,
+        "truncated": 2,
+        "panel": 269771,
+        "gained": 12,
+        "lost": 13
+      },
+      "future": {
+        "n": 32768,
+        "encounters": 16,
+        "wins": 0,
+        "act3": 1616,
+        "boss": 392,
+        "second": 151,
+        "act4": 29,
+        "truncated": 2,
+        "panel": 269771,
+        "gained": 10,
+        "lost": 23
+      }
+    },
+    "audit": {
+      "menus": 133,
+      "options": 775,
+      "max_error": 3.6512901182561563e-05,
+      "changed": 16
+    },
+    "selected": "future"
+  }
+}

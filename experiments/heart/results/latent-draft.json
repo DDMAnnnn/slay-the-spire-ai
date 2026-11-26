@@ -1,0 +1,319 @@
+{
+  "fit": {
+    "base": {
+      "validation": {
+        "cards": {
+          "n": 7054,
+          "nll": 0.8264637589454651,
+          "accuracy": 0.6505528688430786
+        },
+        "relics": {
+          "n": 548,
+          "nll": 0.8553677797317505,
+          "accuracy": 0.5894160270690918
+        }
+      },
+      "test": {
+        "cards": {
+          "n": 6966,
+          "nll": 0.8257859945297241,
+          "accuracy": 0.6583405137062073
+        },
+        "relics": {
+          "n": 534,
+          "nll": 0.8485556244850159,
+          "accuracy": 0.6254681944847107
+        }
+      },
+      "streamers": {
+        "cards": {
+          "n": 3483,
+          "nll": 0.9496577382087708,
+          "accuracy": 0.6060867309570312
+        },
+        "relics": {
+          "n": 237,
+          "nll": 0.8755192160606384,
+          "accuracy": 0.6286919713020325
+        }
+      }
+    },
+    "fits": {
+      "1": {
+        "epoch": 2,
+        "validation_loss": 0.9554137647151947,
+        "clusters": [
+          2088
+        ],
+        "test": {
+          "cards": {
+            "n": 6966,
+            "nll": 0.8263474702835083,
+            "accuracy": 0.6570485234260559
+          },
+          "relics": {
+            "n": 534,
+            "nll": 0.8431128859519958,
+            "accuracy": 0.6123595833778381
+          }
+        },
+        "streamers": {
+          "cards": {
+            "n": 3483,
+            "nll": 0.9489265084266663,
+            "accuracy": 0.6075222492218018
+          },
+          "relics": {
+            "n": 237,
+            "nll": 0.8828223943710327,
+            "accuracy": 0.6413501501083374
+          }
+        }
+      },
+      "4": {
+        "epoch": 2,
+        "validation_loss": 0.9538876205682755,
+        "clusters": [
+          483,
+          395,
+          630,
+          580
+        ],
+        "test": {
+          "cards": {
+            "n": 6966,
+            "nll": 0.8261813521385193,
+            "accuracy": 0.6587712168693542
+          },
+          "relics": {
+            "n": 534,
+            "nll": 0.8399008512496948,
+            "accuracy": 0.6104869246482849
+          }
+        },
+        "streamers": {
+          "cards": {
+            "n": 3483,
+            "nll": 0.9569268226623535,
+            "accuracy": 0.6069480776786804
+          },
+          "relics": {
+            "n": 237,
+            "nll": 0.8795316815376282,
+            "accuracy": 0.6540083885192871
+          }
+        }
+      },
+      "8": {
+        "epoch": 1,
+        "validation_loss": 0.9541612327098846,
+        "clusters": [
+          579,
+          108,
+          130,
+          207,
+          115,
+          287,
+          470,
+          192
+        ],
+        "test": {
+          "cards": {
+            "n": 6966,
+            "nll": 0.8267874717712402,
+            "accuracy": 0.6560436487197876
+          },
+          "relics": {
+            "n": 534,
+            "nll": 0.8413942456245422,
+            "accuracy": 0.6235955357551575
+          }
+        },
+        "streamers": {
+          "cards": {
+            "n": 3483,
+            "nll": 0.9567117691040039,
+            "accuracy": 0.6035027503967285
+          },
+          "relics": {
+            "n": 237,
+            "nll": 0.8746398091316223,
+            "accuracy": 0.6455695629119873
+          }
+        }
+      },
+      "16": {
+        "epoch": 2,
+        "validation_loss": 0.9529364049434662,
+        "clusters": [
+          8,
+          57,
+          288,
+          131,
+          44,
+          120,
+          258,
+          187,
+          88,
+          141,
+          60,
+          210,
+          104,
+          250,
+          68,
+          74
+        ],
+        "test": {
+          "cards": {
+            "n": 6966,
+            "nll": 0.8233102560043335,
+            "accuracy": 0.6580533981323242
+          },
+          "relics": {
+            "n": 534,
+            "nll": 0.8400750756263733,
+            "accuracy": 0.6179775595664978
+          }
+        },
+        "streamers": {
+          "cards": {
+            "n": 3483,
+            "nll": 0.9544996023178101,
+            "accuracy": 0.6066609621047974
+          },
+          "relics": {
+            "n": 237,
+            "nll": 0.8786628246307373,
+            "accuracy": 0.6329113841056824
+          }
+        }
+      }
+    },
+    "selected": "16"
+  },
+  "play": {
+    "selection": {
+      "parent": {
+        "n": 32768,
+        "encounters": 27,
+        "wins": 0,
+        "act3": 1706,
+        "boss": 395,
+        "second": 155,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771
+      },
+      "one": {
+        "n": 32768,
+        "encounters": 28,
+        "wins": 1,
+        "act3": 1598,
+        "boss": 382,
+        "second": 160,
+        "act4": 40,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 10,
+        "lost": 9
+      },
+      "light": {
+        "n": 32768,
+        "encounters": 22,
+        "wins": 1,
+        "act3": 1695,
+        "boss": 407,
+        "second": 168,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 8,
+        "lost": 13
+      },
+      "medium": {
+        "n": 32768,
+        "encounters": 19,
+        "wins": 0,
+        "act3": 1672,
+        "boss": 398,
+        "second": 173,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 9,
+        "lost": 17
+      },
+      "strong": {
+        "n": 32768,
+        "encounters": 24,
+        "wins": 1,
+        "act3": 1563,
+        "boss": 361,
+        "second": 147,
+        "act4": 39,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 20,
+        "lost": 23
+      },
+      "cards": {
+        "n": 32768,
+        "encounters": 21,
+        "wins": 1,
+        "act3": 1661,
+        "boss": 375,
+        "second": 168,
+        "act4": 37,
+        "truncated": 0,
+        "panel": 267771,
+        "gained": 9,
+        "lost": 15
+      }
+    },
+    "test": {
+      "parent": {
+        "n": 32768,
+        "encounters": 26,
+        "wins": 0,
+        "act3": 1640,
+        "boss": 409,
+        "second": 176,
+        "act4": 36,
+        "truncated": 0,
+        "panel": 275771
+      },
+      "strong": {
+        "n": 32768,
+        "encounters": 25,
+        "wins": 2,
+        "act3": 1559,
+        "boss": 410,
+        "second": 177,
+        "act4": 43,
+        "truncated": 0,
+        "panel": 275771,
+        "gained": 16,
+        "lost": 17
+      },
+      "matched_one": {
+        "n": 32768,
+        "encounters": 22,
+        "wins": 2,
+        "act3": 1531,
+        "boss": 364,
+        "second": 169,
+        "act4": 35,
+        "truncated": 0,
+        "panel": 275771,
+        "gained": 11,
+        "lost": 15
+      }
+    },
+    "audit": {
+      "menus": 119,
+      "changed": 12,
+      "max_error": 7.773418016832068e-06
+    },
+    "selected": "strong"
+  }
+}

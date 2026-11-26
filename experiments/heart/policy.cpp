@@ -251,6 +251,11 @@ static std::array<EncounterHidden,2> enc_readout;
 static std::array<double,2> enc_out_bias;
 static std::array<std::vector<std::pair<int,double>>,3> enc_banks;
 static double enc_gain=0.,enc_boss_weight=0.;
+static std::vector<double> room_transition_table,room_tail_table;
+static int room_plan_horizon=0,room_plan_acts=0;
+static std::vector<std::vector<double>> plan_gate,plan_prior,plan_items;
+static std::array<double,2> plan_scale{};
+static double room_plan_gain=0.;
 
 struct View {
     const float *o, *p;
@@ -590,6 +595,7 @@ struct View {
 #include "deck_forecast.inc"
 #include "encounter_forecast.inc"
 #include "learned_map.inc"
+#include "room_planner.inc"
 #include "deck_edits.inc"
 #include "inventory_value.inc"
 #include "route_value.inc"
@@ -685,7 +691,8 @@ struct Bank {
         std::vector<std::array<int,5>> rows(states.size());
         #pragma omp parallel for num_threads(threads) schedule(dynamic,4)
         for(int i=0;i<int(states.size());++i) {
-            Env e=states[i]; auto r=advance(e,w);
+            Env e=states[i];e.gc.map=std::make_shared<Map>(*states[i].gc.map);
+            auto r=advance(e,w);
             rows[i]={r.floor,r.act,int(r.encounter),int(r.heart),int(r.truncated)};
         }
         return rows;
@@ -996,6 +1003,31 @@ PYBIND11_MODULE(heart_native,m) {
         }
         enc_item=item;enc_enemy=foe;enc_context=ctx;enc_readout=readout;enc_out_bias=bias;
         enc_banks=banks;enc_gain=gain;enc_boss_weight=boss;
+    });
+    m.def("reset_draft_plans",[](){plan_scale={};});
+    m.def("set_draft_plans",[](const std::vector<std::vector<double>> &gate,const std::vector<std::vector<double>> &prior,
+                              const std::vector<std::vector<double>> &items,const std::array<double,2> &scale){
+        const size_t k=items.size();
+        if(k<1 || k>32 || gate.size()!=HISTORICAL_ITEMS || prior.size()!=3) throw std::invalid_argument("invalid draft plan shape");
+        for(auto &v:gate) if(v.size()!=k) throw std::invalid_argument("invalid plan gate");
+        for(auto &v:prior) if(v.size()!=k) throw std::invalid_argument("invalid plan prior");
+        for(auto &v:items) if(v.size()!=HISTORICAL_ITEMS) throw std::invalid_argument("invalid draft plan item");
+        plan_gate=gate;plan_prior=prior;plan_items=items;plan_scale=scale;
+    });
+    m.def("reset_room_planner",[](){room_plan_gain=0.;});
+    m.def("set_room_planner",[](const std::vector<double> &transition,const std::vector<double> &tail,
+                               int horizon,int acts,double gain){
+        if(transition.size()!=3*4*2*9*9*10 || tail.size()!=3*4*2*2*9 || horizon<1 || horizon>15 ||
+           acts<1 || acts>7 || !std::isfinite(gain)) throw std::invalid_argument("invalid room planner shape");
+        for(size_t i=0;i<transition.size();i+=10) {
+            double mass=0.;
+            for(int j=0;j<10;++j) {
+                double p=transition[i+j];if(!std::isfinite(p)||p<0. || p>1.000001) throw std::invalid_argument("invalid transition probability");
+                mass+=p;
+            }
+            if(std::abs(mass-1.)>.00001) throw std::invalid_argument("room transition mass differs from one");
+        }
+        room_transition_table=transition;room_tail_table=tail;room_plan_horizon=horizon;room_plan_acts=acts;room_plan_gain=gain;
     });
     m.def("room_transitions",&room_transitions);
     m.def("resource_outcomes",&resource_outcomes);

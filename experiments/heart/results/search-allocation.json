@@ -1,0 +1,155 @@
+{
+  "arms": [
+    [
+      384,
+      2
+    ],
+    [
+      2048,
+      2
+    ],
+    [
+      384,
+      -1
+    ],
+    [
+      2048,
+      -1
+    ]
+  ],
+  "development_fights": 160,
+  "grouped_cv": {
+    "1.0": {
+      "fights": 160,
+      "wins": 130,
+      "mean_exit_health_fraction": 0.5403196604959978,
+      "simulations": 1047168,
+      "gained": 0,
+      "lost": 0,
+      "counts": [
+        160,
+        0,
+        0,
+        0
+      ],
+      "random_same_mix_expected_wins": 130.0,
+      "random_same_mix_expected_simulations": 1047168.0
+    },
+    "8.0": {
+      "fights": 160,
+      "wins": 130,
+      "mean_exit_health_fraction": 0.5403196604959978,
+      "simulations": 1047168,
+      "gained": 0,
+      "lost": 0,
+      "counts": [
+        160,
+        0,
+        0,
+        0
+      ],
+      "random_same_mix_expected_wins": 130.0,
+      "random_same_mix_expected_simulations": 1047168.0
+    },
+    "64.0": {
+      "fights": 160,
+      "wins": 130,
+      "mean_exit_health_fraction": 0.5403196604959978,
+      "simulations": 1047168,
+      "gained": 0,
+      "lost": 0,
+      "counts": [
+        160,
+        0,
+        0,
+        0
+      ],
+      "random_same_mix_expected_wins": 130.0,
+      "random_same_mix_expected_simulations": 1047168.0
+    }
+  },
+  "ridge": 1.0,
+  "test": {
+    "fights": 179,
+    "wins": 141,
+    "mean_exit_health_fraction": 0.5270008305555982,
+    "simulations": 4309760,
+    "gained": 3,
+    "lost": 5,
+    "counts": [
+      40,
+      102,
+      15,
+      22
+    ],
+    "random_same_mix_expected_wins": 141.79329608938548,
+    "random_same_mix_expected_simulations": 4072790.5251396643
+  },
+  "fixed": [
+    {
+      "fights": 179,
+      "wins": 143,
+      "mean_exit_health_fraction": 0.5186326125497208,
+      "simulations": 1046400,
+      "gained": 0,
+      "lost": 0,
+      "counts": [
+        179,
+        0,
+        0,
+        0
+      ],
+      "random_same_mix_expected_wins": 143.0,
+      "random_same_mix_expected_simulations": 1046400.0
+    },
+    {
+      "fights": 179,
+      "wins": 143,
+      "mean_exit_health_fraction": 0.5308835803515273,
+      "simulations": 5517312,
+      "gained": 5,
+      "lost": 5,
+      "counts": [
+        0,
+        179,
+        0,
+        0
+      ],
+      "random_same_mix_expected_wins": 143.0,
+      "random_same_mix_expected_simulations": 5517312.0
+    },
+    {
+      "fights": 179,
+      "wins": 133,
+      "mean_exit_health_fraction": 0.46804856162010805,
+      "simulations": 919680,
+      "gained": 1,
+      "lost": 11,
+      "counts": [
+        0,
+        0,
+        179,
+        0
+      ],
+      "random_same_mix_expected_wins": 133.0,
+      "random_same_mix_expected_simulations": 919680.0
+    },
+    {
+      "fights": 179,
+      "wins": 140,
+      "mean_exit_health_fraction": 0.48620983543638907,
+      "simulations": 5027840,
+      "gained": 4,
+      "lost": 7,
+      "counts": [
+        0,
+        0,
+        0,
+        179
+      ],
+      "random_same_mix_expected_wins": 140.0,
+      "random_same_mix_expected_simulations": 5027840.0
+    }
+  ],
+  "retrospective_oracle_wins": 150
+}
