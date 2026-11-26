@@ -1,37 +1,31 @@
-# Spire Combat AI
+# Slay the Spire AI
 
-A first-party combat adapter for the original Slay the Spire and a Python policy runner. ModTheSpire loads the jar and BaseMod supplies the update hook. Game state, action enumeration, command validation, and recording are implemented in this project.
+A reinforcement learning project that plays Ironclad on Ascension 20 in *Slay the Spire*. The goal is to defeat the Corrupt Heart from the ordinary starting deck. The agent chooses cards and targets in combat and makes deck, potion, shop, rest, event, and route decisions using player-visible information.
 
-## Try one fight on Windows
+## Approach
 
-1. Build with PowerShell 7 and JDK 11 or newer: `./build.ps1 -Game 'E:/SteamLibrary/steamapps/common/SlayTheSpire'`. The script uses the game's libraries and the two Workshop loaders and writes `build/SpireCombatAI.jar`. Place that jar in the game's `mods` directory.
-2. Launch the original game with mods. Enable BaseMod and **Spire Combat AI** in ModTheSpire. For the first test, use a disposable run and the vanilla card and potion pool.
-3. Double-click **Start combat agent.cmd** or run `py -3 agent.py play`. Choose the character, Ascension, route, and encounter in the game yourself. At a player turn, press **F8**. The sample policy can spend a Fire Potion and play cards. F8 again releases control. Avoid manual actions during automated combat.
-4. The agent stops controlling the game at the end of the fight or on an unsupported selection screen. The Python process can wait for another F8 session. Close it with Ctrl+C.
+Training compares alternative actions from the same game position. The choice determines how far each comparison runs.
 
-## Card rules and PyTorch exercises
+- **Combat.** Card mechanics and a short lookahead over the visible hand give each play an initial score. The simulator tries alternative cards and targets, then finishes each fight with the same policy. A small PyTorch network learns from differences in survival and remaining HP to adjust the scores.
+- **Card rewards and events.** For a card reward, skipping gives a reference for measuring the value of adding each offered card. For an event, the agent learns preferences by comparing the downstream outcomes of its available buttons.
+- **Late-game practice.** Training revisits naturally reached Act 2 and Act 3 positions with the decks, relics, and HP earned along the way. Full-run evaluation starts at Neow.
 
-The [combat model and design notes](battle/README.md) cover hand-authored mechanics, the object encoder, action scoring and recording-based training. The [A20 starter-fight experiment](experiments/combat/README.md) trains decisions from completed fights. Run the model with `python -m battle` and a subcommand.
+## Results
 
-The [original card table](CARD_TABLE.md) is the reference for all 370 registered card IDs. Run `python check_card_table.py path/to/desktop-1.0.jar` with a JDK available to verify coverage and rule syntax. The live wiring policy runs independently of the table.
+On the same 4,096 validation starts, adding learned card and event preferences increased Act 3 arrivals from **25 to 52**. Two frozen policy versions defeated the Heart **three times across 524,288 fresh simulator starts**. The first winning action sequence also defeated the Heart in the original game, finishing with **22/84 HP**. The real game and simulator briefly differed in their card piles on floor 22 before coming back into sync.
 
-For the attention exercises, install PyTorch with `python -m pip install -r requirements-model.txt`. On the development machine, the existing CPU installation is also available in PowerShell with `$env:PYTHONPATH = (Resolve-Path build/python-deps).Path`.
+[Checkpoint and replay instructions](experiments/heart/README.md) · [Evaluation counts and seeds](experiments/heart/results/evaluation.json) · [Development notes](MODEL.md) · [Live combat adapter](LIVE_COMBAT.md)
 
-## Read a recording
+## Roadmap
 
-The game writes one UTF-8 JSONL file per session in `%USERPROFILE%/SpireCombatAI/recordings`. From the project directory in PowerShell:
+1. **Make Heart wins more consistent.** Identify common losses in the replays, compare policy changes on matched seeds, and evaluate the resulting player on fresh starts.
+2. **Improve decisions across fights.** Use combat outcomes to estimate whether a deck can afford an elite fight, how much HP a potion is likely to save, and when a rest is worth more than an upgrade.
 
-```powershell
-$latest = Get-ChildItem "$env:USERPROFILE/SpireCombatAI/recordings/*.jsonl" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-py -3 agent.py replay $latest.FullName
-```
+**Possible generalizations.** One candidate experiment is transfer from Ironclad to Silent. Test the frozen policy first to measure zero-shot transfer, then compare fine-tuning with training from scratch under the same budget. Other open directions include transfer across Ascension levels and to modded cards with unfamiliar mechanics.
 
-Add `--full` to inspect every public field. Each decision has a ticket, the observed state, and its legal choices. The matching action row records what the policy requested; the next decision or finish row shows what was observed afterward. A file without a finish row is incomplete. “Combat ended” marks the engine's battle-end signal, which can include escape and precede reward collection. Replays review recorded decisions; they do not reconstruct animation frames or label a terminal HP change as a measured training reward.
+## Software credits
 
-## Policy interface
+- **Simulator and RL interface.** gamerpuppy developed the original C++ simulator. Training uses bpblakely's fork for game transitions, card facts, player-visible observations, and legal-action masks. [Original sts_lightspeed](https://github.com/gamerpuppy/sts_lightspeed) · [Fork at the training revision](https://github.com/bpblakely/sts_lightspeed/tree/482b3ef29c93746ada7d6fd0fd16885d7cc30b1f)
+- **In-game replay.** bpblakely's toolkit supplied the command conversion and playback infrastructure used to replay the winning decisions in the original game. [sts-lightspeed-toolkit at the playback revision](https://github.com/bpblakely/sts-lightspeed-toolkit/tree/f46fed59175646254b284c27e677a9b32ca5b748)
 
-Replace `choose(state, options)` in `agent.py`. The mailbox lives under `%USERPROFILE%/SpireCombatAI` and assumes a single game and agent process. The adapter publishes a decision atomically, then accepts a matching ticket and one action from the current legal set. Indices are zero-based. Example commands are `play 0 1` (hand slot 0, enemy 1), `potion 0 1`, and `end`. State includes hand, energy, HP, block, powers, enemies, visible current-turn intents, potions, relics, deck and piles. The draw pile is sorted, the seed is omitted, and Runic Dome suppresses intent fields. Combat submenus such as choosing a card to exhaust require manual continuation in this prototype.
-
-## 18 Nov 2026 — First connection check
-
-I wanted to own the boundary between the model and the game. The first check uses the real Java mailbox and recorder, a Python agent, and a synthetic decision. It checks stale-ticket rejection, a valid reply, a completed recording, and cleanup. That tells me the two processes agree on the protocol. A real fight is the separate check for game timing, potion effects, and the final observed state. No policy has been trained yet.
+This repository implements the Ironclad policy, the training procedure that compares alternative decisions, the late-game curriculum, and the evaluation experiments.
