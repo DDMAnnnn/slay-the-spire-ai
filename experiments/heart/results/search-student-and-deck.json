@@ -172,5 +172,65 @@
       "heart_encounter_seeds": [],
       "seconds": 7.78
     }
-  ]
+  ],
+  "frozen_student_comparison": {
+    "seed_range": [
+      194000000,
+      194032767
+    ],
+    "models": {
+      "student": {
+        "runs": 32768,
+        "mean_floor": 23.733,
+        "best_floor": 56,
+        "act2": 21288,
+        "act3": 1992,
+        "act4": 8,
+        "hearts": 0,
+        "truncated": 1,
+        "first_boss": 270,
+        "second_boss": 75,
+        "heart_encounter_seeds": [
+          194010878,
+          194014482,
+          194017560,
+          194023027,
+          194031269
+        ]
+      },
+      "search_student": {
+        "runs": 32768,
+        "mean_floor": 25.928,
+        "best_floor": 56,
+        "act2": 23964,
+        "act3": 3173,
+        "act4": 24,
+        "hearts": 1,
+        "truncated": 0,
+        "first_boss": 477,
+        "second_boss": 140,
+        "heart_encounter_seeds": [
+          194002140,
+          194003292,
+          194003320,
+          194006527,
+          194010878,
+          194010950,
+          194014111,
+          194017344,
+          194020491,
+          194023046,
+          194024321,
+          194024902,
+          194026636,
+          194031269
+        ]
+      }
+    },
+    "paired_against_online_search": {
+      "gained": 11,
+      "lost": 10,
+      "shared": 3
+    }
+  }
 }

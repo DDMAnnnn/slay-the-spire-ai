@@ -1,0 +1,386 @@
+{
+  "source": "https://github.com/SnyderConsulting/sts_ml/tree/1e69c2e78a5ab3cb44cca5ffdfcb82803a68701d",
+  "projection": {
+    "by_screen": {
+      "1": {
+        "shared": 196,
+        "same_action": 196,
+        "same_scores": 196
+      },
+      "4": {
+        "shared": 180,
+        "same_action": 180,
+        "same_scores": 180
+      },
+      "5": {
+        "shared": 248,
+        "same_action": 248,
+        "same_scores": 248
+      },
+      "2": {
+        "shared": 881,
+        "same_action": 875,
+        "same_scores": 881
+      },
+      "7": {
+        "shared": 82,
+        "same_action": 82,
+        "same_scores": 82
+      },
+      "6": {
+        "shared": 26,
+        "same_action": 26,
+        "same_scores": 26
+      }
+    },
+    "mismatches": [
+      [
+        [
+          2,
+          "(4, 10.0, 0.0, 0.0)",
+          "(4, 40.0, 0.0, 0.0)"
+        ],
+        2
+      ],
+      [
+        [
+          2,
+          "(4, 19.0, 0.0, 0.0)",
+          "(4, 60.0, 0.0, 0.0)"
+        ],
+        1
+      ],
+      [
+        [
+          2,
+          "(4, 14.0, 0.0, 0.0)",
+          "(4, 60.0, 0.0, 0.0)"
+        ],
+        1
+      ],
+      [
+        [
+          2,
+          "(4, 18.0, 0.0, 0.0)",
+          "(4, 40.0, 0.0, 0.0)"
+        ],
+        1
+      ],
+      [
+        [
+          2,
+          "(4, 17.0, 0.0, 0.0)",
+          "(4, 60.0, 0.0, 0.0)"
+        ],
+        1
+      ]
+    ],
+    "source_games": 96,
+    "menu_differences": {
+      "2": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "7": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "4": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "5": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "6": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "1": {
+        "source": [],
+        "local": [
+          "('potion', 75)"
+        ]
+      },
+      "8": {
+        "source": [
+          "(1, 12.0, 0.0, 21.0)",
+          "(1, 133.0, 0.0, 62.0)",
+          "(1, 156.0, 0.0, 66.0)",
+          "(1, 192.0, 0.0, 57.0)",
+          "(1, 70.0, 0.0, 38.0)",
+          "(1, 94.0, 0.0, 58.0)",
+          "(3, 23.0, 0.0, 42.0)",
+          "(3, 6.0, 0.0, 39.0)",
+          "(3, 7.0, 0.0, 41.0)"
+        ],
+        "local": [
+          "('potion', 75)",
+          "(1, 12.0, 0.0, 29.0)",
+          "(1, 133.0, 0.0, 85.0)",
+          "(1, 156.0, 0.0, 91.0)",
+          "(1, 192.0, 0.0, 78.0)",
+          "(1, 70.0, 0.0, 52.0)",
+          "(1, 94.0, 0.0, 80.0)",
+          "(3, 23.0, 0.0, 57.0)",
+          "(3, 6.0, 0.0, 54.0)",
+          "(3, 7.0, 0.0, 56.0)"
+        ]
+      }
+    }
+  },
+  "ordinary": {
+    "apprentice.json.gz-261991-2048-8192": {
+      "runs": 256,
+      "early": 2048,
+      "late": 8192,
+      "panel_seed": 261991,
+      "act2": 50,
+      "act3": 10,
+      "act4": 1,
+      "encounters": 1,
+      "wins": 1,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        "14400005930738173788"
+      ],
+      "victory_seeds": [
+        "14400005930738173788"
+      ]
+    },
+    "apprentice.json.gz-261991-384-2048": {
+      "runs": 256,
+      "early": 384,
+      "late": 2048,
+      "panel_seed": 261991,
+      "act2": 37,
+      "act3": 4,
+      "act4": 0,
+      "encounters": 0,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": []
+    },
+    "selected-whole_map.json.gz-261991-0-0": {
+      "runs": 256,
+      "early": 0,
+      "late": 0,
+      "mode": -1,
+      "elite": 0,
+      "boss": 0,
+      "panel_seed": 261991,
+      "act2": 142,
+      "act3": 8,
+      "act4": 0,
+      "encounters": 0,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": []
+    },
+    "selected-whole_map.json.gz-261991-0-2048-mode-1-elite2048-boss8192": {
+      "runs": 256,
+      "early": 0,
+      "late": 2048,
+      "mode": -1,
+      "elite": 2048,
+      "boss": 8192,
+      "panel_seed": 261991,
+      "act2": 171,
+      "act3": 17,
+      "act4": 0,
+      "encounters": 0,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": []
+    },
+    "selected-whole_map.json.gz-261991-2048-8192": {
+      "runs": 256,
+      "early": 2048,
+      "late": 8192,
+      "panel_seed": 261991,
+      "act2": 158,
+      "act3": 15,
+      "act4": 1,
+      "encounters": 1,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        "14558666822105984750"
+      ],
+      "victory_seeds": []
+    },
+    "selected-whole_map.json.gz-261991-384-2048": {
+      "runs": 8,
+      "early": 384,
+      "late": 2048,
+      "panel_seed": 261991,
+      "act2": 3,
+      "act3": 0,
+      "act4": 0,
+      "encounters": 0,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": []
+    },
+    "selected-whole_map.json.gz-261991-64-64": {
+      "runs": 256,
+      "early": 64,
+      "late": 64,
+      "panel_seed": 261991,
+      "act2": 71,
+      "act3": 2,
+      "act4": 0,
+      "encounters": 0,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": []
+    }
+  },
+  "earned": {
+    "selected-whole_map.json.gz-261991-0-0-handoff3": {
+      "runs": 192,
+      "early": 0,
+      "late": 0,
+      "mode": -1,
+      "elite": 0,
+      "boss": 0,
+      "panel_seed": 261991,
+      "reference_combat": false,
+      "search_followups": false,
+      "searched_followups": 0,
+      "act2": 192,
+      "act3": 192,
+      "act4": 6,
+      "encounters": 5,
+      "wins": 1,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        "5948786366796856874",
+        "9243619327549770133",
+        "2283910268098858041",
+        "8098558682560658104",
+        "13582072982924437371"
+      ],
+      "victory_seeds": [
+        "8098558682560658104"
+      ],
+      "conditional_start_act": 3,
+      "reference_encounters": 65,
+      "reference_wins": 13,
+      "gained": 0,
+      "lost": 60
+    },
+    "selected-whole_map.json.gz-261991-0-0-handoff4": {
+      "runs": 73,
+      "early": 0,
+      "late": 0,
+      "mode": -1,
+      "elite": 0,
+      "boss": 0,
+      "panel_seed": 261991,
+      "reference_combat": false,
+      "search_followups": false,
+      "searched_followups": 0,
+      "act2": 73,
+      "act3": 73,
+      "act4": 73,
+      "encounters": 38,
+      "wins": 2,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        "14046645790065567481",
+        "18069560822795812414",
+        "10175257524374833309",
+        "14258468775780764881",
+        "5948786366796856874",
+        "6477427745533194263",
+        "4703598699111232186",
+        "1734943696778549358",
+        "6681018531029530971",
+        "1213497322575597127",
+        "9243619327549770133",
+        "4377453305199596809",
+        "17159140776085688558",
+        "8990689030548322757",
+        "12096956805342539708",
+        "16604375538068883074",
+        "11995939337666632048",
+        "12137907297811416894",
+        "6037997140251212452",
+        "6329661570866482531",
+        "2283910268098858041",
+        "15798724573812271463",
+        "5212595349633201503",
+        "2360124279877355584",
+        "8098558682560658104",
+        "4400836056383429033",
+        "402004952770920512",
+        "14564340680993077554",
+        "679275129301177106",
+        "5512660856693430054",
+        "13582072982924437371",
+        "482570192634289885",
+        "14790249832275098536",
+        "7317845635050019160",
+        "9371360864935841604",
+        "15409387409372238251",
+        "4461133204392439605",
+        "10539541653891376049"
+      ],
+      "victory_seeds": [
+        "4703598699111232186",
+        "9371360864935841604"
+      ],
+      "conditional_start_act": 4,
+      "reference_encounters": 65,
+      "reference_wins": 13,
+      "gained": 2,
+      "lost": 29
+    },
+    "selected-whole_map.json.gz-261991-0-0-public-expert-intent-imitation-handoff3": {
+      "runs": 192,
+      "early": 0,
+      "late": 0,
+      "mode": -1,
+      "elite": 0,
+      "boss": 0,
+      "panel_seed": 261991,
+      "neural_checkpoint": "build\\public-expert-intent\\imitation.pt",
+      "reference_combat": false,
+      "search_followups": false,
+      "searched_followups": 0,
+      "act2": 192,
+      "act3": 192,
+      "act4": 4,
+      "encounters": 2,
+      "wins": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        "5948786366796856874",
+        "2283910268098858041"
+      ],
+      "victory_seeds": [],
+      "conditional_start_act": 3,
+      "reference_encounters": 65,
+      "reference_wins": 13,
+      "gained": 0,
+      "lost": 63
+    }
+  }
+}

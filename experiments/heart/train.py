@@ -3,6 +3,8 @@ import argparse
 from hashlib import sha256
 import json
 from pathlib import Path
+from tempfile import NamedTemporaryFile
+import time
 
 import numpy as np
 import heart_native as engine
@@ -15,9 +17,21 @@ SCALE = np.array([.55,6,2,.55,2,3,2,.8,1,.7,1.5,.8,7,.6,.3,5,.8,.17,4,4,1.5])
 
 
 def write(path, obj):
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(obj, indent=2), encoding="utf8")
-    tmp.replace(path)
+    # On Windows a concurrent progress reader can briefly prevent replacement.
+    with NamedTemporaryFile(mode="w", encoding="utf8", dir=path.parent, suffix=".tmp", delete=False) as fp:
+        tmp = Path(fp.name)
+        json.dump(obj, fp, indent=2)
+    try:
+        for attempt in range(8):
+            try:
+                tmp.replace(path)
+                return
+            except PermissionError:
+                if attempt == 7:
+                    raise
+                time.sleep(.025 * 2**attempt)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def configure(source, destination):
@@ -49,9 +63,15 @@ def configure(source, destination):
             setter(data)
             if source.resolve() != destination.resolve():
                 write(destination/path.name, data)
-    from .replay import set_public_belief, set_inventory_search, set_historical_menu, set_historical_gate
+    from .replay import set_public_belief, set_inventory_search, set_historical_menu, set_historical_gate, set_resource_policy, set_deck_forecast, set_learned_map, set_route_worlds, set_human_events, set_strategic_apprentice
     path=source/"public-belief.json"
     config=json.loads(path.read_text()) if path.exists() else None
+    set_resource_policy(None)
+    set_deck_forecast(None)
+    set_learned_map(None)
+    set_route_worlds(None)
+    set_human_events(None)
+    set_strategic_apprentice(None)
     set_public_belief(config)
     if source.resolve()!=destination.resolve():
         write(destination/path.name,config)
@@ -60,6 +80,36 @@ def configure(source, destination):
     set_historical_menu(menu)
     if source.resolve()!=destination.resolve():
         write(destination/path.name,menu)
+    path=source/"route-worlds.json"
+    worlds=json.loads(path.read_text()) if path.exists() else None
+    set_route_worlds(worlds)
+    apprentice_path=source/"strategic-apprentice.json"
+    apprentice=json.loads(apprentice_path.read_text()) if apprentice_path.exists() else None
+    set_strategic_apprentice(apprentice)
+    if source.resolve()!=destination.resolve():
+        write(destination/apprentice_path.name,apprentice)
+    event_path=source/"human-events.json"
+    event_model=json.loads(event_path.read_text()) if event_path.exists() else None
+    set_human_events(event_model)
+    if source.resolve()!=destination.resolve():
+        write(destination/event_path.name,event_model)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,worlds)
+    path=source/"map-policy.json"
+    map_policy=json.loads(path.read_text()) if path.exists() else None
+    set_learned_map(map_policy)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,map_policy)
+    path=source/"deck-outcome.json"
+    forecast=json.loads(path.read_text()) if path.exists() else None
+    set_deck_forecast(forecast)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,forecast)
+    path=source/"resource-policy.json"
+    resource=json.loads(path.read_text()) if path.exists() else None
+    set_resource_policy(resource)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,resource)
     path=source/"historical-gate.json"
     gate=json.loads(path.read_text()) if path.exists() else None
     set_historical_gate(gate)

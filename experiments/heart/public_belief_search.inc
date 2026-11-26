@@ -99,6 +99,8 @@ void match_player_powers(Player &p,const float *shown) {
         p.statusMap[PS(i)]=int(shown[i]);p.statusSeq[i]=++p.statusSeqNext;
     }
 }
+#include "stasis_particles.inc"
+
 bool make_particle(Env &e,const View &v,const EnemyParticle &sample,int draw,const uint8_t *legal) {
     const auto *o=v.o;
     const auto room=Room(int(o[8])-1);
@@ -107,10 +109,16 @@ bool make_particle(Env &e,const View &v,const EnemyParticle &sample,int draw,con
     if(e.bc.outcome!=Outcome::UNDECIDED || e.bc.inputState!=InputState::PLAYER_NORMAL) return false;
     auto &bc=e.bc;auto &p=bc.player;
     bc.turn=int(v.p[4]);bc.monsters=sample.monsters;
+    std::vector<int> stasis_slots;
     for(int j=0;j<bc.monsters.monsterCount;++j) {
         const auto s=v.enemy(j);
         auto &m=bc.monsters.arr[j];
-        if(s[MONSTER_BASE+int(MS::STASIS)]) return false;
+        if(s[MONSTER_BASE+int(MS::STASIS)]) {
+            if(!reconstruct_stasis || m.id!=MonsterId::BRONZE_ORB || sample.encounter!=Encounter::AUTOMATON) return false;
+            m.setHasStatus<MS::STASIS>(true);
+            m.miscInfo=1;
+            if(!s[4]) stasis_slots.push_back(std::min(1,j));
+        }
         m.curHp=int(s[1]);m.maxHp=int(s[2]);m.block=int(s[3]);
         match_common_debuffs(m,s);
     }
@@ -168,6 +176,16 @@ bool make_particle(Env &e,const View &v,const EnemyParticle &sample,int draw,con
     }
     std::array<float,OBS_SIZE> check;
     std::array<uint8_t,N_ACTIONS> mask;
+    if(!stasis_slots.empty()) {
+        auto missing=missing_stasis_cards(o,int(stasis_slots.size()));
+        if(missing.empty()) return false;
+        if(missing.size()==2 && draw%2) std::swap(missing[0],missing[1]);
+        for(size_t i=0;i<missing.size();++i) {
+            CardInstance c(C(missing[i]/2-1),missing[i]%2!=0);
+            c.uniqueId=cards.nextUniqueCardId++;
+            cards.stasisCards[stasis_slots[i]]=c;
+        }
+    }
     e.observe(check.data());e.mask(mask.data());
     return std::equal(legal,legal+N_ACTIONS,mask.begin()) &&
            std::equal(o+OBS_PLAYER,o+OBS_DRAW,check.begin()+OBS_PLAYER) &&
@@ -176,6 +194,7 @@ bool make_particle(Env &e,const View &v,const EnemyParticle &sample,int draw,con
 
 #include "public_continuation.inc"
 #include "public_tree.inc"
+#include "terminal_search.inc"
 
 void View::belief_scores(const uint8_t *mask,double *out) const {
     if(!o[7] || !mask[ACT_END_TURN] || belief_branch || opening_branch || simulated_tactic>=0) return;
@@ -211,20 +230,20 @@ void View::belief_scores(const uint8_t *mask,double *out) const {
     if(actions.size()>limit) actions.resize(limit);
     std::vector<std::array<double,3>> totals(actions.size());
     std::vector<Env> next_play_roots;
-    if(next_play_width || public_tree_budget) next_play_roots.reserve(belief_draws);
+    if(next_play_width || public_tree_budget || terminal_budget) next_play_roots.reserve(belief_draws);
     int accepted=0;
     const int attempts=std::min<int>(order.size()*belief_draws,8*belief_draws);
     for(int d=0;d<attempts && accepted<belief_draws;++d) {
         Env e;
         if(!make_particle(e,*this,*order[d%order.size()],d,mask)) continue;
-        if(public_tree_budget) {
+        if(public_tree_budget || terminal_budget) {
             next_play_roots.push_back(std::move(e));++accepted;continue;
         }
         for(size_t j=0;j<actions.size();++j) {
             for(int t=0;t<belief_plans;++t) {
                 int tactic=t==0?-1:t==1?1:2;
                 auto result=finish_combat_action(e,w,actions[j],tactic);
-                totals[j][t]+=fight_utility(result);
+                totals[j][t]+=fight_utility(result,o);
             }
         }
         if(next_play_width) next_play_roots.push_back(std::move(e));
@@ -234,7 +253,8 @@ void View::belief_scores(const uint8_t *mask,double *out) const {
     // Select a continuation tactic after averaging its outcome over all particles.
     // Picking it separately for each hidden draw would overvalue clairvoyant plans.
     auto best_plan=[&](size_t j){return *std::max_element(totals[j].begin(),totals[j].begin()+belief_plans);};
-    if(public_tree_budget) public_tree_scores(actions,next_play_roots,w,out);
+    if(terminal_budget) terminal_search_scores(actions,next_play_roots,out);
+    else if(public_tree_budget) public_tree_scores(actions,next_play_roots,w,out);
     else {
         double base=best_plan(0);
         for(size_t j=1;j<actions.size();++j) out[actions[j]]+=belief_scale*(best_plan(j)-base)/accepted;

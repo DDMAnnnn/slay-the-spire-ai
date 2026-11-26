@@ -1,0 +1,1778 @@
+{
+  "native_conversion": {
+    "source": "https://raw.githubusercontent.com/SnyderConsulting/sts_ml/1e69c2e78a5ab3cb44cca5ffdfcb82803a68701d/results/replays.jsonl.gz",
+    "sha256": "6e7078b3e4fd09d77f373d619993a3783ae0820facc5ac3166fc32d0a7941789",
+    "counts": {
+      "supplied": 1000,
+      "source_fights": 11680,
+      "combat_decisions": 45085,
+      "games_with_verified_fights": 984,
+      "verified_fights": 3289,
+      "complete_matching_games": 83,
+      "complete_matching_victories": 0,
+      "excluded_source": 6
+    },
+    "endings": {
+      "illegal": 354,
+      "unmapped": 128,
+      "domain": 56,
+      "fight_mismatch": 371,
+      "end": 85
+    },
+    "verified_fights_by_act": {
+      "1": 3289
+    },
+    "divergence_examples": [
+      {
+        "seed": 6337394915462047430,
+        "actual": [
+          1,
+          11,
+          15,
+          75,
+          74
+        ],
+        "expected": [
+          1,
+          11,
+          15,
+          75,
+          66
+        ]
+      },
+      {
+        "seed": 759538635434381960,
+        "actual": [
+          1,
+          7,
+          16,
+          46,
+          0
+        ],
+        "expected": [
+          1,
+          7,
+          16,
+          49,
+          0
+        ]
+      },
+      {
+        "seed": 11188449632027903195,
+        "actual": [
+          1,
+          5,
+          1,
+          27,
+          33
+        ],
+        "expected": [
+          1,
+          5,
+          1,
+          28,
+          34
+        ]
+      },
+      {
+        "seed": 13128475658333549275,
+        "actual": [
+          1,
+          8,
+          2,
+          37,
+          36
+        ],
+        "expected": [
+          1,
+          8,
+          2,
+          43,
+          42
+        ]
+      },
+      {
+        "seed": 12229334910464728872,
+        "actual": [
+          1,
+          16,
+          18,
+          58,
+          56
+        ],
+        "expected": [
+          1,
+          16,
+          18,
+          58,
+          55
+        ]
+      },
+      {
+        "seed": 11074011712116214320,
+        "actual": [
+          1,
+          16,
+          18,
+          71,
+          33
+        ],
+        "expected": [
+          1,
+          16,
+          18,
+          46,
+          33
+        ]
+      },
+      {
+        "seed": 8140219839299435181,
+        "actual": [
+          1,
+          12,
+          4,
+          26,
+          49
+        ],
+        "expected": [
+          1,
+          12,
+          4,
+          26,
+          64
+        ]
+      },
+      {
+        "seed": 6936073511215528838,
+        "actual": [
+          1,
+          8,
+          15,
+          55,
+          35
+        ],
+        "expected": [
+          1,
+          8,
+          15,
+          55,
+          33
+        ]
+      },
+      {
+        "seed": 3518968697954134085,
+        "actual": [
+          1,
+          10,
+          16,
+          29,
+          0
+        ],
+        "expected": [
+          1,
+          10,
+          16,
+          27,
+          0
+        ]
+      },
+      {
+        "seed": 6111339209619255840,
+        "actual": [
+          1,
+          8,
+          10,
+          71,
+          48
+        ],
+        "expected": [
+          1,
+          8,
+          10,
+          71,
+          56
+        ]
+      }
+    ]
+  },
+  "source_runtime": {
+    "counts": {
+      "train": 114558,
+      "games_verified": 994,
+      "validation": 15119,
+      "test": 12482
+    },
+    "by_act": {
+      "1": 69694,
+      "2": 46646,
+      "3": 22607,
+      "4": 3212
+    },
+    "limit": 1000
+  },
+  "field_agreement": {
+    "decisions": 515,
+    "identical": 487,
+    "mask_disagreements": 0,
+    "different_fields": [
+      [
+        1015,
+        12
+      ],
+      [
+        1255,
+        5
+      ],
+      [
+        1014,
+        4
+      ],
+      [
+        1314,
+        2
+      ],
+      [
+        1267,
+        2
+      ],
+      [
+        1266,
+        1
+      ],
+      [
+        1260,
+        1
+      ],
+      [
+        1016,
+        1
+      ],
+      [
+        1261,
+        1
+      ],
+      [
+        1067,
+        1
+      ],
+      [
+        1273,
+        1
+      ]
+    ],
+    "examples": [
+      {
+        "seed": 2937064075635979348,
+        "step": 4,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 2937064075635979348,
+        "step": 5,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 2937064075635979348,
+        "step": 6,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 5,
+        "fields": [
+          [
+            1014,
+            -9,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 6,
+        "fields": [
+          [
+            1014,
+            -9,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 7,
+        "fields": [
+          [
+            1014,
+            0,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 8,
+        "fields": [
+          [
+            1014,
+            0,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 4329415476685415407,
+        "step": 6,
+        "fields": [
+          [
+            1266,
+            1,
+            0
+          ],
+          [
+            1314,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 4329415476685415407,
+        "step": 7,
+        "fields": [
+          [
+            1260,
+            1,
+            0
+          ],
+          [
+            1314,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 6111339209619255840,
+        "step": 9,
+        "fields": [
+          [
+            1015,
+            0,
+            1
+          ],
+          [
+            1016,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 1671538427490826262,
+        "step": 8,
+        "fields": [
+          [
+            1015,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 14823261757295777343,
+        "step": 5,
+        "fields": [
+          [
+            1015,
+            0,
+            2
+          ]
+        ]
+      }
+    ]
+  },
+  "imitation": {
+    "examples": {
+      "train": 114558,
+      "validation": 15119,
+      "test": 12482
+    },
+    "history": [
+      {
+        "epoch": 1,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.514650439843905,
+            "nll": 1.1315540977552208
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6058085628579221,
+            "nll": 0.8873522511157932
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.4739224562094076,
+            "nll": 1.2452209591278995
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.35516483516483516,
+            "nll": 1.5707074379134964
+          },
+          {
+            "count": 429,
+            "accuracy": 0.28438228438228436,
+            "nll": 1.6312303787622697
+          }
+        ]
+      },
+      {
+        "epoch": 2,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.5257622858654672,
+            "nll": 1.1131485494263818
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6179438232887919,
+            "nll": 0.8648400388623506
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.4804172407006495,
+            "nll": 1.226876709879301
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.3723076923076923,
+            "nll": 1.5639346430851864
+          },
+          {
+            "count": 429,
+            "accuracy": 0.3006993006993007,
+            "nll": 1.6206160547572137
+          }
+        ]
+      },
+      {
+        "epoch": 3,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.5276804021429988,
+            "nll": 1.1013061830752882
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.624079629124625,
+            "nll": 0.8531810357975707
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.48140129895689826,
+            "nll": 1.2179777674308045
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.36131868131868133,
+            "nll": 1.546032001369602
+          },
+          {
+            "count": 429,
+            "accuracy": 0.31002331002331,
+            "nll": 1.6029151080649493
+          }
+        ]
+      },
+      {
+        "epoch": 4,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.536675706065216,
+            "nll": 1.0987744388445335
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6351240796291246,
+            "nll": 0.8440782298240734
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.4871088368431411,
+            "nll": 1.2186155786572468
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.3687912087912088,
+            "nll": 1.5551634124085143
+          },
+          {
+            "count": 429,
+            "accuracy": 0.331002331002331,
+            "nll": 1.6133294761319816
+          }
+        ]
+      },
+      {
+        "epoch": 5,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.535815860837357,
+            "nll": 1.0998349139611394
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6343059721843469,
+            "nll": 0.8457912549453696
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.48533753198189333,
+            "nll": 1.2182241573833006
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.37362637362637363,
+            "nll": 1.5600329533252086
+          },
+          {
+            "count": 429,
+            "accuracy": 0.31002331002331,
+            "nll": 1.6002313484956612
+          }
+        ]
+      },
+      {
+        "epoch": 6,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.5401150869766519,
+            "nll": 1.1024646089146224
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6381238069266431,
+            "nll": 0.8484558596382162
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.4918323164731352,
+            "nll": 1.2233740827789037
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.3740659340659341,
+            "nll": 1.5592916276952722
+          },
+          {
+            "count": 429,
+            "accuracy": 0.317016317016317,
+            "nll": 1.5902912166568783
+          }
+        ]
+      },
+      {
+        "epoch": 7,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.5344930220252663,
+            "nll": 1.1134615169646003
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6274884101445323,
+            "nll": 0.855487708958287
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.4878960834481401,
+            "nll": 1.240213335229055
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.3789010989010989,
+            "nll": 1.5587588121602824
+          },
+          {
+            "count": 429,
+            "accuracy": 0.32167832167832167,
+            "nll": 1.6610199365860376
+          }
+        ]
+      },
+      {
+        "epoch": 8,
+        "validation": [
+          {
+            "count": 15119,
+            "accuracy": 0.5387922481645612,
+            "nll": 1.1340564408861493
+          },
+          {
+            "count": 7334,
+            "accuracy": 0.6347150259067358,
+            "nll": 0.8644517132525292
+          },
+          {
+            "count": 5081,
+            "accuracy": 0.48907695335563867,
+            "nll": 1.273712993817779
+          },
+          {
+            "count": 2275,
+            "accuracy": 0.37846153846153846,
+            "nll": 1.5954229945926877
+          },
+          {
+            "count": 429,
+            "accuracy": 0.337995337995338,
+            "nll": 1.6423951484662391
+          }
+        ]
+      }
+    ],
+    "initial_validation": [
+      {
+        "count": 15119,
+        "accuracy": 0.45022818969508566,
+        "nll": 1.7684589371856885
+      },
+      {
+        "count": 7334,
+        "accuracy": 0.5297245704935915,
+        "nll": 1.4487886138205506
+      },
+      {
+        "count": 5081,
+        "accuracy": 0.4107459161582366,
+        "nll": 1.810629297536885
+      },
+      {
+        "count": 2275,
+        "accuracy": 0.31472527472527473,
+        "nll": 2.513839841046176
+      },
+      {
+        "count": 429,
+        "accuracy": 0.2773892773892774,
+        "nll": 2.7811696823938186
+      }
+    ],
+    "selected_epoch": 4,
+    "sha256": "f8e90cf7e48f408d33978fc8f0b0908135f0f2fb01f7e1f7f970406cb6dd4875",
+    "unseen_demonstrations": [
+      {
+        "count": 12482,
+        "accuracy": 0.5490306040698606,
+        "nll": 1.0504731011875852
+      },
+      {
+        "count": 6374,
+        "accuracy": 0.6299027298399749,
+        "nll": 0.8315408399645946
+      },
+      {
+        "count": 4095,
+        "accuracy": 0.4896214896214896,
+        "nll": 1.2150293683248854
+      },
+      {
+        "count": 1798,
+        "accuracy": 0.42102335928809786,
+        "nll": 1.4031839492721472
+      },
+      {
+        "count": 215,
+        "accuracy": 0.35348837209302325,
+        "nll": 1.4571809236393418
+      }
+    ]
+  },
+  "whole_run_screen": {
+    "parent": {
+      "runs": 1024,
+      "seconds": 16.29,
+      "active_steps": 252606,
+      "mean_floor": 23.0830078125,
+      "act2": 625,
+      "act3": 53,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    "standalone": {
+      "runs": 1024,
+      "seconds": 126.97,
+      "active_steps": 231378,
+      "mean_floor": 21.1708984375,
+      "act2": 546,
+      "act3": 28,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    "mixed": {
+      "runs": 1024,
+      "seconds": 138.38,
+      "active_steps": 255157,
+      "mean_floor": 23.359375,
+      "act2": 647,
+      "act3": 47,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    "conservative": {
+      "runs": 1024,
+      "seconds": 138.75,
+      "active_steps": 251536,
+      "mean_floor": 23.021484375,
+      "act2": 621,
+      "act3": 52,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    }
+  },
+  "whole_run_decision": "No candidate improved the ordinary-start screen",
+  "displayed_intent_audit": {
+    "decisions": 515,
+    "identical": 487,
+    "mask_disagreements": 0,
+    "draw_reversal_checks": 515,
+    "intent_fields_identical": 514,
+    "different_fields": [
+      [
+        1015,
+        12
+      ],
+      [
+        1255,
+        5
+      ],
+      [
+        1014,
+        4
+      ],
+      [
+        1314,
+        2
+      ],
+      [
+        1267,
+        2
+      ],
+      [
+        1001,
+        1
+      ],
+      [
+        1266,
+        1
+      ],
+      [
+        1260,
+        1
+      ],
+      [
+        1016,
+        1
+      ],
+      [
+        1261,
+        1
+      ],
+      [
+        1067,
+        1
+      ],
+      [
+        1273,
+        1
+      ]
+    ],
+    "examples": [
+      {
+        "seed": 2937064075635979348,
+        "step": 4,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 2937064075635979348,
+        "step": 5,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 2937064075635979348,
+        "step": 6,
+        "fields": [
+          [
+            1255,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 5,
+        "fields": [
+          [
+            1014,
+            -9,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 6,
+        "fields": [
+          [
+            1014,
+            -9,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 7,
+        "fields": [
+          [
+            1001,
+            4,
+            13
+          ],
+          [
+            1014,
+            0,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 9502027575374182988,
+        "step": 8,
+        "fields": [
+          [
+            1014,
+            0,
+            9
+          ]
+        ]
+      },
+      {
+        "seed": 4329415476685415407,
+        "step": 6,
+        "fields": [
+          [
+            1266,
+            1,
+            0
+          ],
+          [
+            1314,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 4329415476685415407,
+        "step": 7,
+        "fields": [
+          [
+            1260,
+            1,
+            0
+          ],
+          [
+            1314,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 6111339209619255840,
+        "step": 9,
+        "fields": [
+          [
+            1015,
+            0,
+            1
+          ],
+          [
+            1016,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 1671538427490826262,
+        "step": 8,
+        "fields": [
+          [
+            1015,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 14823261757295777343,
+        "step": 5,
+        "fields": [
+          [
+            1015,
+            0,
+            2
+          ]
+        ]
+      }
+    ]
+  },
+  "boss_chest_translation": {
+    "source": "https://raw.githubusercontent.com/SnyderConsulting/sts_ml/1e69c2e78a5ab3cb44cca5ffdfcb82803a68701d/results/replays.jsonl.gz",
+    "sha256": "6e7078b3e4fd09d77f373d619993a3783ae0820facc5ac3166fc32d0a7941789",
+    "counts": {
+      "supplied": 1000,
+      "source_fights": 11680,
+      "combat_decisions": 46859,
+      "games_with_verified_fights": 984,
+      "verified_fights": 3400,
+      "complete_matching_games": 90,
+      "complete_matching_victories": 0,
+      "excluded_source": 6
+    },
+    "endings": {
+      "illegal": 352,
+      "unmapped": 116,
+      "end": 92,
+      "fight_mismatch": 384,
+      "domain": 50
+    },
+    "verified_fights_by_act": {
+      "1": 3289,
+      "2": 111
+    },
+    "divergence_examples": [
+      {
+        "seed": 6337394915462047430,
+        "actual": [
+          1,
+          11,
+          15,
+          75,
+          74
+        ],
+        "expected": [
+          1,
+          11,
+          15,
+          75,
+          66
+        ]
+      },
+      {
+        "seed": 759538635434381960,
+        "actual": [
+          1,
+          7,
+          16,
+          46,
+          0
+        ],
+        "expected": [
+          1,
+          7,
+          16,
+          49,
+          0
+        ]
+      },
+      {
+        "seed": 11188449632027903195,
+        "actual": [
+          1,
+          5,
+          1,
+          27,
+          33
+        ],
+        "expected": [
+          1,
+          5,
+          1,
+          28,
+          34
+        ]
+      },
+      {
+        "seed": 13128475658333549275,
+        "actual": [
+          1,
+          8,
+          2,
+          37,
+          36
+        ],
+        "expected": [
+          1,
+          8,
+          2,
+          43,
+          42
+        ]
+      },
+      {
+        "seed": 12229334910464728872,
+        "actual": [
+          1,
+          16,
+          18,
+          58,
+          56
+        ],
+        "expected": [
+          1,
+          16,
+          18,
+          58,
+          55
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "actual": [
+          2,
+          30,
+          36,
+          59,
+          0
+        ],
+        "expected": [
+          2,
+          30,
+          36,
+          59,
+          15
+        ]
+      },
+      {
+        "seed": 17356768340702083333,
+        "actual": [
+          2,
+          22,
+          28,
+          46,
+          15
+        ],
+        "expected": [
+          2,
+          22,
+          28,
+          46,
+          18
+        ]
+      },
+      {
+        "seed": 11074011712116214320,
+        "actual": [
+          1,
+          16,
+          18,
+          71,
+          33
+        ],
+        "expected": [
+          1,
+          16,
+          18,
+          46,
+          33
+        ]
+      },
+      {
+        "seed": 8140219839299435181,
+        "actual": [
+          1,
+          12,
+          4,
+          26,
+          49
+        ],
+        "expected": [
+          1,
+          12,
+          4,
+          26,
+          64
+        ]
+      },
+      {
+        "seed": 6936073511215528838,
+        "actual": [
+          1,
+          8,
+          15,
+          55,
+          35
+        ],
+        "expected": [
+          1,
+          8,
+          15,
+          55,
+          33
+        ]
+      }
+    ]
+  },
+  "cross_act_audit": {
+    "decisions": 473,
+    "identical": 437,
+    "mask_disagreements": 2,
+    "draw_reversal_checks": 473,
+    "intent_fields_identical": 470,
+    "different_fields": [
+      [
+        1015,
+        7
+      ],
+      [
+        1119,
+        6
+      ],
+      [
+        1014,
+        5
+      ],
+      [
+        1266,
+        4
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        898,
+        4
+      ],
+      [
+        1272,
+        3
+      ],
+      [
+        1001,
+        3
+      ],
+      [
+        1267,
+        2
+      ],
+      [
+        1273,
+        2
+      ],
+      [
+        1277,
+        2
+      ],
+      [
+        1067,
+        2
+      ],
+      [
+        1570,
+        2
+      ],
+      [
+        1261,
+        2
+      ],
+      [
+        994,
+        1
+      ],
+      [
+        1048,
+        1
+      ],
+      [
+        1455,
+        1
+      ],
+      [
+        1457,
+        1
+      ],
+      [
+        1459,
+        1
+      ],
+      [
+        1461,
+        1
+      ],
+      [
+        1463,
+        1
+      ],
+      [
+        1464,
+        1
+      ],
+      [
+        1465,
+        1
+      ],
+      [
+        1466,
+        1
+      ],
+      [
+        1569,
+        1
+      ],
+      [
+        1571,
+        1
+      ],
+      [
+        1283,
+        1
+      ],
+      [
+        1287,
+        1
+      ],
+      [
+        1289,
+        1
+      ],
+      [
+        1295,
+        1
+      ],
+      [
+        1254,
+        1
+      ],
+      [
+        909,
+        1
+      ],
+      [
+        1000,
+        1
+      ],
+      [
+        1002,
+        1
+      ],
+      [
+        1451,
+        1
+      ]
+    ],
+    "examples": [
+      {
+        "seed": 2937064075635979348,
+        "step": 12,
+        "fields": [
+          [
+            1267,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 2937064075635979348,
+        "step": 11,
+        "fields": [
+          [
+            1273,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 17003072781819564004,
+        "step": 69,
+        "fields": [
+          [
+            1266,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "seed": 17003072781819564004,
+        "step": 220,
+        "fields": [
+          [
+            994,
+            31,
+            29
+          ],
+          [
+            1048,
+            67,
+            75
+          ],
+          [
+            1455,
+            189,
+            214
+          ],
+          [
+            1457,
+            201,
+            226
+          ],
+          [
+            1459,
+            242,
+            241
+          ],
+          [
+            1461,
+            340,
+            243
+          ],
+          [
+            1463,
+            350,
+            340
+          ],
+          [
+            1464,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "seed": 17003072781819564004,
+        "step": 218,
+        "fields": [
+          [
+            1277,
+            201,
+            241
+          ],
+          [
+            1283,
+            122,
+            226
+          ],
+          [
+            1287,
+            0,
+            1
+          ],
+          [
+            1289,
+            189,
+            243
+          ],
+          [
+            1295,
+            242,
+            214
+          ]
+        ]
+      },
+      {
+        "seed": 11205041991991527975,
+        "step": 54,
+        "fields": [
+          [
+            1015,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 1924187713455361976,
+        "step": 12,
+        "fields": [
+          [
+            1015,
+            0,
+            2
+          ]
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "step": 61,
+        "fields": [
+          [
+            1119,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "step": 69,
+        "fields": [
+          [
+            1119,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "step": 67,
+        "fields": [
+          [
+            1119,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "step": 87,
+        "fields": [
+          [
+            1119,
+            0,
+            3
+          ]
+        ]
+      },
+      {
+        "seed": 6686096663450517821,
+        "step": 37,
+        "fields": [
+          [
+            1272,
+            0,
+            1
+          ]
+        ]
+      }
+    ],
+    "by_act": {
+      "1": 259,
+      "2": 214
+    }
+  },
+  "visible_intents_training": {
+    "selected_epoch": 5,
+    "act_weights": [
+      1.0,
+      0.7152255097097542,
+      0.8742605247705845,
+      1.2430773018500814,
+      3.0
+    ],
+    "unseen_demonstrations": [
+      {
+        "count": 12482,
+        "accuracy": 0.5536772953052396,
+        "nll": 1.0468262114828164
+      },
+      {
+        "count": 6374,
+        "accuracy": 0.6360213366802636,
+        "nll": 0.8266926166365653
+      },
+      {
+        "count": 4095,
+        "accuracy": 0.4908424908424908,
+        "nll": 1.2111935641157177
+      },
+      {
+        "count": 1798,
+        "accuracy": 0.42046718576195774,
+        "nll": 1.4078484371851496
+      },
+      {
+        "count": 215,
+        "accuracy": 0.4232558139534884,
+        "nll": 1.4232415753741596
+      }
+    ],
+    "screen": {
+      "parent": {
+        "runs": 1024,
+        "seconds": 22.23,
+        "active_steps": 252606,
+        "mean_floor": 23.0830078125,
+        "act2": 625,
+        "act3": 53,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      },
+      "standalone": {
+        "runs": 1024,
+        "seconds": 114.31,
+        "active_steps": 239398,
+        "mean_floor": 22.068359375,
+        "act2": 600,
+        "act3": 35,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      },
+      "mixed": {
+        "runs": 1024,
+        "seconds": 132.33,
+        "active_steps": 256672,
+        "mean_floor": 23.4853515625,
+        "act2": 643,
+        "act3": 55,
+        "act4": 1,
+        "heart_encounter_seeds": [
+          224000144
+        ],
+        "victory_seeds": [],
+        "truncated": 0
+      },
+      "conservative": {
+        "runs": 1024,
+        "seconds": 101.92,
+        "active_steps": 252510,
+        "mean_floor": 23.078125,
+        "act2": 626,
+        "act3": 48,
+        "act4": 0,
+        "heart_encounter_seeds": [],
+        "victory_seeds": [],
+        "truncated": 0
+      }
+    },
+    "sha256": "5ed417051c318c988fb0e0b55742b1d12ee6905a7de2c8869f4aaa4b8efb18e1"
+  },
+  "late_specialist": {
+    "selection": {
+      "35": {
+        "eligible": 1861,
+        "original": {
+          "n": 192,
+          "hits": 0,
+          "wins": 0,
+          "act3": 192,
+          "act4": 3,
+          "second_boss": 10,
+          "truncated": 0
+        },
+        "arms": {
+          "standalone": {
+            "n": 192,
+            "hits": 0,
+            "wins": 0,
+            "act3": 192,
+            "act4": 1,
+            "second_boss": 4,
+            "truncated": 0,
+            "estimated_extra_entries": 0.0,
+            "estimated_extra_act4": -19.385416666666668,
+            "estimated_extra_second_boss": -58.15625
+          },
+          "mixed": {
+            "n": 192,
+            "hits": 0,
+            "wins": 0,
+            "act3": 192,
+            "act4": 2,
+            "second_boss": 12,
+            "truncated": 0,
+            "estimated_extra_entries": 0.0,
+            "estimated_extra_act4": -9.692708333333334,
+            "estimated_extra_second_boss": 19.385416666666668
+          },
+          "conservative": {
+            "n": 192,
+            "hits": 0,
+            "wins": 0,
+            "act3": 192,
+            "act4": 3,
+            "second_boss": 11,
+            "truncated": 0,
+            "estimated_extra_entries": 0.0,
+            "estimated_extra_act4": 0.0,
+            "estimated_extra_second_boss": 9.692708333333334
+          }
+        },
+        "same_prefix_control": 24
+      },
+      "49": {
+        "eligible": 281,
+        "original": {
+          "n": 192,
+          "hits": 4,
+          "wins": 0,
+          "act3": 192,
+          "act4": 9,
+          "second_boss": 59,
+          "truncated": 0
+        },
+        "arms": {
+          "standalone": {
+            "n": 192,
+            "hits": 1,
+            "wins": 0,
+            "act3": 192,
+            "act4": 6,
+            "second_boss": 52,
+            "truncated": 0,
+            "estimated_extra_entries": -4.390625,
+            "estimated_extra_act4": -4.390625,
+            "estimated_extra_second_boss": -10.244791666666668
+          },
+          "mixed": {
+            "n": 192,
+            "hits": 4,
+            "wins": 0,
+            "act3": 192,
+            "act4": 8,
+            "second_boss": 61,
+            "truncated": 0,
+            "estimated_extra_entries": 0.0,
+            "estimated_extra_act4": -1.4635416666666667,
+            "estimated_extra_second_boss": 2.9270833333333335
+          },
+          "conservative": {
+            "n": 192,
+            "hits": 4,
+            "wins": 0,
+            "act3": 192,
+            "act4": 9,
+            "second_boss": 59,
+            "truncated": 0,
+            "estimated_extra_entries": 0.0,
+            "estimated_extra_act4": 0.0,
+            "estimated_extra_second_boss": 0.0
+          }
+        },
+        "same_prefix_control": 24
+      }
+    },
+    "test": {
+      "n": 32768,
+      "hits": 7,
+      "wins": 0,
+      "act3": 1774,
+      "act4": 12,
+      "second_boss": 79,
+      "truncated": 0
+    },
+    "chosen": {
+      "floor": 35,
+      "blend": "conservative"
+    },
+    "test_parent": {
+      "n": 32768,
+      "hits": 5,
+      "wins": 0,
+      "act3": 1774,
+      "act4": 11,
+      "second_boss": 83,
+      "truncated": 0
+    },
+    "eligible": 1774,
+    "start": 226000000,
+    "heart_encounter_seeds": [
+      226002782,
+      226005349,
+      226012700,
+      226013714,
+      226022196,
+      226029978,
+      226032157
+    ],
+    "parent_encounter_seeds": [
+      226002782,
+      226013714,
+      226022196,
+      226029978,
+      226032157
+    ],
+    "victory_seeds": []
+  },
+  "whole_run_intent_test": {
+    "start": 223000000,
+    "n": 32768,
+    "act3": 1925,
+    "act4": 14,
+    "heart_encounter_seeds": [
+      223002413,
+      223004193,
+      223004507,
+      223008200,
+      223009051,
+      223014034,
+      223016952,
+      223019963,
+      223021019,
+      223024672
+    ],
+    "victory_seeds": [
+      223014034
+    ],
+    "truncated": 3
+  }
+}

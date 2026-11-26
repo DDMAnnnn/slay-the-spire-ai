@@ -1,0 +1,279 @@
+{
+  "collection": {
+    "scout_start": 251000000,
+    "scout_runs": 32768,
+    "acts": {
+      "1": {
+        "forks": 2399,
+        "continuations": 5435,
+        "heart_disagreements": 2,
+        "act_disagreements": 862
+      },
+      "2": {
+        "forks": 2400,
+        "continuations": 5704,
+        "heart_disagreements": 5,
+        "act_disagreements": 212
+      },
+      "3": {
+        "forks": 1598,
+        "continuations": 3908,
+        "heart_disagreements": 28,
+        "act_disagreements": 36
+      }
+    }
+  },
+  "fit": {
+    "splits": [
+      5188,
+      595,
+      614
+    ],
+    "fits": {
+      "heart": {
+        "training_informative": 31,
+        "validation": [
+          {
+            "epoch": 1,
+            "forks": 595,
+            "changed": 42,
+            "gain": 0.0,
+            "improved": 0,
+            "lost": 0
+          },
+          {
+            "epoch": 3,
+            "forks": 595,
+            "changed": 72,
+            "gain": 0.0,
+            "improved": 0,
+            "lost": 0
+          },
+          {
+            "epoch": 6,
+            "forks": 595,
+            "changed": 61,
+            "gain": 0.0,
+            "improved": 0,
+            "lost": 0
+          },
+          {
+            "epoch": 12,
+            "forks": 595,
+            "changed": 87,
+            "gain": 0.0,
+            "improved": 0,
+            "lost": 0
+          }
+        ],
+        "selected": 1,
+        "test": {
+          "forks": 614,
+          "changed": 37,
+          "gain": 0.0,
+          "improved": 0,
+          "lost": 0
+        }
+      },
+      "milestones": {
+        "training_informative": 634,
+        "validation": [
+          {
+            "epoch": 1,
+            "forks": 595,
+            "changed": 42,
+            "gain": 0.000907562964130193,
+            "improved": 8,
+            "lost": 0
+          },
+          {
+            "epoch": 3,
+            "forks": 595,
+            "changed": 59,
+            "gain": 0.0012941176537424326,
+            "improved": 11,
+            "lost": 0
+          },
+          {
+            "epoch": 6,
+            "forks": 595,
+            "changed": 58,
+            "gain": 0.0011260504834353924,
+            "improved": 10,
+            "lost": 0
+          },
+          {
+            "epoch": 12,
+            "forks": 595,
+            "changed": 61,
+            "gain": 0.0013277310645207763,
+            "improved": 11,
+            "lost": 0
+          }
+        ],
+        "selected": 12,
+        "test": {
+          "forks": 614,
+          "changed": 70,
+          "gain": 0.0005048859748058021,
+          "improved": 9,
+          "lost": 3
+        }
+      }
+    }
+  },
+  "play": {
+    "selection": {
+      "parent": {
+        "n": 8192,
+        "encounters": 9,
+        "wins": 1,
+        "act3": 417,
+        "boss": 91,
+        "second": 40,
+        "act4": 11,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          252002250,
+          252003191,
+          252003255,
+          252004264,
+          252004907,
+          252005123,
+          252005235,
+          252006945,
+          252007469
+        ],
+        "victory_seeds": [
+          252007469
+        ]
+      },
+      "heart": {
+        "n": 8192,
+        "encounters": 11,
+        "wins": 1,
+        "act3": 430,
+        "boss": 88,
+        "second": 35,
+        "act4": 11,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          252003255,
+          252004992,
+          252005020,
+          252005123,
+          252005235,
+          252005470,
+          252005539,
+          252005584,
+          252005588,
+          252006489,
+          252007469
+        ],
+        "victory_seeds": [
+          252007469
+        ]
+      },
+      "milestones": {
+        "n": 8192,
+        "encounters": 4,
+        "wins": 2,
+        "act3": 448,
+        "boss": 152,
+        "second": 63,
+        "act4": 12,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          252002250,
+          252004992,
+          252005020,
+          252007469
+        ],
+        "victory_seeds": [
+          252002250,
+          252007469
+        ]
+      }
+    },
+    "test": {
+      "parent": {
+        "n": 32768,
+        "encounters": 21,
+        "wins": 2,
+        "act3": 1590,
+        "boss": 372,
+        "second": 141,
+        "act4": 29,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          253000197,
+          253002522,
+          253008150,
+          253010735,
+          253012587,
+          253012848,
+          253012978,
+          253018042,
+          253020391,
+          253022421,
+          253023634,
+          253023793,
+          253024140,
+          253024432,
+          253024539,
+          253024607,
+          253025268,
+          253025984,
+          253030333,
+          253031253,
+          253032699
+        ],
+        "victory_seeds": [
+          253025268,
+          253032699
+        ]
+      },
+      "heart": {
+        "n": 32768,
+        "encounters": 22,
+        "wins": 1,
+        "act3": 1585,
+        "boss": 311,
+        "second": 132,
+        "act4": 34,
+        "truncated": 1,
+        "heart_encounter_seeds": [
+          253001546,
+          253001907,
+          253002522,
+          253008235,
+          253018042,
+          253020246,
+          253020391,
+          253021177,
+          253021383,
+          253022295,
+          253023476,
+          253023793,
+          253024079,
+          253024140,
+          253024539,
+          253024973,
+          253025268,
+          253025312,
+          253025984,
+          253029880,
+          253031253,
+          253031437
+        ],
+        "victory_seeds": [
+          253025268
+        ]
+      }
+    },
+    "selected": "heart",
+    "gained": 13,
+    "lost": 12,
+    "shared": 9
+  }
+}

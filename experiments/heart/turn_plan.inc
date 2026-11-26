@@ -145,6 +145,11 @@ void base_scores(const uint8_t *mask,double *out) const {
     if(use_expert && !o[7]) apply_expert_prior(mask,out);
     if(!boss_draft_weights.empty() && !o[7]) apply_boss_draft(mask,out);
     if((route_scale[0] || route_scale[1]) && !o[7]) route_scores(mask,out);
+    if(map_mix && !o[7]) learned_map_scores(mask,out);
+    if(!o[7] && (forecast_scale[0] || forecast_scale[1] || forecast_scale[2])) deck_forecast_scores(mask,out);
+    if(!o[7] && (resource_mix[0] || resource_mix[1] || resource_mix[2] || resource_mix[3])) resource_menu(mask,out);
+    if(!o[7] && strat_enabled) strategic_menu(mask,out);
+    if(!o[7] && enc_gain) score_predicted_fights(mask,out);
     if(!o[7] || !mask[ACT_END_TURN]) return;
     double before=*std::max_element(out,out+ACT_POTION);
     auto start=start_turn();

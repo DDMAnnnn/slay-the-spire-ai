@@ -1,0 +1,160 @@
+{
+  "selection": {
+    "base": {
+      "fatal": {
+        "fights": 48,
+        "wins": 0,
+        "mean_exit_hp": 0.0,
+        "mean_potions": 0.75,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 48,
+        "mean_exit_hp": 43.333333333333336,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 0.1474187999701826
+    },
+    "rollout": {
+      "fatal": {
+        "fights": 48,
+        "wins": 13,
+        "mean_exit_hp": 3.2083333333333335,
+        "mean_potions": 0.6666666666666666,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 47,
+        "mean_exit_hp": 45.541666666666664,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 4.5262034999759635
+    },
+    "mean96": {
+      "fatal": {
+        "fights": 48,
+        "wins": 10,
+        "mean_exit_hp": 4.0625,
+        "mean_potions": 0.6666666666666666,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 48,
+        "mean_exit_hp": 43.916666666666664,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 5.720959200029029
+    },
+    "mixed96": {
+      "fatal": {
+        "fights": 48,
+        "wins": 8,
+        "mean_exit_hp": 1.9791666666666667,
+        "mean_potions": 0.6875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 48,
+        "mean_exit_hp": 44.395833333333336,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 5.7278778000036255
+    },
+    "mean384": {
+      "fatal": {
+        "fights": 48,
+        "wins": 9,
+        "mean_exit_hp": 2.9583333333333335,
+        "mean_potions": 0.6875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 48,
+        "mean_exit_hp": 44.833333333333336,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 20.618957000013324
+    },
+    "mixed384": {
+      "fatal": {
+        "fights": 48,
+        "wins": 11,
+        "mean_exit_hp": 1.8958333333333333,
+        "mean_potions": 0.75,
+        "capped": 0
+      },
+      "control": {
+        "fights": 48,
+        "wins": 47,
+        "mean_exit_hp": 44.541666666666664,
+        "mean_potions": 0.2708333333333333,
+        "capped": 0
+      },
+      "seconds": 22.72875200000999
+    }
+  },
+  "selected": "mean96",
+  "heldout": {
+    "base": {
+      "fatal": {
+        "fights": 160,
+        "wins": 0,
+        "mean_exit_hp": 0.0,
+        "mean_potions": 0.73125,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 160,
+        "mean_exit_hp": 43.175,
+        "mean_potions": 0.3,
+        "capped": 0
+      },
+      "seconds": 0.9378270000452176
+    },
+    "rollout": {
+      "fatal": {
+        "fights": 160,
+        "wins": 44,
+        "mean_exit_hp": 3.6375,
+        "mean_potions": 0.71875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 160,
+        "mean_exit_hp": 44.69375,
+        "mean_potions": 0.3125,
+        "capped": 0
+      },
+      "seconds": 60.54374820001249
+    },
+    "mean96": {
+      "fatal": {
+        "fights": 160,
+        "wins": 26,
+        "mean_exit_hp": 1.86875,
+        "mean_potions": 0.725,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 159,
+        "mean_exit_hp": 42.9375,
+        "mean_potions": 0.29375,
+        "capped": 0
+      },
+      "seconds": 20.949746999976924
+    }
+  }
+}

@@ -7,9 +7,17 @@ struct NextCombatGroup {
     std::vector<size_t> worlds;
 };
 
-double fight_utility(const FightReturn &result) {
-    return result.win ? belief_win_value+result.health-4.*result.potions
-                      : -28.*result.remaining-4.*result.potions;
+double fight_utility(const FightReturn &result,const float *o) {
+    if(!result.win) return -28.*result.remaining-4.*result.potions;
+    const double old=belief_win_value+result.health-4.*result.potions;
+    if(!resource_search_mix || o[4]<1 || o[4]>3) return old;
+    ResourcePosition after(int(o[4]),int(o[3]),result.exit_health,o[1]);
+    ResourcePosition reference(int(o[4]),int(o[3]),.5*o[1],o[1]);
+    std::array<int,5> initial{};
+    for(int k=0;k<5;++k) initial[k]=int(o[17+k]);
+    const double learned=belief_win_value+.5*o[1]+after.health()+after.inventory(result.kept)
+                        -reference.health()-reference.inventory(initial);
+    return old+resource_search_mix*(learned-old);
 }
 
 double crossfit_advantage(const std::vector<std::vector<double>> &returns,double margin) {
@@ -71,7 +79,7 @@ double next_play_gain(const std::vector<Env> &roots,int first,const Weights &w,i
         std::vector<std::vector<double>> returns;
         for(auto i:g.worlds) {
             auto &row=returns.emplace_back();
-            for(int a:g.options) row.push_back(fight_utility(finish_combat_action(next[i],w,a)));
+            for(int a:g.options) row.push_back(fight_utility(finish_combat_action(next[i],w,a),g.shown.data()));
         }
         // Require a two-HP advantage on the selecting worlds before changing the second play.
         gain+=crossfit_advantage(returns,2.);

@@ -1,0 +1,837 @@
+{
+  "fit": {
+    "selected_epoch": 1,
+    "history": [
+      {
+        "epoch": 1,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.5283318161964417,
+        "origin_logloss": 0.014547259546816349,
+        "local_logloss": 0.5307164788246155,
+        "expert_logloss": 0.5542799830436707
+      },
+      {
+        "epoch": 2,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.5420734286308289,
+        "origin_logloss": 0.0060181086882948875,
+        "local_logloss": 0.5201260447502136,
+        "expert_logloss": 0.5934311151504517
+      },
+      {
+        "epoch": 3,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.5453160405158997,
+        "origin_logloss": 0.004465398378670216,
+        "local_logloss": 0.521618664264679,
+        "expert_logloss": 0.5986529588699341
+      },
+      {
+        "epoch": 4,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.5826285481452942,
+        "origin_logloss": 0.0032052842434495687,
+        "local_logloss": 0.5189265012741089,
+        "expert_logloss": 0.6758517026901245
+      },
+      {
+        "epoch": 5,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.5825620293617249,
+        "origin_logloss": 0.00253146979957819,
+        "local_logloss": 0.5155948996543884,
+        "expert_logloss": 0.6796594262123108
+      },
+      {
+        "epoch": 6,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.6349364519119263,
+        "origin_logloss": 0.001952395774424076,
+        "local_logloss": 0.5164214372634888,
+        "expert_logloss": 0.7837656140327454
+      },
+      {
+        "epoch": 7,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.6158010959625244,
+        "origin_logloss": 0.0024363130796700716,
+        "local_logloss": 0.5182927250862122,
+        "expert_logloss": 0.744176983833313
+      },
+      {
+        "epoch": 8,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.6448110938072205,
+        "origin_logloss": 0.002233341569080949,
+        "local_logloss": 0.5159710645675659,
+        "expert_logloss": 0.8034334182739258
+      },
+      {
+        "epoch": 9,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.6656454205513,
+        "origin_logloss": 0.001869488158263266,
+        "local_logloss": 0.5163719654083252,
+        "expert_logloss": 0.8456388711929321
+      },
+      {
+        "epoch": 10,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.705985426902771,
+        "origin_logloss": 0.0018838078249245882,
+        "local_logloss": 0.5124526619911194,
+        "expert_logloss": 0.9290444850921631
+      },
+      {
+        "epoch": 11,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.7280634045600891,
+        "origin_logloss": 0.0017260996391996741,
+        "local_logloss": 0.5119469165802002,
+        "expert_logloss": 0.9724476933479309
+      },
+      {
+        "epoch": 12,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.7285333275794983,
+        "origin_logloss": 0.0016330542275682092,
+        "local_logloss": 0.517828106880188,
+        "expert_logloss": 0.9675248265266418
+      },
+      {
+        "epoch": 13,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.753558337688446,
+        "origin_logloss": 0.00154562306124717,
+        "local_logloss": 0.5153452157974243,
+        "expert_logloss": 1.0194350481033325
+      },
+      {
+        "epoch": 14,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.7712480425834656,
+        "origin_logloss": 0.0015307655557990074,
+        "local_logloss": 0.5162069797515869,
+        "expert_logloss": 1.0561612844467163
+      },
+      {
+        "epoch": 15,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.7932565212249756,
+        "origin_logloss": 0.0014171391958370805,
+        "local_logloss": 0.5131003856658936,
+        "expert_logloss": 1.1038672924041748
+      },
+      {
+        "epoch": 16,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.794424831867218,
+        "origin_logloss": 0.0016176030039787292,
+        "local_logloss": 0.5136393308639526,
+        "expert_logloss": 1.1030526161193848
+      },
+      {
+        "epoch": 17,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.817121684551239,
+        "origin_logloss": 0.001705635222606361,
+        "local_logloss": 0.513741672039032,
+        "expert_logloss": 1.151643991470337
+      },
+      {
+        "epoch": 18,
+        "n": 20788,
+        "local": 19972,
+        "expert": 816,
+        "survival_logloss": 0.8209818005561829,
+        "origin_logloss": 0.0015122642507776618,
+        "local_logloss": 0.5163913369178772,
+        "expert_logloss": 1.1538554430007935
+      }
+    ],
+    "training": 161243,
+    "heldout": {
+      "n": 20750,
+      "local": 20035,
+      "expert": 715,
+      "survival_logloss": 0.5909990072250366,
+      "origin_logloss": 0.01806202158331871,
+      "local_logloss": 0.5060305595397949,
+      "expert_logloss": 0.7073460221290588
+    },
+    "heldout_stage_baseline": 0.6022277474403381,
+    "heldout_domain_baseline": 0.6931471805599453,
+    "own_scout_runs": 32768,
+    "public_source": "SnyderConsulting/sts_ml verified game traces"
+  },
+  "audit": {
+    "menus_by_screen": {
+      "2": 874,
+      "3": 56,
+      "4": 64
+    },
+    "max_score_error": 7.867813110351562e-06
+  },
+  "train_candidates": [
+    {
+      "params": [
+        45,
+        0,
+        0
+      ],
+      "metrics": {
+        "weighted_rate": 0.000213623046875,
+        "paired_gain": -9.1552734375e-05,
+        "paired_se": 0.0,
+        "act3": 0.0627390076693606,
+        "first_boss": 0.00748966681055171,
+        "raw_entries": 7,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 7,
+            "gain": 4,
+            "lost": 7
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        10,
+        5,
+        2
+      ],
+      "metrics": {
+        "weighted_rate": 0.00018310546875,
+        "paired_gain": -0.0001220703125,
+        "paired_se": 0.0,
+        "act3": 0.0558414196200749,
+        "first_boss": 0.007274121960393067,
+        "raw_entries": 6,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 6,
+            "gain": 5,
+            "lost": 9
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        40,
+        12,
+        0
+      ],
+      "metrics": {
+        "weighted_rate": 0.000152587890625,
+        "paired_gain": -0.000152587890625,
+        "paired_se": 0.0,
+        "act3": 0.06237147740811187,
+        "first_boss": 0.004532349893681959,
+        "raw_entries": 5,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 5,
+            "gain": 4,
+            "lost": 9
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        0,
+        0,
+        15
+      ],
+      "metrics": {
+        "weighted_rate": 0.000207976937573185,
+        "paired_gain": -9.719884367681499e-05,
+        "paired_se": 0.00010000805154381713,
+        "act3": 0.03136275947882979,
+        "first_boss": 0.0031814607010980777,
+        "raw_entries": 4,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 1,
+            "gain": 1,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 3,
+            "gain": 2,
+            "lost": 9
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        25,
+        0,
+        8
+      ],
+      "metrics": {
+        "weighted_rate": 0.0001220703125,
+        "paired_gain": -0.00018310546875,
+        "paired_se": 0.0,
+        "act3": 0.04592029446555562,
+        "first_boss": 0.005199044598546587,
+        "raw_entries": 4,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 4,
+            "gain": 2,
+            "lost": 8
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        0,
+        40,
+        0
+      ],
+      "metrics": {
+        "weighted_rate": 0.0001220703125,
+        "paired_gain": -0.00018310546875,
+        "paired_se": 0.0,
+        "act3": 0.04175658790377809,
+        "first_boss": 0.0038426919108270324,
+        "raw_entries": 4,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 4,
+            "gain": 2,
+            "lost": 8
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        0,
+        25,
+        10
+      ],
+      "metrics": {
+        "weighted_rate": 0.0001220703125,
+        "paired_gain": -0.00018310546875,
+        "paired_se": 0.0,
+        "act3": 0.045060183580888785,
+        "first_boss": 0.0035929051765252176,
+        "raw_entries": 4,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 4,
+            "gain": 2,
+            "lost": 8
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        60,
+        25,
+        10
+      ],
+      "metrics": {
+        "weighted_rate": 0.0001220703125,
+        "paired_gain": -0.00018310546875,
+        "paired_se": 0.0,
+        "act3": 0.050656715913755514,
+        "first_boss": 0.00278960681352459,
+        "raw_entries": 4,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 4,
+            "gain": 4,
+            "lost": 10
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        30,
+        15,
+        5
+      ],
+      "metrics": {
+        "weighted_rate": 0.0,
+        "paired_gain": -0.00030517578125,
+        "paired_se": 0.0,
+        "act3": 0.05277130224103047,
+        "first_boss": 0.003477931860180035,
+        "raw_entries": 0,
+        "stages": [
+          {
+            "population": 12348,
+            "sampled": 517,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18525,
+            "sampled": 838,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1629,
+            "sampled": 427,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 266,
+            "sampled": 266,
+            "hits": 0,
+            "gain": 0,
+            "lost": 10
+          }
+        ]
+      }
+    }
+  ],
+  "selection": [
+    {
+      "params": [
+        40,
+        12,
+        0
+      ],
+      "metrics": {
+        "weighted_rate": 0.0005181293376553969,
+        "paired_gain": 0.00018243597828039685,
+        "paired_se": 0.00029818737518083,
+        "act3": 0.05065530245813564,
+        "first_boss": 0.00787997158106974,
+        "raw_entries": 7,
+        "stages": [
+          {
+            "population": 12476,
+            "sampled": 1112,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18407,
+            "sampled": 1802,
+            "hits": 1,
+            "gain": 1,
+            "lost": 0
+          },
+          {
+            "population": 1624,
+            "sampled": 921,
+            "hits": 1,
+            "gain": 1,
+            "lost": 0
+          },
+          {
+            "population": 261,
+            "sampled": 261,
+            "hits": 5,
+            "gain": 3,
+            "lost": 9
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        10,
+        5,
+        2
+      ],
+      "metrics": {
+        "weighted_rate": 0.0003284698718274973,
+        "paired_gain": -7.223487547502711e-06,
+        "paired_se": 3.540471557409053e-05,
+        "act3": 0.052812807705307385,
+        "first_boss": 0.010040794410196351,
+        "raw_entries": 10,
+        "stages": [
+          {
+            "population": 12476,
+            "sampled": 1112,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18407,
+            "sampled": 1802,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1624,
+            "sampled": 921,
+            "hits": 1,
+            "gain": 1,
+            "lost": 0
+          },
+          {
+            "population": 261,
+            "sampled": 261,
+            "hits": 9,
+            "gain": 6,
+            "lost": 8
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        45,
+        0,
+        0
+      ],
+      "metrics": {
+        "weighted_rate": 0.00018310546875,
+        "paired_gain": -0.000152587890625,
+        "paired_se": 0.0,
+        "act3": 0.057945094206744575,
+        "first_boss": 0.008012572122325165,
+        "raw_entries": 6,
+        "stages": [
+          {
+            "population": 12476,
+            "sampled": 1112,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18407,
+            "sampled": 1802,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1624,
+            "sampled": 921,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 261,
+            "sampled": 261,
+            "hits": 6,
+            "gain": 4,
+            "lost": 9
+          }
+        ]
+      }
+    },
+    {
+      "params": [
+        0,
+        0,
+        15
+      ],
+      "metrics": {
+        "weighted_rate": 3.0517578125e-05,
+        "paired_gain": -0.00030517578125,
+        "paired_se": 0.0,
+        "act3": 0.031530405136834125,
+        "first_boss": 0.002963736980990761,
+        "raw_entries": 1,
+        "stages": [
+          {
+            "population": 12476,
+            "sampled": 1112,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 18407,
+            "sampled": 1802,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 1624,
+            "sampled": 921,
+            "hits": 0,
+            "gain": 0,
+            "lost": 0
+          },
+          {
+            "population": 261,
+            "sampled": 261,
+            "hits": 1,
+            "gain": 0,
+            "lost": 10
+          }
+        ]
+      }
+    }
+  ],
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "act3": 1840,
+      "act4": 19,
+      "first_boss": 278,
+      "second_boss": 98,
+      "heart_encounter_seeds": [
+        236000377,
+        236005946,
+        236008674,
+        236008785,
+        236008984,
+        236009406,
+        236013932,
+        236016634,
+        236017954,
+        236022062,
+        236025059,
+        236028123,
+        236032741
+      ],
+      "victory_seeds": [],
+      "truncated": 2
+    },
+    "joint": {
+      "runs": 32768,
+      "act3": 1754,
+      "act4": 3,
+      "first_boss": 236,
+      "second_boss": 53,
+      "heart_encounter_seeds": [
+        236012549,
+        236027628
+      ],
+      "victory_seeds": [],
+      "truncated": 2
+    }
+  }
+}

@@ -1,0 +1,320 @@
+{
+  "training_states": 36821,
+  "selection_seed_range": [
+    197000000,
+    197000127
+  ],
+  "assessment_seed_range": [
+    197000128,
+    197000255
+  ],
+  "selection_history": [
+    {
+      "epoch": 1,
+      "scores": [
+        {
+          "scale": 0.25,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.255003809928894,
+          "changed": 420,
+          "corrected": 13,
+          "spoiled": 61
+        },
+        {
+          "scale": 0.5,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.3284000158309937,
+          "changed": 420,
+          "corrected": 20,
+          "spoiled": 118
+        },
+        {
+          "scale": 1.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.4196401834487915,
+          "changed": 420,
+          "corrected": 37,
+          "spoiled": 212
+        },
+        {
+          "scale": 2.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.665192723274231,
+          "changed": 420,
+          "corrected": 68,
+          "spoiled": 396
+        }
+      ]
+    },
+    {
+      "epoch": 2,
+      "scores": [
+        {
+          "scale": 0.25,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.2378119230270386,
+          "changed": 420,
+          "corrected": 13,
+          "spoiled": 84
+        },
+        {
+          "scale": 0.5,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.2828339338302612,
+          "changed": 420,
+          "corrected": 21,
+          "spoiled": 139
+        },
+        {
+          "scale": 1.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.3628971576690674,
+          "changed": 420,
+          "corrected": 39,
+          "spoiled": 230
+        },
+        {
+          "scale": 2.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.6638718843460083,
+          "changed": 420,
+          "corrected": 66,
+          "spoiled": 412
+        }
+      ]
+    },
+    {
+      "epoch": 4,
+      "scores": [
+        {
+          "scale": 0.25,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.2899529933929443,
+          "changed": 420,
+          "corrected": 11,
+          "spoiled": 93
+        },
+        {
+          "scale": 0.5,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.2952661514282227,
+          "changed": 420,
+          "corrected": 26,
+          "spoiled": 164
+        },
+        {
+          "scale": 1.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.4584957361221313,
+          "changed": 420,
+          "corrected": 36,
+          "spoiled": 280
+        },
+        {
+          "scale": 2.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.7379378080368042,
+          "changed": 420,
+          "corrected": 67,
+          "spoiled": 499
+        }
+      ]
+    },
+    {
+      "epoch": 8,
+      "scores": [
+        {
+          "scale": 0.25,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.29207444190979,
+          "changed": 420,
+          "corrected": 15,
+          "spoiled": 104
+        },
+        {
+          "scale": 0.5,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.368323564529419,
+          "changed": 420,
+          "corrected": 28,
+          "spoiled": 194
+        },
+        {
+          "scale": 1.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.5173002481460571,
+          "changed": 420,
+          "corrected": 51,
+          "spoiled": 356
+        },
+        {
+          "scale": 2.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.9857345819473267,
+          "changed": 420,
+          "corrected": 80,
+          "spoiled": 588
+        }
+      ]
+    },
+    {
+      "epoch": 16,
+      "scores": [
+        {
+          "scale": 0.25,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.275390863418579,
+          "changed": 420,
+          "corrected": 21,
+          "spoiled": 133
+        },
+        {
+          "scale": 0.5,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.3910173177719116,
+          "changed": 420,
+          "corrected": 37,
+          "spoiled": 243
+        },
+        {
+          "scale": 1.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 1.6310884952545166,
+          "changed": 420,
+          "corrected": 63,
+          "spoiled": 433
+        },
+        {
+          "scale": 2.0,
+          "count": 2872,
+          "parent_regret": 1.2137019634246826,
+          "regret": 2.2343733310699463,
+          "changed": 420,
+          "corrected": 83,
+          "spoiled": 699
+        }
+      ]
+    }
+  ],
+  "selected": {
+    "epoch": 2,
+    "scale": 0.25
+  },
+  "assessment": {
+    "scale": 0.25,
+    "count": 2949,
+    "parent_regret": 1.1492969989776611,
+    "regret": 1.1974127292633057,
+    "changed": 446,
+    "corrected": 14,
+    "spoiled": 82
+  },
+  "checkpoint_sha256": "83f0105bd2c1e632f27fc79a2ca69ec2b3212a025613f46bbb20dcace120b0e0",
+  "ordinary_screen": {
+    "parent": {
+      "runs": 1024,
+      "seconds": 16.88,
+      "active_steps": 254169,
+      "mean_floor": 23.826171875,
+      "act2": 678,
+      "act3": 57,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    },
+    "combat": {
+      "runs": 1024,
+      "seconds": 172.92,
+      "active_steps": 256407,
+      "mean_floor": 23.908203125,
+      "act2": 684,
+      "act3": 58,
+      "act4": 0,
+      "heart_encounter_seeds": [],
+      "victory_seeds": [],
+      "truncated": 0
+    }
+  },
+  "ordinary_seed_range": [
+    194000000,
+    194032767
+  ],
+  "ordinary": {
+    "runs": 32768,
+    "act2": 21473,
+    "act3": 1946,
+    "act4": 8,
+    "truncated": 0,
+    "heart_encounter_seeds": [
+      194014111,
+      194020911,
+      194031269
+    ],
+    "victory_seeds": []
+  },
+  "controls": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 23.643,
+      "best_floor": 56,
+      "act2": 21198,
+      "act3": 1924,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 244,
+      "second_boss": 61,
+      "heart_encounter_seeds": [
+        194023027,
+        194031269
+      ]
+    },
+    "belief": {
+      "runs": 32768,
+      "mean_floor": 25.755,
+      "best_floor": 56,
+      "act2": 23797,
+      "act3": 3055,
+      "act4": 22,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 489,
+      "second_boss": 139,
+      "heart_encounter_seeds": [
+        194000337,
+        194002140,
+        194005158,
+        194006083,
+        194012512,
+        194014635,
+        194021313,
+        194021653,
+        194021988,
+        194023027,
+        194023528,
+        194024902,
+        194031269
+      ]
+    }
+  }
+}

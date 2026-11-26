@@ -4,6 +4,8 @@ struct FightReturn {
     bool win;
     float health, remaining, potions;
     bool capped;
+    std::array<int,5> kept{};
+    float exit_health=0;
 };
 
 FightReturn finish_combat_action(Env game, const Weights &weights, int first,int tactic=-1) {
@@ -13,6 +15,18 @@ FightReturn finish_combat_action(Env game, const Weights &weights, int first,int
     const int initial_potions=game.bc.potionCount;
     const auto encounter=game.bc.encounter;
     const int floor=game.gc.floorNum;
+    auto record_resources=[&](FightReturn result) {
+        if(resource_search_mix && result.win) {
+            const bool exited=!game.inBattle || encounter!=game.bc.encounter || floor!=game.gc.floorNum;
+            result.exit_health=exited?game.gc.curHp:game.bc.player.curHp;
+            const auto &items=exited?game.gc.potions:game.bc.potions;
+            const int capacity=exited?game.gc.potionCapacity:game.bc.potionCapacity;
+            for(int slot=0;slot<capacity;++slot)
+                if(items[slot]!=Potion::EMPTY_POTION_SLOT && int(items[slot])>1)
+                    result.kept[slot]=int(items[slot])+1;
+        }
+        return result;
+    };
     int action=first;
     for (int k=0; k<400 && game.inBattle && !game.done(); ++k) {
         if (k) {
@@ -23,7 +37,7 @@ FightReturn finish_combat_action(Env game, const Weights &weights, int first,int
         }
         if (!game.step(action)) throw std::runtime_error("invalid combat continuation");
         if (game.inBattle && (encounter!=game.bc.encounter || floor!=game.gc.floorNum))
-            return {true,float(game.gc.curHp),0.f,float(initial_potions-game.gc.potionCount),false};
+            return record_resources({true,float(game.gc.curHp),0.f,float(initial_potions-game.gc.potionCount),false});
     }
     bool win=game.bc.outcome==Outcome::PLAYER_VICTORY;
     float hp=0, max_hp=0;
@@ -32,8 +46,8 @@ FightReturn finish_combat_action(Env game, const Weights &weights, int first,int
         hp+=std::max(0,m.curHp);max_hp+=m.maxHp;
     }
     float remaining=hp/std::max(1.f,max_hp);
-    return {win,win?float(game.bc.player.curHp):0.f,win?0.f:remaining,
-            float(initial_potions-game.bc.potionCount),game.inBattle && !game.done()};
+    return record_resources({win,win?float(game.bc.player.curHp):0.f,win?0.f:remaining,
+            float(initial_potions-game.bc.potionCount),game.inBattle && !game.done()});
 }
 
 using CombatReturnRow=std::array<float,11+CURRICULUM_INPUT>;

@@ -51,7 +51,16 @@ double curriculum_delta(const Candidate &c) const {
 }
 void all_scores(const uint8_t *mask,double *out) const {
     base_scores(mask,out);
+    if(resource_drink_gain && o[7] && mask[ACT_END_TURN] && o[4]>=1 && o[4]<=3) {
+        ResourcePosition pos(int(o[4]),int(o[3]),p[0],p[1]);
+        int n=0;for(int i=0;i<5;++i) n+=o[17+i]>0;
+        for(int a=ACT_POTION;a<ACT_DISCARD;++a) if(mask[a]) {
+            const int id=int(o[17+(a-ACT_POTION)/5]);
+            out[a]+=resource_drink_gain*(resource_typical_cost-pos.potion(n,id));
+        }
+    }
     if(choice_attention.scale) attention_scores(mask,out);
+    if(route_world_count && !o[7]) sample_routes(mask,out);
     if(inventory_draws && simulated_tactic<0 && !o[7]) inventory_search(mask,out);
     if(belief_draws && !belief_branch) belief_scores(mask,out);
     if(!curriculum_scale || simulated_tactic>=0 || opening_branch) return;

@@ -365,3 +365,171 @@ I tried 12 changes to the policy together over five generations. I selected a se
 ### Would combat search alone explain the combined result?
 
 I finished the last arm on the same 32,768 starts. Combat search alone reached the Heart 13 times, exactly as often as combat search plus reward planning. Five encounters were shared. Eight seeds improved and eight regressed after I added reward planning. Act 3 arrivals rose from 3,055 to 3,160 and Act 4 from 22 to 24. I have evidence for combat search over its parent, but this panel gives me no net Heart benefit for the extra reward search. [Four policies on the same seeds](results/paired-combat-and-rewards.json)
+
+### Can I learn from a stronger public-information agent across simulator versions?
+
+I obtained 1,000 published action traces from SnyderConsulting's Ironclad agent. Their benchmark reports 66 Heart encounters and 13 victories. Six runs ended in errors and I excluded them from imitation. I first translated each recorded action into the interface I use for play. I matched the floor, encounter, entry HP and exit HP for 3,289 fights. All were in Act 1. Continuing after the first divergence would pair potentially incorrect game states and decisions. [Original benchmark and traces](https://github.com/SnyderConsulting/sts_ml/tree/1e69c2e78a5ab3cb44cca5ffdfcb82803a68701d/results)
+
+I then replayed the 994 completed games in the exact published simulator and matched their initial and terminal state hashes. I exported 142,159 regular combat choices with at least two legal actions, including 22,607 in Act 3 and 3,212 in Act 4. I gave my learner only fields I can also construct in my simulator. It sees unordered card piles, HP, block, energy, cards, relic IDs, visible statuses and attack hit counts. It has no access to replay seeds, future actions, private move IDs or draw order. I separated complete games before training. In 515 early-combat decisions that could be reconstructed in both simulators, all 515 action masks agreed. The full input tensors matched in 487. The differences included card costs, upgrades and enemy status stacks. I will evaluate transfer by playing ordinary games in my simulator. [Cross-fork checks and data split](results/public-demonstrations.json)
+
+To reproduce the extraction, I build the local native extension, run `python -m experiments.heart.public_demonstrations`, then `python -m experiments.heart.prepare_public_demo --python313 PATH_TO_WINDOWS_PYTHON313` and `python -m experiments.heart.audit_public_demo`. I train with `python -m experiments.heart.public_demo_student`. The upstream simulator, trajectories and model checkpoints are stored in the local build directory.
+
+### Would the Heart-trained deck policy replicate?
+
+On 32,768 new seeds beginning at 223000000, the frozen policy reached the Heart 15 times against seven for the same policy without the learned adjustments. Both killed the Heart once. Over the two panels I gained 19 encounters, lost eight and kept seven in common (two-sided exact paired p = 0.0522). The observed encounter rate went from 15/65,536 to 26/65,536. I would keep the adjustment for further development while treating the size of its benefit as uncertain.
+
+Act-dependent trust alone reached the Heart 10 and 11 times on the two panels. HP and deck-size conditioning alone reached it nine and 11 times. The change in willingness to take a card alone reached it five and 10 times. The complete policy reached it 11 and 15 times. I will use the complete set of weights as the macro policy in the next combat experiment. [Replication and all three individual changes](results/stratified-gate.json)
+
+### Which imitation checkpoint should play?
+
+I initialized the combat network with my existing Ironclad weights and trained it on 114,558 recorded choices. When two copies of a card have the same visible hand row, I credit either copy on the same target. I compared all eight epochs on 15,119 decisions from separate games. Validation negative log likelihood fell from 1.768 initially to 1.099 at epoch four and rose to 1.134 at epoch eight. I froze epoch four before opening the final 12,482 decisions. It agreed with the demonstrator on 54.9% overall, 63.0% in Act 1, 49.0% in Act 2, 42.1% in Act 3 and 35.3% in Act 4. The Act 4 figure has only 215 decisions.
+
+I also want to know whether this network is more useful after the deck is established. I fixed two candidate switching floors, 35 and 49, and three strengths of the original combat policy. I can test a frozen late specialist on an entire 32,768-start panel while replaying only those seeds that the parent reached the switching floor on. Both policies make identical decisions before that point. Every other seed is an unchanged loss and still counts in my denominator. I check a sample of the unchanged prefix policy against the original native outcomes before selecting the floor on separate seeds. [Epoch selection, assessment and data checks](results/public-demonstrations.json)
+
+### Did the tactical imitator improve actual games?
+
+I played the same 1,024 fresh starts with the macro policy fixed. My existing combat policy reached Act 3 in 53 games. The imitation policy reached it in 28. Mixing imitation with the existing scores raised that to 47 or 52, depending on the strength of the mix. No arm entered Act 4. I rejected the whole-run replacement. The original inputs could distinguish the number of incoming hits, but could not distinguish six incoming damage from thirty. My next version restores the displayed intent and damage and increases the relative training weight of later acts. [Frozen policy screen](results/public-demonstrations.json)
+
+I also completed the late-position test for deeper search. Of 96 naturally reached floor-49 situations, the original policy reached the Heart once, ordinary combat search four times and the deeper search four times. The deeper search got 33 runs to the second Act 3 boss against 23 for ordinary search. Of 96 floor-32 situations, none of the three policies reached the Heart. The deeper search got one to Act 4. [Late-game continuations and matched fight controls](results/matched-fight-search.json)
+
+### Can I reproduce the displayed incoming damage?
+
+I translated the current move into the game's visible icon, damage and hit count. The renderer accounts for Weak, Vulnerable, relics, stance, facing and Intangible. Runic Dome yields a hidden icon and zero damage fields. The learner never receives the original move identifier. On 515 shared early-game decisions the two simulators agreed on all enemy intent fields in 514. All 515 legal masks agreed and reversing the draw pile changed zero inputs. The single damage discrepancy occurred on a position where the simulators also disagreed on enemy Strength.
+
+I trained with the restored display and gave underrepresented acts more weight by the inverse square root of how frequent they are. I preserve the original data split and the previous legal-action objective. For this version the extraction command adds `--intent-output build/public-expert-intent`, and training adds `--root build/public-expert-intent --balance-acts`. [Visible-field comparison](results/public-demonstrations.json)
+
+### Did the full-observation search student retain the teacher's Heart entries?
+
+On the complete 194M panel of 32,768 ordinary starts, the original combat policy reached the Heart twice, the online search reached it 13 times, and my full-observation student of that search reached it three times. The student won zero Hearts. It reached Act 3 in 1,946 runs against 1,924 for the parent and 3,055 for search. I would retain online planning when I need the stronger play. Moving its decisions into this network recovered little of its end-to-end benefit. [Frozen checkpoint, validation and matched ordinary runs](results/full-search-student.json)
+
+### Why did the first trace translation stop before Act 2?
+
+I compared the actions on both sides of the first boss chest. My simulator keeps the chest open after taking a relic and exposes a final confirmation. The recorded simulator returns directly to the map. I inserted that confirmation only after a relic had been taken and every relic choice was disabled. This recovered 111 further matching fights, all in Act 2, bringing the total to 3,400. The imitation dataset already contains all four acts because I extracted it inside the source simulator.
+
+I repeated the observation comparison deeper in combat, including 214 Act 2 choices. Of 473 positions, 437 matched on every input, 470 on every intent field, and 471 on the legal mask. Reversing the draw pile changed zero inputs. The remaining discrepancies matter when interpreting imitation accuracy across the two games. [Trace and observation audits](results/public-demonstrations.json)
+
+The new combat policy selected epoch five. Held-out action agreement went from 54.9% to 55.4% overall and from 35.3% to 42.3% on the 215 Act 4 choices. On 1,024 new starts with the macro policy fixed, the revised standalone version got 35 to Act 3 compared with 28 for the previous standalone version and 53 for the parent. Mixing the revised model with the parent got 55 to Act 3 and one to the Heart. I selected that mix for the full panel. [Frozen checkpoint and screen](results/public-demonstrations.json)
+
+### Did adding the compact student help online search?
+
+On the same 32,768 seeds the compact student alone reached the Heart five times, search alone 13 times, and search with the compact adjustment 14 times. The combined player gained 11 encounters and lost 10 compared with search alone. Act 3 arrivals rose from 3,055 to 3,173. One additional encounter across that many runs gives me little reason to favor the extra component on Heart reach alone. [Frozen policies and paired outcomes](results/search-student-and-deck.json)
+
+### Did a late combat specialist help on ordinary starts?
+
+I tried switching combat policy on floor 35 or 49. I selected the floor-35 conservative blend on separate practice games. On the untouched 32,768-start panel, the 1,774 runs that reached Act 3 got the specialist and all earlier choices stayed identical. It retained the parent's five Heart encounters and added two. Neither policy won against the Heart. With only two seeds separating them, I kept this as an experimental option. [Selection and paired outcomes](results/public-demonstrations.json)
+
+### Can I learn when to rest and what to buy from a stronger player?
+
+I extracted 15,346 campfire, shop, upgrade and removal decisions from 994 verified public games. I kept whole games together when splitting training, checkpoint selection and testing. The scorer compares each legal option using the deck, relics, HP, gold, key status, potion occupancy and price. This lets the same upgrade or purchase receive a different score when the run changes. In 560 real menus the exported C++ scorer agreed with the training implementation within 0.000004 on centered logits. That check caught a floor-zero discrepancy in card removals before I ran the final evaluation.
+
+On 4,096 ordinary selection starts the existing policy got 225 runs to Act 3 and two to the Heart. The selected 70% imitation blend got 170 to Act 3 and two to the Heart. I froze that mix and scheduled separate tests of the four decisions to see which ones help my own combat player. [Training, checkpoint selection and gameplay screen](results/resource-policy.json) and [demonstration source](https://github.com/SnyderConsulting/sts_ml/tree/1e69c2e78a5ab3cb44cca5ffdfcb82803a68701d/results)
+
+### What happened when the learned resource decisions played full runs?
+
+On 32,768 new starts the existing player reached the Heart 16 times and won twice. Changing all four decisions together gave me eight encounters and zero wins. Changing only the shop gave me five encounters, only removals 11, only campfires 17, and only upgrade targets 18. I kept the existing shop policy. On a second 32,768 starts, changing only upgrades again increased Act 3 arrivals (1,816 to 1,931), but Heart encounters fell from nine to seven. Across the two panels the upgrade adjustment added 278 Act 3 arrivals and zero net Heart encounters. [Frozen component comparisons and replication](results/resource-policy.json)
+
+### Can the combat planner continue while a Bronze Orb holds a card?
+
+My planner used to stop simulating actions whenever an orb showed Stasis. I subtracted the hand and all three public piles from the permanent deck. When that left the correct number of cards, I restored those cards in independently simulated fights. For two different stolen cards I varied which orb carried which. A separate grader could compare my inference with the actual stolen cards. Across 3,993 decisions with an active holder, I made 463 predictions and got the set of cards right 458 times. The five errors are why I treat this as an inference.
+
+I played both policies from 487 naturally earned Bronze Automaton fights on fresh seeds. Recovering Stasis took wins from 100 to 113, with 21 newly won fights and eight newly lost ones. The other 1,049 boss fights produced identical results. This measures a specific Act 2 fight, so I report it separately from the ordinary Heart rate. [Stasis reconstruction and matched outcomes](results/stasis-search.json)
+
+### How much does the human draft policy help when I also search combat?
+
+On 32,768 identical starts, the learned draft alone reached the Heart nine times. Combat and reward search without the learned draft reached it 13 times. Using both the learned draft and those searches reached it 34 times and defeated it three times. The combined player gained 31 encounters and lost ten relative to the two searches alone. Its 3,077 Act 3 arrivals were fewer than the searches' 3,160, which makes the gain after Act 3 particularly interesting. I replayed all three victories from Neow and verified the final encounter and remaining HP (30, 30 and 23). I started an independent replication and a comparison that removes reward search while retaining learned drafting and combat search. [Panel, paired changes and verified victories](results/combined-human-search.json)
+
+### Would a model of successful inventories make better draft choices?
+
+I trained a model on visible inventories at shops and campfires using 32,768 of my own runs plus independently verified expert games. It predicts whether the run advances to the next act under either player and predicts which player assembled the inventory. To score a reward or removal I change the relevant item count and measure the difference in its predictions. The C++ scorer and the training model agreed to within 0.000008 on 994 real menus.
+
+On held-out games the survival log loss was 0.591 against 0.602 for knowing only the act and player. The source classifier's log loss was 0.018, easily explained in part by the opening relic. In the Act 1 inventories I inspected the expert always had Burning Blood; my player had exchanged it in every case. Recognizing the player doesn't tell me which item would help my player win.
+
+I selected the scales on separate seed pools using weighted Heart encounters. The selected policy used the two survival estimates and zero weight on source resemblance. On 32,768 untouched starts it reached the Heart twice against 13 for the parent. I rejected it. Being able to forecast what happens to an existing deck offered little protection against choosing the wrong edit. [Forecast accuracy, selection procedure and ordinary runs](results/deck-outcomes.json)
+
+### Should I keep Burning Blood with the current draft policy?
+
+I repeated the opening experiment with my current draft policy. On 32,768 new starts the ordinary opening got 1,854 games to Act 3 and 14 to the Heart. Ranking all four offers using the previously learned values got 1,847 and 12. Forcing the best offer that retained Burning Blood got 1,466 and nine. I kept the ordinary opening. [Controlled opening comparison](results/starter-relic-transfer.json)
+
+### Can my combat policy learn on the late-game decks that the expert actually earned?
+
+I replayed the verified source runs and saved the exact beginning of each sampled fight. I separated whole games into 420 training fights, 160 validation fights and 179 held-out fights. Replaying from those states fixes the deck, HP, enemy and initial shuffle. The learner receives the public observation. The grader can compare the outcome with the recorded expert play.
+
+I first queried a public-information search teacher on 4,121 decisions reached by my student and added its preferred move to training. A control received the same number of updates and original demonstration examples matched by act. On the 179 held-out fights the initial student won 127, the extra demonstration training won 126 and the correction-trained student won 127. The original recorded player had won 158. Follow-up selection screens used the same deterministic fallback in all student arms.
+
+I also tried reinforcement learning. Four sampled attempts started from each identical state. I compared their returns within the group so that a strong starting deck could not earn credit for the actions I sampled. A win earned one point and up to a quarter point for HP left. I limited the update with a clipped policy ratio and a penalty for moving far from the initial action distribution. Validation selected update six of twelve. On held-out fights it won 128 against 127 and left 34.4 HP on average against 33.5. Its clearest difference was Act 3 (42 of 56 against 37); it lost ground in the other acts. I scheduled a full ordinary-start test that deploys it only in Act 3. [Matched fights, training and epoch selection](results/expert-state-learning.json)
+
+The older whole-run imitation blend has now finished its ordinary panel. It got 1,925 runs to Act 3 against 1,825 for the existing player, but reached the Heart only ten times against 15. Each won once. [Frozen ordinary-start evaluation](results/public-demonstrations.json)
+
+### Does understanding the map beyond the next room change the route?
+
+I fitted two routing policies to the same 8,370 expert decisions at map forks. The first scores each immediate room given the resources I carry. The second also computes the value of connected paths backward from the top of the map. I used a differentiable Bellman backup so an observed choice can teach me that an elite leading to a campfire differs from one leading to another fight. Only the room types, edges, visible burning elite and current resources enter the model.
+
+On 984 held-out forks the next-room model matched 73.8% of expert choices; the whole-map model matched 92.7%. I selected the deployment mixtures on separate ordinary starts. On the same 32,768 test games the existing route policy reached the Heart 11 times, the next-room model 12 times and the whole-map model 26 times. The whole-map model reached Act 3 on fewer starts (1,604 versus 1,880) but entered Act 4 twice as often (38 versus 19). It won one Heart. I kept it for independent replication and a combined test with combat search. [Imitation, score parity, tests and paired encounters](results/learned-map.json)
+
+
+On a second 32,768 ordinary starts my whole-map router reached the Heart 21 times and won twice. The old router reached it 11 times and won zero. Across both panels I counted 47 encounters versus 22. I then switched the new router on in only one act at a time on the second panel. Act 1 alone got 18 encounters, Act 2 alone got 11, Act 3 alone got 10, and Acts 2 and 3 together got 11. I can see an effect from my early route even though the Heart comes three acts later. I kept the all-act router because it won the full comparison on both panels. [Replication and stage-specific results](results/learned-map.json)
+
+
+### Can I improve an expert route by replaying the road I didn't take?
+
+I saved 6,397 actual forks, replayed up to three legal paths from each one, and finished each run with my existing router. The unchanged path had to reproduce the full original run's floor, act, keys and encounter result before I used either branch. Only 35 forks produced different Heart outcomes, including 28 from Act 3. With whole games assigned to splits, that left 31 informative training forks for a Heart-only objective. I kept a second objective that also valued reaching the bosses and Act 4.
+
+On 8,192 selection starts I counted 11 encounters with Heart-only training, four with the extra milestones and nine with the existing router. On 32,768 fresh starts the selected policy got 22 encounters and one kill; the existing router got 21 and two. Thirteen seeds gained an encounter and 12 lost one. I kept the existing router. [Matched branches, checkpoint selection and ordinary-start results](results/map-preference-learning.json)
+
+### Would seeing the search teacher's scores help me learn its moves?
+
+I used the same 29,240 training positions for three students. I varied the supervision between the teacher's chosen move, the fraction of search visits to each move, and a blend of within-position search evaluations and visits. Every student also saw the recorded expert move. Equivalent copies of a card aimed at the same target shared probability in the loss.
+
+Validation favored the evaluation-informed student, which won 119 of 160 fights against 114 for my initial student. In 179 untouched fights the initial student won 127, the chosen-move student won 130, the visit student won 125, and the evaluation-informed student won 129. That leaves a substantial gap to the original expert's 158 wins from these starting positions. [Comparable search targets and held-out fights](results/root-distillation.json)
+
+I also finished the ordinary-run test of my earlier reinforcement-trained Act 3 specialist. It reached the Heart 11 times on 32,768 starts. The imitation specialist also got 11, and the existing player got 12. The five extra Act 3 fight wins I had seen on expert decks didn't translate into more Heart encounters on my own decks. [Ordinary Act 3 transfer](results/expert-state-learning.json)
+
+
+### Would a deeper tree rescue more losing fights on my own decks?
+
+I built a tree that plays out the whole fight on each independently generated battle. I compared two simulation budgets and two ways to score a root move: its mean return, or a mixture of the mean and best return. I gave each root move at least two simulations in each world. These worlds came from practice data and the visible battle state; the real future draws stayed unavailable.
+
+I selected 96 simulations per world with mean return. In a fresh bank of 160 naturally lost fights and 160 matched winning controls, my selected tree rescued 26 losses and kept 159 wins. My existing rollout search rescued 44 and kept all 160. I kept the existing search. The new tree plays many continuations with a random legal policy; deeper search alone didn't make those continuations reliable enough to justify deploying it. [Budgets, selection and fresh matched fights](results/terminal-search.json)
+
+
+I checked how well the external public-search teacher actually plays from the same combat starts. On validation it won 112, 121, 128 and 125 of 160 fights at 64, 384, 2,048 and 8,192 simulations per decision. I'd pick 2,048 from that result. On the separate 179 fights those four budgets won 123, 133, 140 and 145. The original student won 127 and the logged expert had won 158. I used independent search particles and kept the student fallback identical on unhandled decisions. That isolates part of the gap: my original training labels came from a much weaker search budget than the best teacher tested here. These are fight outcomes on earned expert decks. [Budgets, matching and combat outcomes](results/search-teacher-ceiling.json)
+
+
+On the second 32,768 ordinary starts, the frozen human draft and combat/reward searches reached the Heart 29 times and killed it once. Human drafting alone reached it 13 times and won zero. Across my two evaluations the combined player earned 63 encounters and four victories in 65,536 starts (0.0961%). [Independent replication](results/combined-human-search.json)
+
+### Can a human campfire or event choice teach my router what to do after it arrives?
+
+I reconstructed campfire decisions from the same archive of human A20 Ironclad Heart wins as my draft policy. To keep the HP input honest, I used the previous floor's HP and excluded cases where Eternal Feather was known to heal on entry. Smith targets competed against the subset of unupgraded cards I could reconstruct from earlier transactions. On held-out games the model identified the campfire action 79.7% of the time and the smith target 49.9% of the time. A uniformly sampled target within the reconstructed smith menus would get 19.7%.
+
+On a fresh panel of 32,768 uniformly sampled 64-bit starts, a 35% campfire and smith mixture reached the Heart 28 times with six kills, against 21 and three. Isolating the decisions gave 30 encounters and six kills for campfire actions alone, and 19 and two for smith targets alone. I tested those on the same seeds after selecting the mixture. [Human campfire experiments](results/human-campfires.json)
+
+I also mapped historical event button names to their simulator actions for 23 events. The mapping identifies the choices. I learned their scores from earlier human games. Event frequencies alone matched 75.7% of held-out decisions and adding HP, gold and floor matched 74.3%. I selected the deployment mixture on ordinary starts. A 45% contextual mixture reached the Heart 30 times and won six on 32,768 new starts, versus 22 and three with the same router and its earlier event choices. I checked the deployed scores against the training formula on 64 real menus; the largest difference was below 0.000001. [Human event experiments](results/human-events.json)
+
+
+I tested the two human-trained decisions together on another 32,768 ordinary starts. The router alone reached 25 Hearts and won one. The event policy reached 30 and won one. The campfire and smith mixture reached 34 and won five. Both together reached 33 and won five. The campfire mixture now has 62 encounters across two 32,768-run panels against 46 for the same router without it. I retained that fast policy. [Shared seeds and all four arms](results/human-campfires.json)
+
+### Should I simulate a few rooms before committing to a late route?
+
+I reconstructed the visible Act 3 map, HP, inventory and keys in fresh worlds. Each legal route experienced the same set of independently generated encounters across a fixed horizon. On my initial audit I recovered 300 usable worlds across 100 branch decisions and changed 24 choices. In 384 earned selection positions the existing policy got seven Heart encounters and the best trial got six. On a separate full panel of 32,768 ordinary starts, all 1,644 Act 3 arrivals stayed identical, while the selected planner reached 421 first bosses against 344, and 27 Hearts against 20. Both had zero wins. The selection result and the fresh result point in different directions, so I started a replication using my retained campfire policy. [Public world checks, selection and whole runs](results/route-rollouts.json)
+
+### Can I hand all the noncombat menus to an imitation model?
+
+I started with a shop. Matching a recorded purchase is measurable, but I care about what happens after the purchase. I trained one scorer on 45,080 choices from verified public A20 traces and split games before fitting. I chose epoch 12 on validation. It matched 93% of held-out shop choices, 94% of removals and 67% of boss relic choices. The original player in that archive reached 65 Hearts and won 13 times in 994 games. Those are the demonstrator's results.
+
+In my simulator, the best inventory mixture from the selection panel reached 12 Hearts on 32,768 fresh starts, against 18 with the existing player. I then let the existing player build its deck through Act 2 before switching just the inventory decisions. It reached 36 Hearts against 25 on selection. On fresh starts it tied at 27 encounters each, with two kills against zero. I kept the incumbent. [Training, menu agreement, early and late deployment](results/strategic-apprentice.json)
+
+I also removed reward search from the combined player while keeping its combat search and human draft weights. On the same 32,768 starts it reached 18 Hearts and killed one. Restoring reward search gave 34 encounters and three kills. [Same-seed reward search comparison](results/combined-human-search.json)
+
+### At the same HP, what changes if I still have the potion?
+
+I saved 8,523 real postcombat reward screens and replayed them at four HP levels. When a potion was present, I kept it in one continuation and removed it in the other. The unchanged branch had to reproduce the original game's final floor, act, keys, Heart encounter and win. Across 53,647 continuations, I fitted the differences within each starting position. This avoids interpreting a bad deck losing both HP and a potion as evidence that spending the potion caused the loss.
+
+On held-out positions, the mean squared error for the effect on reaching the next act fell from 0.0493 to 0.0453 compared with fitting a single scale to HP minus four per potion. The lightest inventory adjustment reached 34 Hearts against 27 on selection. It tied the original policy at 27 on 32,768 new starts and won once against zero. I kept the previous potion policy. [Counterfactual effects and ordinary starts](results/resource-effects.json)
+
+### Where do I lose an already-developed deck?
+
+I replayed the public reference traces to their first Act 3 screen. With all 192 original inventories restored and the noncombat router fixed, my fast combat player reached five Hearts and killed one. My locally trained combat imitation reached two and killed zero. The recorded player had reached 65 and won 13. From the 73 earned Act 4 positions my fast player reached 38 Hearts and killed two. I keep these conditional tests separate from the ordinary-start rate. [Restoration checks and outcomes](results/reference-runtime.json)
+
+I also compared two searches on individual held-out fights. At 384 simulations, a shared public-belief tree won 143 of 179 fights versus 133 for separate trees. Eleven fights switched to wins and one to a loss. At 2,048 simulations, the same shared-tree mode still won 143. I selected the mode using different games. The independent search then won 140 at that budget. These runs used the published simulator's public search without its strategic Heart checkpoint. [Matched source fights](results/shared-search-screen.json)
+
+On the retained campfire policy I repeated the 13-room Act 3 planning experiment. It reached 37 Hearts instead of 34 on 32,768 starts, with three kills instead of five. The first boss count increased from 395 to 460. Clearing the last two fights remains a separate bottleneck. [Late map replication](results/route-rollouts.json)

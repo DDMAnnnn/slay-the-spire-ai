@@ -28,6 +28,51 @@ def set_actor(params):
         engine.set_actor(*params)
 
 
+def set_strategic_apprentice(config):
+    if config:
+        engine.set_strategic_apprentice(*config[:7])
+        acts=config[7] if len(config)>7 else 15
+        if hasattr(engine,"set_strategic_acts"):engine.set_strategic_acts(acts)
+        elif acts!=15:raise ValueError("native build cannot restrict the strategic policy by act")
+    elif hasattr(engine,"reset_strategic_apprentice"):
+        engine.reset_strategic_apprentice()
+
+
+def set_human_events(config):
+    if config:
+        engine.set_human_events(*config)
+    elif hasattr(engine,"reset_human_events"):
+        engine.reset_human_events()
+
+
+def set_route_worlds(config):
+    if config or hasattr(engine,"set_route_worlds"):
+        engine.set_route_worlds(*(config or (0,4,3,0.)))
+
+
+def set_learned_map(config):
+    if config:
+        engine.set_learned_map(*config[:6])
+        if len(config)>6 or hasattr(engine,"set_map_acts"):
+            engine.set_map_acts(config[6] if len(config)>6 else 7)
+    elif hasattr(engine,"reset_learned_map"):
+        engine.reset_learned_map()
+
+
+def set_deck_forecast(config):
+    if config:
+        engine.set_deck_forecast(*config)
+    elif hasattr(engine,"reset_deck_forecast"):
+        engine.reset_deck_forecast()
+
+
+def set_resource_policy(config):
+    if config:
+        engine.set_resource_policy(*config)
+    elif hasattr(engine,"reset_resource_policy"):
+        engine.reset_resource_policy()
+
+
 def set_historical_gate(config):
     if config or hasattr(engine,"set_historical_gate"):
         engine.set_historical_gate(config if config is not None else [0.]*12)
@@ -48,6 +93,10 @@ def set_inventory_search(config):
 
 
 def set_public_belief(config,weights=None):
+    if hasattr(engine,"set_terminal_search"):
+        engine.set_terminal_search(*(config.get("terminal_search",[0,0.]) if config else [0,0.]))
+    if hasattr(engine,"set_stasis_reconstruction"):
+        engine.set_stasis_reconstruction(bool(config and config.get("stasis")))
     if hasattr(engine,"set_public_tree"):
         engine.set_public_tree(config.get("tree_budget",0) if config else 0, config.get("tree_depth",1) if config else 1)
     if hasattr(engine,"set_continuation"):
@@ -182,10 +231,33 @@ def apply_model(variant, model):
     set_inventory_value(model.get("inventory_value"))
     engine.set_boss_draft(model.get("boss_draft",[]))
     set_scenarios(model.get("scenarios"))
+    set_resource_policy(None)
+    set_deck_forecast(None)
+    set_learned_map(None)
+    set_route_worlds(None)
+    set_human_events(None)
+    set_strategic_apprentice(None)
+    if hasattr(engine,"reset_encounter_forecast"):
+        engine.reset_encounter_forecast()
+    if hasattr(engine,"reset_resource_effects"):
+        engine.reset_resource_effects()
     set_public_belief(model.get("public_belief"),model["weights"])
     set_inventory_search(model.get("inventory_search"))
     set_historical_menu(model.get("historical_menu"))
     set_historical_gate(model.get("historical_gate"))
+    set_resource_policy(model.get("resource_policy"))
+    set_deck_forecast(model.get("deck_outcome"))
+    set_learned_map(model.get("map_policy"))
+    set_route_worlds(model.get("route_worlds"))
+    set_human_events(model.get("human_events"))
+    set_strategic_apprentice(model.get("strategic_apprentice"))
+    encounter=model.get("encounter_forecast")
+    if encounter:
+        banks=[encounter["encounters"][str(a)] for a in (1,2,3)]
+        engine.set_encounter_forecast(*encounter["weights"],banks,encounter["gain"],encounter["boss"])
+    effects=model.get("resource_effects")
+    if effects:
+        engine.set_resource_effects(effects["hp"],effects["potion"],effects["gain"],effects["mix"],effects["typical"])
     return model["weights"]
 
 

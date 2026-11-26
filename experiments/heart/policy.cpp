@@ -36,6 +36,10 @@ static bool use_final_weights=false;
 static int late_from=5;
 using EventTable = std::array<std::array<double,16>,std::size(eventGameNames)>;
 static EventTable event_values{};
+using EventContext=std::array<std::array<std::array<double,7>,4>,std::size(eventGameNames)>;
+static EventContext human_event_logits{};
+static std::array<bool,std::size(eventGameNames)> human_event_seen{};
+static double human_event_mix=0.;
 constexpr int CARD_COUNT=std::size(cardNames);
 constexpr int CHOICE_FEATURES=CARD_COUNT+16*std::size(eventGameNames);
 using BossDraftInput=std::array<float,32+CARD_COUNT>;
@@ -195,8 +199,58 @@ static std::vector<float> historical_upgrade,historical_repeat;
 static std::array<double,2> historical_scales{};
 static std::array<double,12> historical_gate{};
 
+constexpr int RESOURCE_TOKENS=9+CARD_COUNT+int(std::size(relicNames))+int(std::size(potionNames));
+using ResourceInput=std::array<float,23>;
+using ResourceHidden=std::array<float,12>;
+static std::array<std::array<ResourceInput,6>,4> resource_category{};
+static std::array<std::vector<ResourceInput>,4> resource_item;
+static std::vector<ResourceHidden> resource_context;
+static std::array<std::vector<ResourceHidden>,4> resource_option;
+static std::array<double,4> resource_mix{};
+using StratHidden=std::array<double,16>;
+using StratInput=std::array<double,17>;
+constexpr int STRAT_BASE=16+CARD_COUNT+int(std::size(relicNames))+int(std::size(potionNames));
+constexpr int STRAT_NEOW=STRAT_BASE+8+16*int(std::size(eventGameNames));
+constexpr int STRAT_TOKENS=STRAT_NEOW+256;
+static std::vector<StratHidden> strat_context,strat_action;
+static std::vector<StratInput> strat_item;
+static std::array<std::array<StratInput,15>,10> strat_category{};
+static std::array<std::array<double,STRAT_TOKENS>,10> strat_task_item{};
+static std::array<StratHidden,10> strat_task_hidden{};
+static std::array<double,10> strat_mix{};
+static bool strat_enabled=false;
+static int strat_acts=15;
+using ForecastHidden=std::array<float,24>;
+using ForecastHeads=std::array<float,3>;
+static std::vector<ForecastHidden> forecast_items;
+static std::array<ForecastHidden,3> forecast_stage{};
+static std::array<std::vector<ForecastHeads>,3> forecast_direct;
+static std::array<std::array<ForecastHeads,24>,3> forecast_readout{};
+static ForecastHeads forecast_scale{};
+using MapReward=std::array<std::array<double,10>,13>;
+using MapEdge=std::array<std::array<std::array<double,9>,9>,2>;
+static MapReward map_reward{};
+static MapEdge map_edge{};
+static std::array<double,10> map_depth{};
+static std::array<double,3> map_branch{};
+static bool map_graph=false;
+static double map_mix=0.;
+static int map_active_acts=7;
+static int route_world_count=0,route_world_horizon=4,route_world_act=3;
+static double route_world_scale=0.;
+static thread_local std::array<int,3>* route_world_audit=nullptr;
+static thread_local std::vector<std::array<double,3>>* route_root_difference=nullptr;
+
 #include "choice_attention.inc"
 #include "public_belief.inc"
+#include "resource_effects.inc"
+using EncounterHidden=std::array<double,24>;
+static std::vector<EncounterHidden> enc_item,enc_enemy;
+static std::array<std::array<double,11>,24> enc_context;
+static std::array<EncounterHidden,2> enc_readout;
+static std::array<double,2> enc_out_bias;
+static std::array<std::vector<std::pair<int,double>>,3> enc_banks;
+static double enc_gain=0.,enc_boss_weight=0.;
 
 struct View {
     const float *o, *p;
@@ -465,8 +519,18 @@ struct View {
                 if(learned_neow) return neow_values.at(int(c[1])-1).at(int(c[2])-1);
                 return i==3 ? w[Swap]-1 : -.001*i;
             }
-            if(kind==ChoiceKind::EVENT_OPTION && i<16)
-                return learned(i)+event_values.at(int(o[9])-1)[i] - .0001*i;
+            if(kind==ChoiceKind::EVENT_OPTION && i<16) {
+                const int event=int(o[9])-1;
+                const double old=learned(i)+event_values.at(event)[i];
+                if(i<4 && human_event_mix && human_event_seen.at(event)) {
+                    const double miss=1.-o[0]/std::max(1.f,o[1]);
+                    std::array<double,7> x={1.,miss,miss*miss,(o[1]-75)/50.,std::min(o[2]/200.,3.),
+                        std::max(0,int(o[3])-1)%17/15.,double(o[4]>=3)};
+                    const auto &params=human_event_logits[event][i];
+                    return (1.-human_event_mix)*old+8.*human_event_mix*std::inner_product(x.begin(),x.end(),params.begin(),0.)-.0001*i;
+                }
+                return old-.0001*i;
+            }
             return -.001*i;
         case ScreenState::MAP_SCREEN: return map_score(i);
         case ScreenState::REST_ROOM:
@@ -521,6 +585,11 @@ struct View {
 #include "boss_draft.inc"
 #include "expert_prior.inc"
 #include "human_strategy.inc"
+#include "resource_policy.inc"
+#include "strategic_apprentice.inc"
+#include "deck_forecast.inc"
+#include "encounter_forecast.inc"
+#include "learned_map.inc"
 #include "deck_edits.inc"
 #include "inventory_value.inc"
 #include "route_value.inc"
@@ -529,6 +598,7 @@ struct View {
     void attention_scores(const uint8_t *mask,double *out) const;
     void belief_scores(const uint8_t *mask,double *out) const;
     void inventory_search(const uint8_t *mask,double *out) const;
+    void sample_routes(const uint8_t *mask,double *out) const;
     void opening_scores(const uint8_t *mask,double *out) const;
 #include "turn_plan.inc"
 #include "curriculum_actor.inc"
@@ -536,6 +606,7 @@ struct View {
 
 #include "choice_attention_scores.inc"
 #include "scenario.inc"
+#include "route_worlds.inc"
 #include "opening_search.inc"
 struct Result { int floor=0, act=0, keys=0, steps=0; bool heart=false, truncated=false, encounter=false; };
 Result advance(Env &e,const Weights &w,std::vector<int>* trace=nullptr,int stopAct=0,
@@ -646,6 +717,12 @@ struct Bank {
 #include "intent_practice.inc"
 #include "boss_drill.inc"
 #include "boss_entry_health.inc"
+#include "stasis_audit.inc"
+#include "deck_outcomes.inc"
+#include "map_counterfactuals.inc"
+#include "resource_counterfactuals.inc"
+#include "room_transitions.inc"
+#include "public_trace.inc"
 #include "recovery_drill.inc"
 #include "edit_practice.inc"
 #include "route_practice.inc"
@@ -666,6 +743,58 @@ std::vector<std::array<int,5>> tactic_progress(const Bank &bank,const Weights &w
 }
 
 PYBIND11_MODULE(heart_native,m) {
+    m.def("set_route_worlds",[](int count,int horizon,int act,double scale){
+        if(count<0 || count>32 || horizon<1 || horizon>16 || act<1 || act>3 || !std::isfinite(scale))
+            throw std::invalid_argument("invalid route search parameters");
+        route_world_count=count;route_world_horizon=horizon;route_world_act=act;route_world_scale=scale;
+    });
+    m.def("route_root_projection",[](const Weights &w,py::array_t<float,py::array::c_style> obs,
+            py::array_t<uint8_t,py::array::c_style> mask,int sample){
+        if(obs.ndim()!=1 || obs.size()!=OBS_SIZE || mask.ndim()!=1 || mask.size()!=N_ACTIONS)
+            throw std::invalid_argument("incorrect root observation dimensions");
+        std::vector<std::array<double,3>> difference;
+        struct Guard {~Guard(){route_root_difference=nullptr;}} guard;
+        route_root_difference=&difference;
+        Env e;View v(obs.data(),w);
+        bool matched=restore_route_world(e,v,sample,mask.data());
+        return py::make_tuple(matched,difference);
+    });
+    m.def("route_world_audit",[](const Weights &w,const std::vector<uint64_t>& seeds){
+        std::array<int,3> stats{};
+        struct Guard {~Guard(){route_world_audit=nullptr;}} guard;
+        route_world_audit=&stats;
+        for(auto seed:seeds) run(w,seed);
+        return stats;
+    });
+    m.def("set_learned_map",[](const MapReward &reward,const std::array<double,10> &depth,const MapEdge &edge,
+        const std::array<double,3> &branch,bool graph,double mix){
+        if(!std::isfinite(mix) || mix<0 || mix>1) throw std::invalid_argument("map mixture must be in [0,1]");
+        map_reward=reward;map_depth=depth;map_edge=edge;map_branch=branch;map_graph=graph;map_mix=mix;
+    });
+    m.def("set_map_acts",[](int acts){
+        if(acts<0 || acts>7) throw std::invalid_argument("invalid map act mask");
+        map_active_acts=acts;
+    });
+    m.def("reset_learned_map",[](){map_mix=0.;map_active_acts=7;});
+    m.def("set_deck_forecast",[](std::vector<ForecastHidden> items, std::array<ForecastHidden,3> stage,
+        std::array<std::vector<ForecastHeads>,3> direct,std::array<std::array<ForecastHeads,24>,3> readout,ForecastHeads scale){
+        if(items.size()!=CARD_COUNT+std::size(relicNames)) throw std::invalid_argument("forecast vocabulary mismatch");
+        for(const auto &row:direct) if(row.size()!=items.size()) throw std::invalid_argument("forecast layout mismatch");
+        forecast_items=std::move(items);forecast_stage=stage;forecast_direct=std::move(direct);
+        forecast_readout=readout;forecast_scale=scale;
+    });
+    m.def("reset_deck_forecast",[](){forecast_scale={};});
+    m.def("set_resource_policy",[](std::array<std::array<ResourceInput,6>,4> category,
+        std::array<std::vector<ResourceInput>,4> item,std::vector<ResourceHidden> context,
+        std::array<std::vector<ResourceHidden>,4> option,std::array<double,4> mix){
+        if(context.size()!=RESOURCE_TOKENS) throw std::invalid_argument("resource vocabulary mismatch");
+        for(int i=0;i<4;++i) if(item[i].size()!=RESOURCE_TOKENS || option[i].size()!=RESOURCE_TOKENS ||
+                !std::isfinite(mix[i]) || mix[i]<0 || mix[i]>1) throw std::invalid_argument("invalid resource policy");
+        resource_category=std::move(category);resource_item=std::move(item);resource_context=std::move(context);
+        resource_option=std::move(option);resource_mix=mix;
+    });
+    m.def("reset_resource_policy",[](){resource_mix={};});
+    m.def("convert_public_trace",&convert_public_trace);
     m.def("set_opening_search",[](int draws,int scope,double scale){
         if(draws<1 || draws>16 || scope<0 || scope>2 || !std::isfinite(scale) || scale<0)
             throw std::invalid_argument("invalid opening search");
@@ -800,6 +929,10 @@ PYBIND11_MODULE(heart_native,m) {
         for(int i=0;i<n;++i) run(w,start+i);
         return counts;
     });
+    m.def("set_terminal_search",[](int budget,double optimism){
+        if(budget<0 || budget>32768 || !(optimism>=0 && optimism<=1)) throw std::invalid_argument("invalid terminal search settings");
+        terminal_budget=budget;terminal_optimism=optimism;
+    });
     m.def("set_public_tree",[](int budget,int depth){
         if(budget<0 || budget>8192 || depth<1 || depth>24) throw std::invalid_argument("invalid tree budget");
         public_tree_budget=budget;public_tree_depth=depth;
@@ -846,6 +979,37 @@ PYBIND11_MODULE(heart_native,m) {
         if(limit<0 || limit>int(N_ACTIONS)) throw std::invalid_argument("invalid search action limit");
         belief_action_limit=limit;
     });
+    m.def("reset_encounter_forecast",[](){enc_gain=0.;});
+    m.def("set_encounter_forecast",[](const std::vector<EncounterHidden> &item,const std::vector<EncounterHidden> &foe,
+          const decltype(enc_context) &ctx,const decltype(enc_readout) &readout,const decltype(enc_out_bias) &bias,
+          const decltype(enc_banks) &banks,double gain,double boss){
+        if(item.size()!=1+2*CARD_COUNT+std::size(relicNames)+std::size(potionNames) || foe.empty() ||
+           !std::isfinite(gain) || boss<0 || boss>1) throw std::invalid_argument("invalid encounter forecast");
+        for(auto &bank:banks) {
+            double mass=0.;
+            for(auto [enemy,p]:bank) {
+                if(enemy<0 || enemy>=int(foe.size()) || p<0 || !std::isfinite(p))
+                    throw std::invalid_argument("invalid forecast encounter");
+                mass+=p;
+            }
+            if(std::abs(mass-1.)>.00001) throw std::invalid_argument("encounter mass differs from one");
+        }
+        enc_item=item;enc_enemy=foe;enc_context=ctx;enc_readout=readout;enc_out_bias=bias;
+        enc_banks=banks;enc_gain=gain;enc_boss_weight=boss;
+    });
+    m.def("room_transitions",&room_transitions);
+    m.def("resource_outcomes",&resource_outcomes);
+    m.def("reset_resource_effects",[](){resource_drink_gain=0.;resource_search_mix=0.;});
+    m.def("set_resource_effects",[](const HpSurface &hp,const PotionSurface &pot,double gain,double mix,double typical){
+        if(!std::isfinite(gain) || !std::isfinite(mix) || mix<0. || mix>1. || !std::isfinite(typical))
+            throw std::invalid_argument("invalid resource effect mixture");
+        for(auto &ctx:pot) for(auto &level:ctx) for(auto &n:level)
+            if(n.size()!=std::size(potionNames)+1) throw std::invalid_argument("wrong potion effect width");
+        resource_hp=hp;resource_potion=pot;resource_drink_gain=gain;resource_search_mix=mix;resource_typical_cost=typical;
+    });
+    m.def("map_preferences",&map_preferences);
+    m.def("collect_deck_outcomes",&collect_deck_outcomes);
+    m.def("set_stasis_reconstruction",[](bool enable){reconstruct_stasis=enable;});
     m.def("set_belief_plans",[](int tactics,double win,bool enriched){
         if(tactics<1 || tactics>3 || !(win>=0)) throw std::invalid_argument("invalid search objective");
         belief_plans=tactics;belief_win_value=win;use_late_particles=enriched;
@@ -923,12 +1087,27 @@ PYBIND11_MODULE(heart_native,m) {
     py::class_<Bank>(m,"Bank").def(py::init<const Weights&,uint64_t,int,int,int>())
         .def(py::init<const Weights&,const std::vector<uint64_t>&,int,int>())
         .def("progress",&Bank::progress)
-        .def("boss_results",&boss_results).def("entry_health",&boss_entry_health)
+        .def("boss_results",&boss_results).def("entry_health",&boss_entry_health).def("audit_stasis",&audit_stasis)
         .def("recovery_phase",&recovery_phase).def("recovery_features",&recovery_features)
         .def("recovery_card_trials",&recovery_card_trials)
         .def("edit_practice",&edit_practice)
         .def("tactic_progress",&tactic_progress)
         .def("batch",&Bank::evaluate).def("__len__",[](const Bank &b){return b.states.size();});
+    m.def("set_strategic_apprentice",[](std::vector<StratHidden> ctx,std::vector<StratHidden> actions,std::vector<StratInput> items,
+           decltype(strat_category) cat,decltype(strat_task_item) tasks,decltype(strat_task_hidden) task_h,decltype(strat_mix) mix){
+        if(ctx.size()!=STRAT_TOKENS || actions.size()!=STRAT_TOKENS || items.size()!=STRAT_TOKENS ||
+           !std::all_of(mix.begin(),mix.end(),[](double x){return x>=0 && x<=1;}))throw std::invalid_argument("invalid strategic policy");
+        strat_context=std::move(ctx);strat_action=std::move(actions);strat_item=std::move(items);strat_category=cat;
+        strat_task_item=tasks;strat_task_hidden=task_h;strat_mix=mix;
+        strat_enabled=std::any_of(mix.begin(),mix.end(),[](double x){return x>0;});
+    });
+    m.def("set_strategic_acts",[](int mask){if(mask<0 || mask>15)throw std::invalid_argument("invalid strategic act mask");strat_acts=mask;});
+    m.def("reset_strategic_apprentice",[](){strat_enabled=false;strat_mix={};strat_acts=15;});
+    m.def("set_human_events",[](const EventContext &table,const std::array<bool,std::size(eventGameNames)> &seen,double mix){
+        if(!(mix>=0 && mix<=1)) throw std::invalid_argument("invalid event blend");
+        human_event_logits=table;human_event_seen=seen;human_event_mix=mix;
+    });
+    m.def("reset_human_events",[](){human_event_mix=0.;});
     m.def("set_event_table",[](const EventTable &table){event_values=table;});
     m.def("batch",[](const Weights &w,uint64_t seed,int n,int threads){
         if(n<1 || threads<1) throw std::invalid_argument("positive batch dimensions required");
