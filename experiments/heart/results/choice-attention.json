@@ -1,0 +1,542 @@
+{
+  "train_states": 78129,
+  "valid_states": 13387,
+  "methods": {
+    "per_action": {
+      "epoch": 32,
+      "history": [
+        {
+          "epoch": 1,
+          "pairs": 58520,
+          "paired_mse": [
+            0.048235129565000534,
+            0.00762178422883153,
+            0.01823754981160164,
+            0.060182321816682816
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.983081973030888
+        },
+        {
+          "epoch": 4,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04634818807244301,
+            0.006265262141823769,
+            0.01717035286128521,
+            0.04737558588385582
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.8383441811624817
+        },
+        {
+          "epoch": 8,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04601053521037102,
+            0.006057948339730501,
+            0.01682181842625141,
+            0.04589492827653885
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.8021742739256976
+        },
+        {
+          "epoch": 16,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04587986320257187,
+            0.005720360204577446,
+            0.015422200784087181,
+            0.045401643961668015
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.757610064471982
+        },
+        {
+          "epoch": 32,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04586751386523247,
+            0.0056438869796693325,
+            0.014936746098101139,
+            0.04517343267798424
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.751660382185419
+        }
+      ],
+      "validation": [
+        {
+          "runs": 3072,
+          "mean_floor": 23.741,
+          "best_floor": 51,
+          "act2": 1982,
+          "act3": 174,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 19,
+          "second_boss": 2,
+          "scale": 1.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.705,
+          "best_floor": 51,
+          "act2": 1995,
+          "act3": 176,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 14,
+          "second_boss": 5,
+          "scale": 4.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.666,
+          "best_floor": 51,
+          "act2": 2002,
+          "act3": 173,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 18,
+          "second_boss": 2,
+          "scale": 12.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.667,
+          "best_floor": 51,
+          "act2": 1981,
+          "act3": 168,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 20,
+          "second_boss": 3,
+          "scale": 1.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.601,
+          "best_floor": 51,
+          "act2": 1987,
+          "act3": 176,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 1,
+          "heart_encounter_seeds": [],
+          "first_boss": 15,
+          "second_boss": 4,
+          "scale": 4.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.526,
+          "best_floor": 51,
+          "act2": 1979,
+          "act3": 176,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 1,
+          "heart_encounter_seeds": [],
+          "first_boss": 18,
+          "second_boss": 4,
+          "scale": 12.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        }
+      ],
+      "selected": {
+        "runs": 3072,
+        "mean_floor": 23.526,
+        "best_floor": 51,
+        "act2": 1979,
+        "act3": 176,
+        "act4": 0,
+        "hearts": 0,
+        "truncated": 1,
+        "heart_encounter_seeds": [],
+        "first_boss": 18,
+        "second_boss": 4,
+        "scale": 12.0,
+        "utility": [
+          4.0,
+          9.0,
+          -1.0,
+          -1.6
+        ]
+      }
+    },
+    "attention": {
+      "epoch": 32,
+      "history": [
+        {
+          "epoch": 1,
+          "pairs": 58520,
+          "paired_mse": [
+            0.047895852476358414,
+            0.007094176020473242,
+            0.01754201203584671,
+            0.059193242341279984
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.9213706433080437
+        },
+        {
+          "epoch": 4,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04635675996541977,
+            0.0060365814715623856,
+            0.01669096015393734,
+            0.04701143503189087
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.8144744948662885
+        },
+        {
+          "epoch": 8,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04601959511637688,
+            0.005870472639799118,
+            0.016266195103526115,
+            0.045443445444107056
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.792724551359269
+        },
+        {
+          "epoch": 16,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04568123817443848,
+            0.005734186619520187,
+            0.015466836281120777,
+            0.044904205948114395
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.764468007794978
+        },
+        {
+          "epoch": 32,
+          "pairs": 58520,
+          "paired_mse": [
+            0.04555897042155266,
+            0.005612312816083431,
+            0.015152005478739738,
+            0.044087644666433334
+          ],
+          "zero_mse": [
+            0.04629186913371086,
+            0.006983711384236813,
+            0.022636359557509422,
+            0.10311005264520645
+          ],
+          "utility_mse": 2.7456505288510638
+        }
+      ],
+      "validation": [
+        {
+          "runs": 3072,
+          "mean_floor": 23.671,
+          "best_floor": 51,
+          "act2": 1972,
+          "act3": 169,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 15,
+          "second_boss": 2,
+          "scale": 1.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.696,
+          "best_floor": 56,
+          "act2": 1984,
+          "act3": 178,
+          "act4": 1,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [
+            184000853
+          ],
+          "first_boss": 14,
+          "second_boss": 4,
+          "scale": 4.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.618,
+          "best_floor": 51,
+          "act2": 1987,
+          "act3": 171,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 1,
+          "heart_encounter_seeds": [],
+          "first_boss": 16,
+          "second_boss": 5,
+          "scale": 12.0,
+          "utility": [
+            6.0,
+            6.0,
+            -2.0,
+            -0.8
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.641,
+          "best_floor": 51,
+          "act2": 1979,
+          "act3": 165,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [],
+          "first_boss": 16,
+          "second_boss": 2,
+          "scale": 1.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.632,
+          "best_floor": 56,
+          "act2": 1988,
+          "act3": 176,
+          "act4": 1,
+          "hearts": 0,
+          "truncated": 0,
+          "heart_encounter_seeds": [
+            184000853
+          ],
+          "first_boss": 15,
+          "second_boss": 5,
+          "scale": 4.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        },
+        {
+          "runs": 3072,
+          "mean_floor": 23.549,
+          "best_floor": 51,
+          "act2": 2001,
+          "act3": 176,
+          "act4": 0,
+          "hearts": 0,
+          "truncated": 1,
+          "heart_encounter_seeds": [],
+          "first_boss": 16,
+          "second_boss": 3,
+          "scale": 12.0,
+          "utility": [
+            4.0,
+            9.0,
+            -1.0,
+            -1.6
+          ]
+        }
+      ],
+      "selected": {
+        "runs": 3072,
+        "mean_floor": 23.632,
+        "best_floor": 56,
+        "act2": 1988,
+        "act3": 176,
+        "act4": 1,
+        "hearts": 0,
+        "truncated": 0,
+        "heart_encounter_seeds": [
+          184000853
+        ],
+        "first_boss": 15,
+        "second_boss": 5,
+        "scale": 4.0,
+        "utility": [
+          4.0,
+          9.0,
+          -1.0,
+          -1.6
+        ]
+      }
+    }
+  },
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 23.629,
+      "best_floor": 56,
+      "act2": 21193,
+      "act3": 1913,
+      "act4": 8,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        185000534,
+        185009378,
+        185011113,
+        185013090,
+        185016677,
+        185020871,
+        185026086
+      ],
+      "first_boss": 244,
+      "second_boss": 50
+    },
+    "per_action": {
+      "runs": 32768,
+      "mean_floor": 23.532,
+      "best_floor": 56,
+      "act2": 21401,
+      "act3": 1910,
+      "act4": 11,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        185000653,
+        185007145,
+        185009378,
+        185020871
+      ],
+      "first_boss": 241,
+      "second_boss": 69
+    },
+    "attention": {
+      "runs": 32768,
+      "mean_floor": 23.62,
+      "best_floor": 56,
+      "act2": 21454,
+      "act3": 1925,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 0,
+      "heart_encounter_seeds": [
+        185009378,
+        185011113,
+        185020871,
+        185024870,
+        185025501
+      ],
+      "first_boss": 212,
+      "second_boss": 51
+    }
+  },
+  "native_score_replay": {
+    "seed": 177000000,
+    "states": 50,
+    "candidate_scores": 198,
+    "max_error": 0.00020299083431751797
+  }
+}

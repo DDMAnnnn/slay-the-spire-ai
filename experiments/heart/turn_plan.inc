@@ -141,6 +141,7 @@ void base_scores(const uint8_t *mask,double *out) const {
     }
     if(use_edits && !o[7]) score_edits(mask,out);
     if(!inventory_tokens.empty() && !o[7]) inventory_scores(mask,out);
+    if(!o[7] && (historical_scales[0] || historical_scales[1])) historical_menu(mask,out);
     if(use_expert && !o[7]) apply_expert_prior(mask,out);
     if(!boss_draft_weights.empty() && !o[7]) apply_boss_draft(mask,out);
     if((route_scale[0] || route_scale[1]) && !o[7]) route_scores(mask,out);

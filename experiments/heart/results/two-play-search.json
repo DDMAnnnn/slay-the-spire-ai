@@ -1,0 +1,142 @@
+{
+  "audit": {
+    "decisions": 2091,
+    "shared_groups": 4008,
+    "heldout_worlds": 21970,
+    "different_first_moves": 157
+  },
+  "matched": {
+    "three_draws": {
+      "fatal": {
+        "fights": 128,
+        "wins": 38,
+        "mean_exit_hp": 4.8125,
+        "mean_potions": 0.921875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 128,
+        "wins": 125,
+        "mean_exit_hp": 42.6015625,
+        "mean_potions": 0.234375,
+        "capped": 0
+      }
+    },
+    "six_draws": {
+      "fatal": {
+        "fights": 128,
+        "wins": 40,
+        "mean_exit_hp": 5.8515625,
+        "mean_potions": 0.9140625,
+        "capped": 0
+      },
+      "control": {
+        "fights": 128,
+        "wins": 126,
+        "mean_exit_hp": 44.1484375,
+        "mean_potions": 0.3125,
+        "capped": 0
+      }
+    },
+    "both": {
+      "fatal": {
+        "fights": 128,
+        "wins": 47,
+        "mean_exit_hp": 5.9375,
+        "mean_potions": 0.8671875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 128,
+        "wins": 128,
+        "mean_exit_hp": 45.0859375,
+        "mean_potions": 0.3515625,
+        "capped": 0
+      }
+    }
+  },
+  "isolated": {
+    "lookahead": {
+      "fatal": {
+        "fights": 128,
+        "wins": 42,
+        "mean_exit_hp": 4.9453125,
+        "mean_potions": 0.9140625,
+        "capped": 0
+      },
+      "control": {
+        "fights": 128,
+        "wins": 128,
+        "mean_exit_hp": 44.8515625,
+        "mean_potions": 0.3203125,
+        "capped": 0
+      }
+    },
+    "free_plays": {
+      "fatal": {
+        "fights": 128,
+        "wins": 40,
+        "mean_exit_hp": 6.21875,
+        "mean_potions": 0.875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 128,
+        "wins": 126,
+        "mean_exit_hp": 44.421875,
+        "mean_potions": 0.3203125,
+        "capped": 0
+      }
+    }
+  },
+  "screen": {
+    "three_draws": {
+      "runs": 1024,
+      "mean_floor": 25.295,
+      "best_floor": 56,
+      "act2": 721,
+      "act3": 95,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 21,
+      "second_boss": 7,
+      "heart_encounter_seeds": [
+        210000482,
+        210000963
+      ],
+      "seconds": 144.52
+    },
+    "six_draws": {
+      "runs": 1024,
+      "mean_floor": 26.61,
+      "best_floor": 56,
+      "act2": 775,
+      "act3": 110,
+      "act4": 2,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 23,
+      "second_boss": 7,
+      "heart_encounter_seeds": [
+        210000482
+      ],
+      "seconds": 387.35
+    },
+    "both": {
+      "runs": 1024,
+      "mean_floor": 26.721,
+      "best_floor": 55,
+      "act2": 775,
+      "act3": 108,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 21,
+      "second_boss": 7,
+      "heart_encounter_seeds": [],
+      "seconds": 868.77
+    }
+  },
+  "qualification": "Joint change did not beat both comparators on the ordinary screen"
+}

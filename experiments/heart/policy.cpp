@@ -4,6 +4,8 @@
 #include <array>
 #include <cmath>
 #include <iterator>
+#include <cstring>
+#include <unordered_map>
 #include <numeric>
 #include <random>
 #include <stdexcept>
@@ -160,6 +162,8 @@ static InventoryTokens inventory_tokens;
 static InventoryHidden inventory_bias{};
 static InventoryHeads inventory_heads{};
 static std::array<double,4> inventory_intercept{},inventory_settings{};
+static int inventory_draws=0,inventory_mode=0;
+static double inventory_search_scale=0.;
 
 double card_prior(C id) {
     switch (id) {
@@ -181,6 +185,18 @@ double card_prior(C id) {
     if (id == C::STRIKE_RED || id == C::DEFEND_RED) return -2;
     return 3;
 }
+
+constexpr int HISTORICAL_ITEMS=2+CARD_COUNT+int(std::size(relicNames));
+using HistoricalHidden=std::array<float,24>;
+using HistoricalEmbeddings=std::vector<HistoricalHidden>;
+static HistoricalEmbeddings historical_context,historical_options;
+static std::array<std::vector<float>,3> historical_bias;
+static std::vector<float> historical_upgrade,historical_repeat;
+static std::array<double,2> historical_scales{};
+static std::array<double,12> historical_gate{};
+
+#include "choice_attention.inc"
+#include "public_belief.inc"
 
 struct View {
     const float *o, *p;
@@ -504,16 +520,21 @@ struct View {
 #include "draft_context.inc"
 #include "boss_draft.inc"
 #include "expert_prior.inc"
+#include "human_strategy.inc"
 #include "deck_edits.inc"
 #include "inventory_value.inc"
 #include "route_value.inc"
 #include "boss_tactics.inc"
     bool scenario_scores(const uint8_t *mask,double *out) const;
+    void attention_scores(const uint8_t *mask,double *out) const;
+    void belief_scores(const uint8_t *mask,double *out) const;
+    void inventory_search(const uint8_t *mask,double *out) const;
     void opening_scores(const uint8_t *mask,double *out) const;
 #include "turn_plan.inc"
 #include "curriculum_actor.inc"
 };
 
+#include "choice_attention_scores.inc"
 #include "scenario.inc"
 #include "opening_search.inc"
 struct Result { int floor=0, act=0, keys=0, steps=0; bool heart=false, truncated=false, encounter=false; };
@@ -611,11 +632,20 @@ struct Bank {
 #include "actor_practice.inc"
 #include "trajectory_teacher.inc"
 #include "curriculum_practice.inc"
+#include "macro_teacher.inc"
+#include "rollout_cache.inc"
+#include "combat_returns.inc"
+#include "public_belief_search.inc"
+#include "belief_distillation.inc"
+#include "matched_fights.inc"
+#include "inventory_search.inc"
+#include "rescue_combat.inc"
 #include "inventory_benchmark.inc"
 #include "inventory_practice.inc"
 #include "boss_draft_practice.inc"
 #include "intent_practice.inc"
 #include "boss_drill.inc"
+#include "boss_entry_health.inc"
 #include "recovery_drill.inc"
 #include "edit_practice.inc"
 #include "route_practice.inc"
@@ -707,7 +737,7 @@ PYBIND11_MODULE(heart_native,m) {
         curriculum_bias=bias;curriculum_out=out;curriculum_scale=scale;
     });
     m.def("set_curriculum_scope",[](int scope){
-        if(scope<0 || scope>2) throw std::invalid_argument("curriculum scope must be 0, 1 or 2");
+        if(scope<0 || scope>5) throw std::invalid_argument("invalid curriculum scope");
         curriculum_scope=scope;
     });
     m.def("reset_curriculum",[](){curriculum_scale=0.;curriculum_scope=0;});
@@ -746,6 +776,126 @@ PYBIND11_MODULE(heart_native,m) {
     });
     m.def("reset_drinks",[](){learned_drinks=false;});
     m.def("preference_practice",&preference_practice);
+    m.def("macro_teacher",&macro_teacher);
+    m.def("set_choice_attention",[](std::vector<AttentionHidden> items,std::vector<AttentionHidden> foes,
+            const std::array<CurriculumFeatures,ATT_WIDTH> &input,const AttentionHidden &bias,
+            const AttentionProj &query,const AttentionProj &key,const AttentionProj &value,
+            const std::array<AttentionKey,ATT_WIDTH> &mix,const AttentionHidden &output,double scale){
+        if(items.size()!=curriculum_items.size() || foes.size()!=curriculum_foes.size())
+            throw std::invalid_argument("invalid choice attention embedding sizes");
+        choice_attention={std::move(items),std::move(foes),input,bias,query,key,value,mix,output,scale};
+    });
+    m.def("reset_choice_attention",[](){choice_attention.scale=0.;});
+    m.def("collect_beliefs",&collect_beliefs);
+    m.def("belief_examples",&belief_examples);
+    m.def("combat_student_priors",&combat_student_priors);
+    m.def("enrich_late_particles",&enrich_late_particles);
+    m.def("set_rollout_cache",[](bool enabled){cache_rollout_actions=enabled;});
+    m.def("rollout_cache_audit",[](const Weights &w,uint64_t start,int n){
+        std::array<int64_t,2> counts{};
+        struct Guard {
+            explicit Guard(std::array<int64_t,2> &c){rollout_cache_audit=&c;}
+            ~Guard(){rollout_cache_audit=nullptr;}
+        } guard(counts);
+        for(int i=0;i<n;++i) run(w,start+i);
+        return counts;
+    });
+    m.def("set_public_tree",[](int budget,int depth){
+        if(budget<0 || budget>8192 || depth<1 || depth>24) throw std::invalid_argument("invalid tree budget");
+        public_tree_budget=budget;public_tree_depth=depth;
+    });
+    m.def("public_tree_audit",[](const Weights &w,uint64_t start,int n){
+        std::array<int,5> counts{};
+        struct Guard {
+            explicit Guard(std::array<int,5> &c){tree_audit=&c;}
+            ~Guard(){tree_audit=nullptr;}
+        } guard(counts);
+        for(int i=0;i<n;++i) run(w,start+i);
+        return counts;
+    });
+    m.def("set_continuation",[](int width,bool free_plays){
+        if(width<0 || width==1 || width>8) throw std::invalid_argument("invalid continuation width");
+        next_play_width=width;search_zero_energy=free_plays;
+    });
+    m.def("continuation_audit",[](const Weights &w,uint64_t start,int n){
+        std::array<int,4> counters{};
+        struct Guard {
+            explicit Guard(std::array<int,4> &c){continuation_audit=&c;}
+            ~Guard(){continuation_audit=nullptr;}
+        } guard(counters);
+        for(int i=0;i<n;++i) run(w,start+i);
+        return counters;
+    });
+    m.def("crossfit_advantage",[](const std::vector<std::vector<double>> &r,double margin){
+        if(r.empty() || r.front().empty() || std::any_of(r.begin(),r.end(),[&](const auto &x){return x.size()!=r.front().size();}))
+            throw std::invalid_argument("rectangular outcome table required");
+        return crossfit_advantage(r,margin);
+    });
+    m.def("set_historical_menu",[](HistoricalEmbeddings context,HistoricalEmbeddings options,
+            std::array<std::vector<float>,3> bias,std::vector<float> upgrade,std::vector<float> repeat,
+            std::array<double,2> scales){
+        if(context.size()!=HISTORICAL_ITEMS || options.size()!=HISTORICAL_ITEMS || upgrade.size()!=HISTORICAL_ITEMS ||
+           repeat.size()!=HISTORICAL_ITEMS || std::any_of(bias.begin(),bias.end(),[](const auto &r){return r.size()!=HISTORICAL_ITEMS;}))
+            throw std::invalid_argument("invalid historical menu vocabulary");
+        historical_context=std::move(context);historical_options=std::move(options);historical_bias=std::move(bias);
+        historical_upgrade=std::move(upgrade);historical_repeat=std::move(repeat);historical_scales=scales;
+    });
+    m.def("set_historical_gate",[](const std::array<double,12> &params){historical_gate=params;});
+    m.def("reset_historical_menu",[](){historical_scales={};});
+    m.def("set_belief_action_limit",[](int limit){
+        if(limit<0 || limit>int(N_ACTIONS)) throw std::invalid_argument("invalid search action limit");
+        belief_action_limit=limit;
+    });
+    m.def("set_belief_plans",[](int tactics,double win,bool enriched){
+        if(tactics<1 || tactics>3 || !(win>=0)) throw std::invalid_argument("invalid search objective");
+        belief_plans=tactics;belief_win_value=win;use_late_particles=enriched;
+    });
+    py::class_<MatchedFights>(m,"MatchedFights")
+        .def(py::init<const Weights &,uint64_t,int,int>())
+        .def_readonly("info",&MatchedFights::info).def("evaluate",&MatchedFights::evaluate);
+    m.def("paired_draw_audit",[](int n){
+        if(n<1) throw std::invalid_argument("positive audit sample required");
+        std::array<int,14> stats{};
+        for(int s=0;s<n;++s) for(int coupled=0;coupled<=1;++coupled) {
+            std::vector<int> key{int(Encounter::JAW_WORM),1,80,2,20,0,0,0,0,0};
+            for(C c:{C::STRIKE_RED,C::DEFEND_RED,C::BASH,C::STRIKE_RED,C::DEFEND_RED,C::ANGER,
+                     C::SHRUG_IT_OFF,C::IRON_WAVE,C::STRIKE_RED,C::FLEX}) key.push_back((1+int(c))*256);
+            key.push_back(-1);
+            auto deck_order=[&](const std::vector<int> &k){
+                auto e=scenario_start(k,s+701,70,5,Room::MONSTER,50,coupled!=0);
+                std::vector<C> deck;
+                for(int i=0;i<e.bc.cards.cardsInHand;++i) deck.push_back(e.bc.cards.hand[i].id);
+                const auto &pile=e.bc.cards.drawPile;
+                for(int i=int(pile.size())-1;i>=0;--i) deck.push_back(pile[i].id);
+                return deck;
+            };
+            auto base=deck_order(key);
+            key.insert(key.end()-1,(1+int(C::POMMEL_STRIKE))*256);
+            auto alt=deck_order(key);
+            auto it=std::find(alt.begin(),alt.end(),C::POMMEL_STRIKE);
+            if(base.size()!=10 || alt.size()!=11 || it==alt.end()) throw std::runtime_error("missing audit card");
+            if(coupled) ++stats[2+(it-alt.begin())];
+            alt.erase(it);stats[coupled]+=alt==base;
+        }
+        return stats;
+    });
+    m.def("set_inventory_search",[](int draws,int mode,double scale){
+        if(draws<0 || draws>32 || mode<0 || mode>1) throw std::invalid_argument("invalid inventory search settings");
+        inventory_draws=draws;inventory_mode=mode;inventory_search_scale=scale;
+    });
+    m.def("set_belief",[](int draws,int scope,double scale){
+        if(draws<0 || draws>32 || scope<0 || scope>2) throw std::invalid_argument("invalid belief settings");
+        belief_draws=draws;belief_scope=scope;belief_scale=scale;
+    });
+    m.def("belief_audit",[](const Weights &w,uint64_t start,int n){
+        std::array<int,5> counts{};
+        struct Guard{~Guard(){belief_audit=nullptr;}} guard;
+        belief_audit=&counts;
+        for(int i=0;i<n;++i) run(w,start+i);
+        return counts;
+    });
+    m.def("combat_returns",&combat_returns);
+    m.def("rescue_combat",&rescue_combat);
     m.def("set_turn_depth",[](int depth){
         if(depth<1 || depth>10) throw std::invalid_argument("turn depth must be 1 to 10 cards");
         turn_depth=depth;
@@ -773,7 +923,7 @@ PYBIND11_MODULE(heart_native,m) {
     py::class_<Bank>(m,"Bank").def(py::init<const Weights&,uint64_t,int,int,int>())
         .def(py::init<const Weights&,const std::vector<uint64_t>&,int,int>())
         .def("progress",&Bank::progress)
-        .def("boss_results",&boss_results)
+        .def("boss_results",&boss_results).def("entry_health",&boss_entry_health)
         .def("recovery_phase",&recovery_phase).def("recovery_features",&recovery_features)
         .def("recovery_card_trials",&recovery_card_trials)
         .def("edit_practice",&edit_practice)
@@ -790,7 +940,35 @@ PYBIND11_MODULE(heart_native,m) {
         }
         return out;
     });
+    m.def("batch_seeds",[](const Weights &w,const std::vector<uint64_t> &seeds,int threads){
+        if(threads<1) throw std::invalid_argument("positive thread count required");
+        std::vector<std::array<int,7>> result(seeds.size());
+        #pragma omp parallel for num_threads(threads) schedule(dynamic,2)
+        for(int i=0;i<int(seeds.size());++i) {
+            auto r=run(w,seeds[i]);
+            result[i]={r.floor,r.act,r.keys,r.steps,int(r.heart),int(r.truncated),int(r.encounter)};
+        }
+        return result;
+    });
     m.def("trace",[](const Weights &w,uint64_t seed){std::vector<int> a;run(w,seed,&a);return a;});
+    m.def("prior_batch",[](const Weights &w,py::array_t<float,py::array::c_style> observations,
+                           py::array_t<uint8_t,py::array::c_style> masks,int threads){
+        if(observations.ndim()!=2 || observations.shape(1)!=OBS_SIZE || masks.ndim()!=2 ||
+           masks.shape(0)!=observations.shape(0) || masks.shape(1)!=N_ACTIONS || threads<1)
+            throw std::invalid_argument("invalid prior batch dimensions");
+        int n=int(observations.shape(0));
+        const float *obs=observations.data();const uint8_t *mask=masks.data();
+        py::array_t<float> result({n,N_ACTIONS});float *out=result.mutable_data();
+        #pragma omp parallel for num_threads(threads) schedule(static)
+        for(int i=0;i<n;++i) {
+            std::array<double,N_ACTIONS> scores;
+            View view(obs+i*OBS_SIZE,w);view.all_scores(mask+i*N_ACTIONS,scores.data());
+            int prior=int(std::max_element(scores.begin(),scores.end())-scores.begin());
+            for(int a=0;a<N_ACTIONS;++a) out[i*N_ACTIONS+a]=mask[i*N_ACTIONS+a]?
+                float(std::max(-16.,(scores[a]-scores[prior])/4.)+1.5*(a==prior)):-1e9f;
+        }
+        return result;
+    });
     m.def("teacher_batch",[](const Weights &weights,
             py::array_t<float,py::array::c_style> observations,
             py::array_t<uint8_t,py::array::c_style> masks,int threads) {

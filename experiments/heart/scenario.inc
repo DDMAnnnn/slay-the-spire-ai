@@ -38,8 +38,9 @@ std::vector<int> scenario_key(const View &v,Encounter encounter) {
         key.push_back(int(o[OBS_RELICS+i*RELIC_W]));
     return key;
 }
+void couple_opening_shuffle(GameContext &gc,int sample);
 Env scenario_start(const std::vector<int> &key,int sample,int hp=-1,int floor=-1,
-                   Room room=Room::INVALID,int gold=0) {
+                   Room room=Room::INVALID,int gold=0,bool paired=false) {
     Env e;
     e.record=false;
     // Fixed artificial seeds let every tactic face the same shuffled deck and
@@ -61,6 +62,7 @@ Env scenario_start(const std::vector<int> &key,int sample,int hp=-1,int floor=-1
     size_t k=10;
     for(;key[k]!=-1;++k) gc.deck.obtainRaw(Card(C(key[k]/256-1),key[k]%256));
     for(++k;k<key.size();++k) gc.relics.add({R(key[k]-1),0});
+    if(paired) couple_opening_shuffle(gc,sample);
     gc.screenState=ScreenState::BATTLE;
     gc.regainControlAction=[](GameContext &g){g.screenState=ScreenState::REWARDS;};
     gc.info.encounter=enc;

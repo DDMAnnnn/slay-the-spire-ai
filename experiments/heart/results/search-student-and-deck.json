@@ -1,0 +1,176 @@
+{
+  "start": 194000000,
+  "parent": {
+    "runs": 32768,
+    "mean_floor": 23.643,
+    "best_floor": 56,
+    "act2": 21198,
+    "act3": 1924,
+    "act4": 5,
+    "hearts": 0,
+    "truncated": 0,
+    "first_boss": 244,
+    "second_boss": 61,
+    "heart_encounter_seeds": [
+      194023027,
+      194031269
+    ]
+  },
+  "inventory": {
+    "runs": 32768,
+    "mean_floor": 23.722,
+    "best_floor": 56,
+    "act2": 21424,
+    "act3": 1972,
+    "act4": 7,
+    "hearts": 0,
+    "truncated": 0,
+    "first_boss": 255,
+    "second_boss": 56,
+    "heart_encounter_seeds": [
+      194002140,
+      194010878,
+      194012576,
+      194021653,
+      194031269
+    ]
+  },
+  "student": {
+    "runs": 32768,
+    "mean_floor": 23.733,
+    "best_floor": 56,
+    "act2": 21288,
+    "act3": 1992,
+    "act4": 8,
+    "hearts": 0,
+    "truncated": 1,
+    "first_boss": 270,
+    "second_boss": 75,
+    "heart_encounter_seeds": [
+      194010878,
+      194014482,
+      194017560,
+      194023027,
+      194031269
+    ]
+  },
+  "training_states": {
+    "matched_states": 110058,
+    "changed_actions": 16309,
+    "sampled_states": 36821
+  },
+  "heldout_states": {
+    "matched_states": 17673,
+    "changed_actions": 2745,
+    "sampled_states": 5821
+  },
+  "checkpoint": {
+    "epoch": 4,
+    "history": [
+      {
+        "epoch": 1,
+        "groups": 5821,
+        "teacher_regret": 1.2519777799631553,
+        "incumbent_regret": 1.1810734625473769,
+        "changed": 866,
+        "correct_changes": 59
+      },
+      {
+        "epoch": 4,
+        "groups": 5821,
+        "teacher_regret": 1.227239096621389,
+        "incumbent_regret": 1.1810734625473769,
+        "changed": 866,
+        "correct_changes": 68
+      },
+      {
+        "epoch": 10,
+        "groups": 5821,
+        "teacher_regret": 1.282007238050237,
+        "incumbent_regret": 1.1810734625473769,
+        "changed": 866,
+        "correct_changes": 97
+      },
+      {
+        "epoch": 20,
+        "groups": 5821,
+        "teacher_regret": 1.3579139650492627,
+        "incumbent_regret": 1.1810734625473769,
+        "changed": 866,
+        "correct_changes": 105
+      },
+      {
+        "epoch": 40,
+        "groups": 5821,
+        "teacher_regret": 1.452484669543648,
+        "incumbent_regret": 1.1810734625473769,
+        "changed": 866,
+        "correct_changes": 119
+      }
+    ]
+  },
+  "settings": [
+    {
+      "scale": 0.7,
+      "runs": 2048,
+      "mean_floor": 23.61,
+      "best_floor": 51,
+      "act2": 1299,
+      "act3": 121,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 22,
+      "second_boss": 5,
+      "heart_encounter_seeds": [],
+      "seconds": 8.53
+    },
+    {
+      "scale": 1.5,
+      "runs": 2048,
+      "mean_floor": 23.613,
+      "best_floor": 56,
+      "act2": 1293,
+      "act3": 128,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 22,
+      "second_boss": 4,
+      "heart_encounter_seeds": [
+        198000231
+      ],
+      "seconds": 8.91
+    },
+    {
+      "scale": 3.0,
+      "runs": 2048,
+      "mean_floor": 23.408,
+      "best_floor": 51,
+      "act2": 1262,
+      "act3": 131,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 20,
+      "second_boss": 5,
+      "heart_encounter_seeds": [],
+      "seconds": 8.82
+    },
+    {
+      "scale": 6.0,
+      "runs": 2048,
+      "mean_floor": 21.185,
+      "best_floor": 51,
+      "act2": 949,
+      "act3": 84,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 18,
+      "second_boss": 5,
+      "heart_encounter_seeds": [],
+      "seconds": 7.78
+    }
+  ]
+}

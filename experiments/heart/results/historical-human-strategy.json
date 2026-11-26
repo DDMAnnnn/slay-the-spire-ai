@@ -1,0 +1,635 @@
+{
+  "data": {
+    "archive": "https://raw.githubusercontent.com/karlo-delacruz-ieds/sts_1_winning_percentage/411c17ab53b24c3781f5a02c6a4032667bbeda3f/A20runs%20JSON.zip",
+    "sha256": "bcbed387cfb783cb4065108924b81330f8df3d4e1042d6f7ecc9ccb12c2e63ee",
+    "runs": {
+      "train": 2088,
+      "validation": 274,
+      "test": 268,
+      "streamers": 147
+    },
+    "decisions": {
+      "train": 57903,
+      "validation": 7602,
+      "test": 7500,
+      "streamers": 3720
+    },
+    "skipped": {
+      "bowl availability unknown": 256,
+      "incomplete menu": 11
+    },
+    "versions": {
+      "2020-07-30": 2537,
+      "2020-01-27": 5,
+      "2019-07-17": 1,
+      "2020-01-14": 12,
+      "2019-07-01": 5,
+      "2019-01-03v3": 1,
+      "2019-01-17": 1,
+      "2018-12-20": 1,
+      "2020-11-10": 67,
+      "2022-03-07": 27,
+      "2022-10-04": 58,
+      "2022-12-01": 13,
+      "2022-12-18": 49
+    }
+  },
+  "imitation": {
+    "frequency": {
+      "epoch": 32,
+      "history": [
+        {
+          "epoch": 2,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.5830734335129005,
+              "cross_entropy": 1.0722218776580663,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5565693430656934,
+              "cross_entropy": 1.1714246568888644,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 4,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.597816841508364,
+              "cross_entropy": 0.9966232866547349,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5602189781021898,
+              "cross_entropy": 1.0892383547594948,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 8,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6022115111993195,
+              "cross_entropy": 0.9558513956094281,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5529197080291971,
+              "cross_entropy": 1.023578783021356,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 16,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6053303090445138,
+              "cross_entropy": 0.9405693268350072,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5565693430656934,
+              "cross_entropy": 0.9772449027012734,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 32,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6060391267366033,
+              "cross_entropy": 0.9366303831381131,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5565693430656934,
+              "cross_entropy": 0.9513298473218932,
+              "uniform_accuracy": 0.25
+            }
+          }
+        }
+      ],
+      "test": {
+        "cards": {
+          "count": 6966,
+          "accuracy": 0.5977605512489234,
+          "cross_entropy": 0.9525115949273144,
+          "uniform_accuracy": 0.2487582596355288
+        },
+        "relics": {
+          "count": 534,
+          "accuracy": 0.5955056179775281,
+          "cross_entropy": 0.9333752728580089,
+          "uniform_accuracy": 0.25
+        }
+      },
+      "streamers": {
+        "cards": {
+          "count": 3483,
+          "accuracy": 0.5845535457938559,
+          "cross_entropy": 1.012905018992921,
+          "uniform_accuracy": 0.24263585397576315
+        },
+        "relics": {
+          "count": 237,
+          "accuracy": 0.6286919831223629,
+          "cross_entropy": 0.9188722558162383,
+          "uniform_accuracy": 0.25
+        }
+      }
+    },
+    "context": {
+      "epoch": 8,
+      "history": [
+        {
+          "epoch": 2,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6312730365749929,
+              "cross_entropy": 0.8855859958182525,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5784671532846716,
+              "cross_entropy": 0.9050852712923593,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 4,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6382194499574709,
+              "cross_entropy": 0.8545996652705358,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5766423357664233,
+              "cross_entropy": 0.872052363235585,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 8,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6505528777998298,
+              "cross_entropy": 0.8264637734283629,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5894160583941606,
+              "cross_entropy": 0.8553677753810465,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 16,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.653813439183442,
+              "cross_entropy": 0.8209773280784839,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5766423357664233,
+              "cross_entropy": 0.8903948582001846,
+              "uniform_accuracy": 0.25
+            }
+          }
+        },
+        {
+          "epoch": 32,
+          "metrics": {
+            "cards": {
+              "count": 7054,
+              "accuracy": 0.6565069464133825,
+              "cross_entropy": 0.8321442091671171,
+              "uniform_accuracy": 0.24986532507113096
+            },
+            "relics": {
+              "count": 548,
+              "accuracy": 0.5620437956204379,
+              "cross_entropy": 0.9766952173553244,
+              "uniform_accuracy": 0.25
+            }
+          }
+        }
+      ],
+      "test": {
+        "cards": {
+          "count": 6966,
+          "accuracy": 0.6583405110536894,
+          "cross_entropy": 0.8257859673884762,
+          "uniform_accuracy": 0.2487582596355288
+        },
+        "relics": {
+          "count": 534,
+          "accuracy": 0.6254681647940075,
+          "cross_entropy": 0.8485555720239989,
+          "uniform_accuracy": 0.25
+        }
+      },
+      "streamers": {
+        "cards": {
+          "count": 3483,
+          "accuracy": 0.6060867068619007,
+          "cross_entropy": 0.9496576274704256,
+          "uniform_accuracy": 0.24263585397576315
+        },
+        "relics": {
+          "count": 237,
+          "accuracy": 0.6286919831223629,
+          "cross_entropy": 0.8755192515216296,
+          "uniform_accuracy": 0.25
+        }
+      }
+    }
+  },
+  "validation": [
+    {
+      "scales": [
+        1.0,
+        2.0
+      ],
+      "runs": 1024,
+      "mean_floor": 23.876,
+      "best_floor": 51,
+      "act2": 670,
+      "act3": 55,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 6,
+      "second_boss": 1,
+      "heart_encounter_seeds": [],
+      "seconds": 2.71
+    },
+    {
+      "scales": [
+        4.0,
+        6.0
+      ],
+      "runs": 1024,
+      "mean_floor": 23.157,
+      "best_floor": 56,
+      "act2": 637,
+      "act3": 56,
+      "act4": 1,
+      "hearts": 1,
+      "truncated": 0,
+      "first_boss": 8,
+      "second_boss": 3,
+      "heart_encounter_seeds": [
+        213000037
+      ],
+      "seconds": 3.09
+    },
+    {
+      "scales": [
+        8.0,
+        12.0
+      ],
+      "runs": 1024,
+      "mean_floor": 21.584,
+      "best_floor": 51,
+      "act2": 555,
+      "act3": 42,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 7,
+      "second_boss": 1,
+      "heart_encounter_seeds": [],
+      "seconds": 2.62
+    },
+    {
+      "scales": [
+        16.0,
+        24.0
+      ],
+      "runs": 1024,
+      "mean_floor": 20.305,
+      "best_floor": 51,
+      "act2": 477,
+      "act3": 38,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 5,
+      "second_boss": 3,
+      "heart_encounter_seeds": [],
+      "seconds": 2.63
+    },
+    {
+      "scales": [
+        40.0,
+        50.0
+      ],
+      "runs": 1024,
+      "mean_floor": 19.271,
+      "best_floor": 51,
+      "act2": 419,
+      "act3": 32,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 3,
+      "second_boss": 3,
+      "heart_encounter_seeds": [],
+      "seconds": 2.56
+    },
+    {
+      "scales": [
+        6.0,
+        24.0
+      ],
+      "runs": 1024,
+      "mean_floor": 22.386,
+      "best_floor": 51,
+      "act2": 602,
+      "act3": 53,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 3,
+      "second_boss": 1,
+      "heart_encounter_seeds": [],
+      "seconds": 2.46
+    }
+  ],
+  "start": 214000000,
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 23.602,
+      "best_floor": 56,
+      "act2": 21253,
+      "act3": 1864,
+      "act4": 11,
+      "hearts": 0,
+      "truncated": 2,
+      "first_boss": 246,
+      "second_boss": 75,
+      "heart_encounter_seeds": [
+        214001264,
+        214008124,
+        214011533,
+        214016006,
+        214025314
+      ]
+    },
+    "context": {
+      "runs": 32768,
+      "mean_floor": 23.057,
+      "best_floor": 56,
+      "act2": 20168,
+      "act3": 1876,
+      "act4": 17,
+      "hearts": 2,
+      "truncated": 4,
+      "first_boss": 275,
+      "second_boss": 87,
+      "heart_encounter_seeds": [
+        214004300,
+        214004505,
+        214004761,
+        214006196,
+        214010245,
+        214013944,
+        214018548,
+        214019983,
+        214020533,
+        214024023,
+        214026835,
+        214028862,
+        214029257
+      ]
+    },
+    "frequency": {
+      "runs": 32768,
+      "mean_floor": 22.973,
+      "best_floor": 56,
+      "act2": 20365,
+      "act3": 1641,
+      "act4": 11,
+      "hearts": 0,
+      "truncated": 2,
+      "first_boss": 184,
+      "second_boss": 48,
+      "heart_encounter_seeds": [
+        214004300,
+        214004505,
+        214005477,
+        214010352,
+        214013348,
+        214019784,
+        214023519,
+        214026924
+      ]
+    },
+    "cards": {
+      "runs": 32768,
+      "mean_floor": 23.049,
+      "best_floor": 56,
+      "act2": 20168,
+      "act3": 1867,
+      "act4": 14,
+      "hearts": 0,
+      "truncated": 4,
+      "first_boss": 271,
+      "second_boss": 87,
+      "heart_encounter_seeds": [
+        214004300,
+        214004505,
+        214006196,
+        214010245,
+        214018548,
+        214019983,
+        214020533,
+        214024023,
+        214026835
+      ]
+    },
+    "relics": {
+      "runs": 32768,
+      "mean_floor": 23.617,
+      "best_floor": 56,
+      "act2": 21253,
+      "act3": 1876,
+      "act4": 10,
+      "hearts": 0,
+      "truncated": 2,
+      "first_boss": 277,
+      "second_boss": 81,
+      "heart_encounter_seeds": [
+        214001264,
+        214011533
+      ]
+    }
+  },
+  "selected": [
+    4.0,
+    6.0
+  ],
+  "confirmation": {
+    "start": 216000000,
+    "results": {
+      "parent": {
+        "runs": 32768,
+        "mean_floor": 23.514,
+        "best_floor": 56,
+        "act2": 21065,
+        "act3": 1879,
+        "act4": 10,
+        "hearts": 0,
+        "truncated": 0,
+        "first_boss": 207,
+        "second_boss": 64,
+        "heart_encounter_seeds": [
+          216003164,
+          216004955,
+          216006764,
+          216007513,
+          216013115,
+          216013290,
+          216015928,
+          216028183,
+          216032258
+        ]
+      },
+      "human": {
+        "runs": 32768,
+        "mean_floor": 22.884,
+        "best_floor": 56,
+        "act2": 19982,
+        "act3": 1736,
+        "act4": 19,
+        "hearts": 0,
+        "truncated": 1,
+        "first_boss": 252,
+        "second_boss": 89,
+        "heart_encounter_seeds": [
+          216002847,
+          216003164,
+          216003586,
+          216006764,
+          216007726,
+          216009029,
+          216009513,
+          216013295,
+          216014648,
+          216017098,
+          216019848,
+          216021006,
+          216028183
+        ]
+      }
+    }
+  },
+  "verified_wins": [
+    {
+      "seed": 214004505,
+      "actions": 669,
+      "keys": [
+        [
+          "Sapphire",
+          9
+        ],
+        [
+          "Ruby",
+          32
+        ],
+        [
+          "Emerald",
+          40
+        ]
+      ],
+      "heart": {
+        "floor": 56,
+        "act": 4,
+        "room": "BOSS",
+        "event": "",
+        "fought": true,
+        "encounter": "The Heart",
+        "hp_before": 76,
+        "hp_after": 35,
+        "max_hp": 134,
+        "turns": 7
+      }
+    },
+    {
+      "seed": 214004761,
+      "actions": 733,
+      "keys": [
+        [
+          "Sapphire",
+          9
+        ],
+        [
+          "Emerald",
+          24
+        ],
+        [
+          "Ruby",
+          40
+        ]
+      ],
+      "heart": {
+        "floor": 56,
+        "act": 4,
+        "room": "BOSS",
+        "event": "",
+        "fought": true,
+        "encounter": "The Heart",
+        "hp_before": 46,
+        "hp_after": 22,
+        "max_hp": 75,
+        "turns": 6
+      }
+    }
+  ],
+  "parity": {
+    "menus": {
+      "REWARDS": 189,
+      "BOSS_RELIC": 15
+    },
+    "maximum_absolute_error": 8.343718960190927e-06,
+    "starts": [
+      215000000,
+      215000015
+    ]
+  },
+  "paired": {
+    "gained": 23,
+    "lost": 11,
+    "shared": 3,
+    "two_sided_p": 0.05761267291381955
+  }
+}

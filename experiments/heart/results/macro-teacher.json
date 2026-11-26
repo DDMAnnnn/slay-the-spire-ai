@@ -1,0 +1,30 @@
+{
+  "held_out": {
+    "start": 172000000,
+    "runs": 256,
+    "ordinary_heart": 0,
+    "teacher_heart": 10,
+    "teacher_wins": 0,
+    "truncated": 0,
+    "ordinary_mean_floor": 23.8359375,
+    "teacher_mean_floor": 41.77734375,
+    "branches": 94653,
+    "decisions": 25323,
+    "overrides": 918,
+    "replay_mismatches": 0
+  },
+  "train": {
+    "start": 173000000,
+    "runs": 1024,
+    "ordinary_heart": 1,
+    "teacher_heart": 34,
+    "teacher_wins": 1,
+    "truncated": 0,
+    "ordinary_mean_floor": 23.6953125,
+    "teacher_mean_floor": 40.763671875,
+    "branches": 372777,
+    "decisions": 98663,
+    "overrides": 3644,
+    "replay_mismatches": 0
+  }
+}

@@ -28,6 +28,56 @@ def set_actor(params):
         engine.set_actor(*params)
 
 
+def set_historical_gate(config):
+    if config or hasattr(engine,"set_historical_gate"):
+        engine.set_historical_gate(config if config is not None else [0.]*12)
+
+
+def set_historical_menu(config):
+    if config:
+        engine.set_historical_menu(*config)
+    elif hasattr(engine,"reset_historical_menu"):
+        engine.reset_historical_menu()
+
+
+def set_inventory_search(config):
+    if config:
+        engine.set_inventory_search(*config)
+    elif hasattr(engine,"set_inventory_search"):
+        engine.set_inventory_search(0,0,0.)
+
+
+def set_public_belief(config,weights=None):
+    if hasattr(engine,"set_public_tree"):
+        engine.set_public_tree(config.get("tree_budget",0) if config else 0, config.get("tree_depth",1) if config else 1)
+    if hasattr(engine,"set_continuation"):
+        engine.set_continuation(config.get("next_width",0) if config else 0, bool(config and config.get("free_plays")))
+    if hasattr(engine,"set_belief_action_limit"):
+        engine.set_belief_action_limit(config.get("action_limit",0) if config else 0)
+    if hasattr(engine,"set_belief_plans"):
+        engine.set_belief_plans(1,32.,False)
+    if config:
+        w=config.get("bank_weights",weights)
+        if w is None: raise ValueError("restoring combat particles requires the collection weights")
+        set_inventory_search(None)
+        set_historical_menu(None)
+        engine.collect_beliefs(w,config["seed"],config["count"])
+        if config.get("enrich",0):
+            engine.enrich_late_particles(w,config["enrich"])
+        if "plans" in config:
+            engine.set_belief_plans(config["plans"],config["win_value"],bool(config.get("enrich")))
+        engine.set_belief(config["draws"],config["scope"],config["scale"])
+    elif hasattr(engine,"set_belief"):
+        engine.set_belief(0,0,0.)
+
+
+def set_choice_attention(config):
+    if config:
+        engine.set_choice_attention(*config)
+    else:
+        engine.reset_choice_attention()
+
+
 def set_inventory_value(config):
     if config:
         engine.set_inventory_value(*config)
@@ -127,10 +177,15 @@ def apply_model(variant, model):
     set_actor(model.get("direct_actor"))
     set_teacher(model.get("trajectory_teacher"))
     set_expert(model.get("expert_prior"))
+    set_choice_attention(model.get("choice_attention"))
     set_curriculum(model.get("curriculum_actor"))
     set_inventory_value(model.get("inventory_value"))
     engine.set_boss_draft(model.get("boss_draft",[]))
     set_scenarios(model.get("scenarios"))
+    set_public_belief(model.get("public_belief"),model["weights"])
+    set_inventory_search(model.get("inventory_search"))
+    set_historical_menu(model.get("historical_menu"))
+    set_historical_gate(model.get("historical_gate"))
     return model["weights"]
 
 

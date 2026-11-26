@@ -1,0 +1,253 @@
+{
+  "synthetic_opponents": [
+    2112,
+    11139,
+    188
+  ],
+  "practice_start": 201000000,
+  "heldout_start": 202000000,
+  "calibration": {
+    "parent": {
+      "fatal": {
+        "fights": 160,
+        "wins": 0,
+        "mean_exit_hp": 0.0,
+        "mean_potions": 0.76875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 160,
+        "mean_exit_hp": 46.76875,
+        "mean_potions": 0.23125,
+        "capped": 0
+      },
+      "seconds": 0.03
+    },
+    "current_search": {
+      "fatal": {
+        "fights": 160,
+        "wins": 48,
+        "mean_exit_hp": 5.05,
+        "mean_potions": 0.7625,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 158,
+        "mean_exit_hp": 47.7875,
+        "mean_potions": 0.25625,
+        "capped": 0
+      },
+      "seconds": 2.79
+    },
+    "late_examples": {
+      "fatal": {
+        "fights": 160,
+        "wins": 54,
+        "mean_exit_hp": 5.45625,
+        "mean_potions": 0.76875,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 157,
+        "mean_exit_hp": 47.78125,
+        "mean_potions": 0.25625,
+        "capped": 0
+      },
+      "seconds": 2.79
+    },
+    "survival": {
+      "fatal": {
+        "fights": 160,
+        "wins": 58,
+        "mean_exit_hp": 5.34375,
+        "mean_potions": 0.80625,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 158,
+        "mean_exit_hp": 48.86875,
+        "mean_potions": 0.29375,
+        "capped": 0
+      },
+      "seconds": 6.36
+    },
+    "portfolio": {
+      "fatal": {
+        "fights": 160,
+        "wins": 63,
+        "mean_exit_hp": 5.875,
+        "mean_potions": 0.79375,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 158,
+        "mean_exit_hp": 48.65625,
+        "mean_potions": 0.25625,
+        "capped": 0
+      },
+      "seconds": 15.15
+    },
+    "deeper_portfolio": {
+      "fatal": {
+        "fights": 160,
+        "wins": 63,
+        "mean_exit_hp": 5.9,
+        "mean_potions": 0.79375,
+        "capped": 0
+      },
+      "control": {
+        "fights": 160,
+        "wins": 158,
+        "mean_exit_hp": 49.14375,
+        "mean_potions": 0.26875,
+        "capped": 0
+      },
+      "seconds": 30.04
+    }
+  },
+  "heldout": {
+    "parent": {
+      "fatal": {
+        "fights": 255,
+        "wins": 0,
+        "mean_exit_hp": 0.0,
+        "mean_potions": 0.8784313725490196,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 45.13725490196079,
+        "mean_potions": 0.3411764705882353,
+        "capped": 0
+      },
+      "seconds": 0.36
+    },
+    "current_search": {
+      "fatal": {
+        "fights": 255,
+        "wins": 56,
+        "mean_exit_hp": 2.756862745098039,
+        "mean_potions": 0.8705882352941177,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 45.86274509803921,
+        "mean_potions": 0.35294117647058826,
+        "capped": 0
+      },
+      "seconds": 21.28
+    },
+    "deeper_portfolio": {
+      "fatal": {
+        "fights": 255,
+        "wins": 79,
+        "mean_exit_hp": 4.537254901960784,
+        "mean_potions": 0.8941176470588236,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 254,
+        "mean_exit_hp": 47.8078431372549,
+        "mean_potions": 0.39215686274509803,
+        "capped": 0
+      },
+      "seconds": 373.49
+    }
+  },
+  "chosen": "deeper_portfolio",
+  "matched_changes": {
+    "fatal": {
+      "all": {
+        "fights": 255,
+        "first_search": 56,
+        "deep_search": 79,
+        "new_wins": 35,
+        "lost_wins": 12,
+        "paired_p": 0.0010885382064742544
+      },
+      "act_1": {
+        "fights": 90,
+        "first_search": 29,
+        "deep_search": 46,
+        "new_wins": 24,
+        "lost_wins": 7,
+        "paired_p": 0.003326892852783203
+      },
+      "act_2": {
+        "fights": 153,
+        "first_search": 24,
+        "deep_search": 31,
+        "new_wins": 10,
+        "lost_wins": 3,
+        "paired_p": 0.09228515625
+      },
+      "act_3": {
+        "fights": 12,
+        "first_search": 3,
+        "deep_search": 2,
+        "new_wins": 1,
+        "lost_wins": 2,
+        "paired_p": 1.0
+      },
+      "act_4": {
+        "fights": 0,
+        "first_search": 0,
+        "deep_search": 0,
+        "new_wins": 0,
+        "lost_wins": 0,
+        "paired_p": 1.0
+      }
+    },
+    "won": {
+      "all": {
+        "fights": 255,
+        "first_search": 255,
+        "deep_search": 254,
+        "new_wins": 0,
+        "lost_wins": 1,
+        "paired_p": 1.0
+      },
+      "act_1": {
+        "fights": 199,
+        "first_search": 199,
+        "deep_search": 198,
+        "new_wins": 0,
+        "lost_wins": 1,
+        "paired_p": 1.0
+      },
+      "act_2": {
+        "fights": 53,
+        "first_search": 53,
+        "deep_search": 53,
+        "new_wins": 0,
+        "lost_wins": 0,
+        "paired_p": 1.0
+      },
+      "act_3": {
+        "fights": 3,
+        "first_search": 3,
+        "deep_search": 3,
+        "new_wins": 0,
+        "lost_wins": 0,
+        "paired_p": 1.0
+      },
+      "act_4": {
+        "fights": 0,
+        "first_search": 0,
+        "deep_search": 0,
+        "new_wins": 0,
+        "lost_wins": 0,
+        "paired_p": 1.0
+      }
+    }
+  }
+}

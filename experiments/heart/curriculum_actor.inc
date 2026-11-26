@@ -37,22 +37,44 @@ Candidate candidate(int a,double gap) const {
     }
     return c;
 }
-double curriculum_delta(const Candidate &c) const {
+double curriculum_linear(const Candidate &c) const {
     double y=0;
     for(int h=0;h<CURRICULUM_WIDTH;++h) {
         float z=curriculum_bias[h]+curriculum_items[c.item][h]+curriculum_foes[c.foe][h];
         z=std::inner_product(c.features.begin(),c.features.end(),curriculum_layer[h].begin(),z);
         y+=std::max(0.f,z)*curriculum_out[h];
     }
-    return 8.*std::tanh(y/8.);
+    return y;
+}
+double curriculum_delta(const Candidate &c) const {
+    return 8.*std::tanh(curriculum_linear(c)/8.);
 }
 void all_scores(const uint8_t *mask,double *out) const {
     base_scores(mask,out);
+    if(choice_attention.scale) attention_scores(mask,out);
+    if(inventory_draws && simulated_tactic<0 && !o[7]) inventory_search(mask,out);
+    if(belief_draws && !belief_branch) belief_scores(mask,out);
     if(!curriculum_scale || simulated_tactic>=0 || opening_branch) return;
-    if((curriculum_scope==1 && !o[7]) || (curriculum_scope==2 && o[7])) return;
-    double top=*std::max_element(out,out+N_ACTIONS);
-    for(int a=0;a<N_ACTIONS;++a) if(mask[a] && out[a]>=top-7*CURRICULUM_TEMP) {
+    const int parent=int(std::max_element(out,out+N_ACTIONS)-out);
+    const double top=out[parent];
+    if(curriculum_scope==4) {
+        if(!o[7] || !mask[ACT_END_TURN] || (parent>=ACT_DISCARD && parent!=ACT_END_TURN)) return;
+        const double reference=curriculum_linear(candidate(parent,0.));
+        for(int a=0;a<=ACT_END_TURN;++a) if(mask[a] && (a<ACT_DISCARD || a==ACT_END_TURN) && out[a]>=top-7*CURRICULUM_TEMP) {
+            auto c=candidate(a,(out[a]-top)/CURRICULUM_TEMP);
+            out[a]+=CURRICULUM_TEMP*curriculum_scale*8.*std::tanh((curriculum_linear(c)-reference)/8.);
+        }
+        return;
+    }
+    if((curriculum_scope==1 && !o[7]) || (curriculum_scope>=2 && o[7])) return;
+    bool wide=curriculum_scope==3;
+    // Keep the incumbent at its original score when only a shortlist receives corrections.
+    // Otherwise a common negative offset can let an unevaluated option win by default.
+    const double reference=curriculum_scope==5?curriculum_delta(candidate(parent,0.)):0.;
+    for(int a=0;a<N_ACTIONS;++a) if(mask[a] && (wide || out[a]>=top-7*CURRICULUM_TEMP)) {
         double gap=(out[a]-top)/CURRICULUM_TEMP;
-        out[a]+=CURRICULUM_TEMP*curriculum_scale*curriculum_delta(candidate(a,gap));
+        // Some useful teacher alternatives fell outside the old action shortlist.
+        if(wide) {gap=std::max(-10.,gap);out[a]=top+CURRICULUM_TEMP*gap;}
+        out[a]+=CURRICULUM_TEMP*curriculum_scale*(curriculum_delta(candidate(a,gap))-reference);
     }
 }

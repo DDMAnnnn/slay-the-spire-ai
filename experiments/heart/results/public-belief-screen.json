@@ -1,0 +1,153 @@
+{
+  "bank_start": 190000000,
+  "bank_seeds": 3072,
+  "audit": [
+    5825,
+    5679,
+    4478,
+    4478,
+    298
+  ],
+  "validation": [
+    {
+      "runs": 1024,
+      "mean_floor": 23.24,
+      "best_floor": 51,
+      "act2": 632,
+      "act3": 67,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 6,
+      "second_boss": 3,
+      "heart_encounter_seeds": [],
+      "seconds": 0.79,
+      "draws": 0,
+      "scope": 0,
+      "scale": 0.0
+    },
+    {
+      "runs": 1024,
+      "mean_floor": 24.253,
+      "best_floor": 56,
+      "act2": 689,
+      "act3": 82,
+      "act4": 1,
+      "hearts": 1,
+      "truncated": 0,
+      "first_boss": 12,
+      "second_boss": 4,
+      "heart_encounter_seeds": [
+        191000914
+      ],
+      "seconds": 13.3,
+      "draws": 1,
+      "scope": 0,
+      "scale": 2.0
+    },
+    {
+      "runs": 1024,
+      "mean_floor": 25.182,
+      "best_floor": 56,
+      "act2": 724,
+      "act3": 81,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 9,
+      "second_boss": 1,
+      "heart_encounter_seeds": [
+        191000775
+      ],
+      "seconds": 21.27,
+      "draws": 1,
+      "scope": 2,
+      "scale": 3.0
+    },
+    {
+      "runs": 1024,
+      "mean_floor": 25.435,
+      "best_floor": 50,
+      "act2": 745,
+      "act3": 91,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 5,
+      "second_boss": 0,
+      "heart_encounter_seeds": [],
+      "seconds": 31.67,
+      "draws": 2,
+      "scope": 2,
+      "scale": 2.0
+    },
+    {
+      "runs": 1024,
+      "mean_floor": 25.417,
+      "best_floor": 51,
+      "act2": 725,
+      "act3": 92,
+      "act4": 0,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 14,
+      "second_boss": 5,
+      "heart_encounter_seeds": [],
+      "seconds": 49.75,
+      "draws": 3,
+      "scope": 1,
+      "scale": 8.0
+    },
+    {
+      "runs": 1024,
+      "mean_floor": 24.968,
+      "best_floor": 56,
+      "act2": 746,
+      "act3": 83,
+      "act4": 1,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 11,
+      "second_boss": 3,
+      "heart_encounter_seeds": [
+        191000526
+      ],
+      "seconds": 44.64,
+      "draws": 4,
+      "scope": 0,
+      "scale": 10.0
+    }
+  ],
+  "test": {},
+  "independent_audit": {
+    "root_order_checks": 1629,
+    "max_score_change": 0,
+    "overrides": 139,
+    "example": {
+      "seed": 195000000,
+      "step": 104,
+      "floor": 16,
+      "hp": 73,
+      "before": "Drink Distilled Chaos",
+      "after": "End turn"
+    },
+    "original_order_preserved": {
+      "ordinary": 0,
+      "paired": 256,
+      "draws": 256
+    },
+    "inserted_card_position_counts": [
+      23,
+      22,
+      22,
+      31,
+      21,
+      18,
+      27,
+      26,
+      19,
+      26,
+      21
+    ]
+  }
+}

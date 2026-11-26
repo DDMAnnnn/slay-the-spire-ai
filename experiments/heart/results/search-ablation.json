@@ -1,0 +1,261 @@
+{
+  "draws": {
+    "settings": [
+      8,
+      1,
+      8.0,
+      1,
+      32.0,
+      false
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 65,
+        "mean_exit_hp": 3.7058823529411766,
+        "mean_potions": 0.8627450980392157,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 253,
+        "mean_exit_hp": 45.76862745098039,
+        "mean_potions": 0.34901960784313724,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 23,
+        "losses": 14
+      },
+      "control": {
+        "gains": 0,
+        "losses": 2
+      }
+    }
+  },
+  "hallways": {
+    "settings": [
+      3,
+      2,
+      8.0,
+      1,
+      32.0,
+      false
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 60,
+        "mean_exit_hp": 3.1137254901960785,
+        "mean_potions": 0.9019607843137255,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 47.15686274509804,
+        "mean_potions": 0.4,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 4,
+        "losses": 0
+      },
+      "control": {
+        "gains": 0,
+        "losses": 0
+      }
+    }
+  },
+  "scale": {
+    "settings": [
+      3,
+      1,
+      12.0,
+      1,
+      32.0,
+      false
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 60,
+        "mean_exit_hp": 2.803921568627451,
+        "mean_potions": 0.8627450980392157,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 254,
+        "mean_exit_hp": 45.86274509803921,
+        "mean_potions": 0.3607843137254902,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 6,
+        "losses": 2
+      },
+      "control": {
+        "gains": 0,
+        "losses": 1
+      }
+    }
+  },
+  "tactics": {
+    "settings": [
+      3,
+      1,
+      8.0,
+      3,
+      32.0,
+      false
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 58,
+        "mean_exit_hp": 3.2470588235294118,
+        "mean_potions": 0.8549019607843137,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 253,
+        "mean_exit_hp": 45.82745098039216,
+        "mean_potions": 0.3333333333333333,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 18,
+        "losses": 16
+      },
+      "control": {
+        "gains": 0,
+        "losses": 2
+      }
+    }
+  },
+  "survival_bonus": {
+    "settings": [
+      3,
+      1,
+      8.0,
+      1,
+      90.0,
+      false
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 57,
+        "mean_exit_hp": 2.611764705882353,
+        "mean_potions": 0.8705882352941177,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 45.83921568627451,
+        "mean_potions": 0.3568627450980392,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 2,
+        "losses": 1
+      },
+      "control": {
+        "gains": 0,
+        "losses": 0
+      }
+    }
+  },
+  "enemy_bank": {
+    "settings": [
+      3,
+      1,
+      8.0,
+      1,
+      32.0,
+      true
+    ],
+    "action_limit": 5,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 63,
+        "mean_exit_hp": 2.9019607843137254,
+        "mean_potions": 0.8745098039215686,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 46.08627450980392,
+        "mean_potions": 0.35294117647058826,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 11,
+        "losses": 4
+      },
+      "control": {
+        "gains": 0,
+        "losses": 0
+      }
+    }
+  },
+  "candidate_count": {
+    "settings": [
+      3,
+      1,
+      8.0,
+      1,
+      32.0,
+      false
+    ],
+    "action_limit": 9,
+    "outcome": {
+      "fatal": {
+        "fights": 255,
+        "wins": 59,
+        "mean_exit_hp": 2.5764705882352943,
+        "mean_potions": 0.8627450980392157,
+        "capped": 0
+      },
+      "control": {
+        "fights": 255,
+        "wins": 255,
+        "mean_exit_hp": 45.90196078431372,
+        "mean_potions": 0.3607843137254902,
+        "capped": 0
+      }
+    },
+    "paired": {
+      "fatal": {
+        "gains": 8,
+        "losses": 5
+      },
+      "control": {
+        "gains": 0,
+        "losses": 0
+      }
+    }
+  }
+}

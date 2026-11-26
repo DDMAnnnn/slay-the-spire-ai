@@ -22,9 +22,9 @@ def write(path, obj):
 
 def configure(source, destination):
     """Restore every fitted component before evaluating a checkpoint directory."""
-    from .replay import set_combat_preferences, set_opening, set_draft, set_late_combat, set_final_weights, set_actor, set_forecast, set_boss_tactics, set_recovery, set_edits, set_scenarios, set_route, set_opening_search, set_teacher, set_expert, set_curriculum, set_inventory_value
+    from .replay import set_combat_preferences, set_opening, set_draft, set_late_combat, set_final_weights, set_actor, set_forecast, set_boss_tactics, set_recovery, set_edits, set_scenarios, set_route, set_opening_search, set_teacher, set_expert, set_curriculum, set_inventory_value, set_choice_attention
     for filename, setter, default in (
-        ("opening-search",set_opening_search,None), ("route",set_route,None), ("scenarios", set_scenarios, None), ("deck-edits", set_edits, None), ("recovery", set_recovery, None), ("boss-tactics", set_boss_tactics, None), ("forecast", set_forecast, None), ("direct-actor", set_actor, None), ("trajectory-teacher", set_teacher, None), ("boss-draft", engine.set_boss_draft, []), ("expert-prior", set_expert, None), ("curriculum-actor", set_curriculum, None), ("inventory-value", set_inventory_value, None),
+        ("opening-search",set_opening_search,None), ("route",set_route,None), ("scenarios", set_scenarios, None), ("deck-edits", set_edits, None), ("recovery", set_recovery, None), ("boss-tactics", set_boss_tactics, None), ("forecast", set_forecast, None), ("direct-actor", set_actor, None), ("trajectory-teacher", set_teacher, None), ("boss-draft", engine.set_boss_draft, []), ("expert-prior", set_expert, None), ("curriculum-actor", set_curriculum, None), ("inventory-value", set_inventory_value, None), ("choice-attention", set_choice_attention, None),
         ("late-combat-last-act", engine.set_late_combat_last_act, 4), ("final-weights", set_final_weights, None),
         ("late-combat", set_late_combat, None),
         ("draft-context", set_draft, None), ("neow", set_opening, None),
@@ -49,6 +49,27 @@ def configure(source, destination):
             setter(data)
             if source.resolve() != destination.resolve():
                 write(destination/path.name, data)
+    from .replay import set_public_belief, set_inventory_search, set_historical_menu, set_historical_gate
+    path=source/"public-belief.json"
+    config=json.loads(path.read_text()) if path.exists() else None
+    set_public_belief(config)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,config)
+    path=source/"historical-menu.json"
+    menu=json.loads(path.read_text()) if path.exists() else None
+    set_historical_menu(menu)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,menu)
+    path=source/"historical-gate.json"
+    gate=json.loads(path.read_text()) if path.exists() else None
+    set_historical_gate(gate)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,gate)
+    path=source/"inventory-search.json"
+    config=json.loads(path.read_text()) if path.exists() else None
+    set_inventory_search(config)
+    if source.resolve()!=destination.resolve():
+        write(destination/path.name,config)
 
 
 def rollouts(w, seed, n, threads):
@@ -88,7 +109,7 @@ def verify(w, seed, destination):
             not episode.get("start_cards") and not episode.get("start_thin")):
         raise AssertionError("Run did not meet the A20 Heart victory conditions")
     components = {}
-    for name in ("event-table", "choice-table", "combat-head", "late", "synergies", "first-boss-relics", "turn-depth", "combat-preferences", "neow", "draft-context", "late-combat", "late-combat-last-act", "final-weights", "direct-actor", "forecast", "boss-tactics", "recovery", "deck-edits", "scenarios", "route", "opening-search", "trajectory-teacher", "boss-draft", "expert-prior", "curriculum-actor", "inventory-value"):
+    for name in ("event-table", "choice-table", "combat-head", "late", "synergies", "first-boss-relics", "turn-depth", "combat-preferences", "neow", "draft-context", "late-combat", "late-combat-last-act", "final-weights", "direct-actor", "forecast", "boss-tactics", "recovery", "deck-edits", "scenarios", "route", "opening-search", "trajectory-teacher", "boss-draft", "expert-prior", "curriculum-actor", "inventory-value", "choice-attention", "public-belief", "inventory-search", "historical-menu", "historical-gate"):
         component = destination.parent / (name + ".json")
         if component.exists():
             components[name] = json.loads(component.read_text())

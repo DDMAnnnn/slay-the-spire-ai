@@ -1,0 +1,163 @@
+{
+  "start": 194000000,
+  "search_settings": {
+    "seed": 190000000,
+    "count": 3072,
+    "draws": 3,
+    "scope": 1,
+    "scale": 8.0
+  },
+  "inventory_settings": [
+    3,
+    0,
+    35.0
+  ],
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 23.643,
+      "best_floor": 56,
+      "act2": 21198,
+      "act3": 1924,
+      "act4": 5,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 244,
+      "second_boss": 61,
+      "heart_encounter_seeds": [
+        194023027,
+        194031269
+      ]
+    },
+    "inventory": {
+      "runs": 32768,
+      "mean_floor": 23.722,
+      "best_floor": 56,
+      "act2": 21424,
+      "act3": 1972,
+      "act4": 7,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 255,
+      "second_boss": 56,
+      "heart_encounter_seeds": [
+        194002140,
+        194010878,
+        194012576,
+        194021653,
+        194031269
+      ]
+    },
+    "combined": {
+      "runs": 32768,
+      "mean_floor": 25.839,
+      "best_floor": 56,
+      "act2": 23927,
+      "act3": 3160,
+      "act4": 24,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 456,
+      "second_boss": 126,
+      "heart_encounter_seeds": [
+        194001088,
+        194002140,
+        194002159,
+        194014111,
+        194014635,
+        194019660,
+        194020911,
+        194021048,
+        194023027,
+        194023528,
+        194024113,
+        194029667,
+        194031269
+      ]
+    },
+    "belief": {
+      "runs": 32768,
+      "mean_floor": 25.755,
+      "best_floor": 56,
+      "act2": 23797,
+      "act3": 3055,
+      "act4": 22,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 489,
+      "second_boss": 139,
+      "heart_encounter_seeds": [
+        194000337,
+        194002140,
+        194005158,
+        194006083,
+        194012512,
+        194014635,
+        194021313,
+        194021653,
+        194021988,
+        194023027,
+        194023528,
+        194024902,
+        194031269
+      ]
+    }
+  },
+  "paired": {
+    "shared": [
+      194023027,
+      194031269
+    ],
+    "new": [
+      194001088,
+      194002140,
+      194002159,
+      194014111,
+      194014635,
+      194019660,
+      194020911,
+      194021048,
+      194023528,
+      194024113,
+      194029667
+    ],
+    "lost": [],
+    "two_sided_p": 0.0009765625
+  },
+  "replay": {
+    "seed": 194001088,
+    "actions": 632,
+    "keys": [
+      [
+        "Sapphire",
+        9
+      ],
+      [
+        "Ruby",
+        32
+      ],
+      [
+        "Emerald",
+        44
+      ]
+    ],
+    "final": {
+      "floor": 56,
+      "act": 4,
+      "room": "BOSS",
+      "event": "",
+      "fought": true,
+      "encounter": "The Heart",
+      "hp_before": 25,
+      "hp_after": 0,
+      "max_hp": 75,
+      "turns": 1
+    },
+    "won": false
+  },
+  "inventory_added_to_combat": {
+    "new_entries": 8,
+    "lost_entries": 8,
+    "shared": 5
+  }
+}

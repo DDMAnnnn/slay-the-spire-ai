@@ -1,0 +1,151 @@
+{
+  "start": 192000000,
+  "selected": {
+    "seed": 190000000,
+    "count": 3072,
+    "draws": 3,
+    "scope": 1,
+    "scale": 8.0
+  },
+  "test": {
+    "parent": {
+      "runs": 32768,
+      "mean_floor": 23.542,
+      "best_floor": 56,
+      "act2": 21096,
+      "act3": 1775,
+      "act4": 6,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 226,
+      "second_boss": 53,
+      "heart_encounter_seeds": [
+        192006184,
+        192008527,
+        192012001
+      ],
+      "seconds": 22.79
+    },
+    "belief": {
+      "runs": 32768,
+      "mean_floor": 25.733,
+      "best_floor": 56,
+      "act2": 23814,
+      "act3": 3008,
+      "act4": 19,
+      "hearts": 0,
+      "truncated": 0,
+      "first_boss": 434,
+      "second_boss": 125,
+      "heart_encounter_seeds": [
+        192006772,
+        192007384,
+        192008527,
+        192009899,
+        192010920,
+        192014934,
+        192015597,
+        192024242,
+        192029349,
+        192029686,
+        192030720
+      ],
+      "seconds": 1581.64
+    }
+  },
+  "paired": {
+    "shared": [
+      192008527
+    ],
+    "search_only": [
+      192006772,
+      192007384,
+      192009899,
+      192010920,
+      192014934,
+      192015597,
+      192024242,
+      192029349,
+      192029686,
+      192030720
+    ],
+    "parent_only": [
+      192006184,
+      192012001
+    ],
+    "exact_two_sided_p": 0.03857421875
+  },
+  "replay": {
+    "parent": {
+      "actions": 121,
+      "keys": [
+        [
+          "Sapphire",
+          9
+        ]
+      ],
+      "last_fight": {
+        "floor": 16,
+        "act": 1,
+        "room": "BOSS",
+        "event": "",
+        "fought": true,
+        "encounter": "Hexaghost",
+        "hp_before": 60,
+        "hp_after": 0,
+        "max_hp": 75,
+        "turns": 10
+      },
+      "act": 1,
+      "won": false
+    },
+    "belief": {
+      "actions": 575,
+      "keys": [
+        [
+          "Sapphire",
+          9
+        ],
+        [
+          "Ruby",
+          23
+        ],
+        [
+          "Emerald",
+          46
+        ]
+      ],
+      "last_fight": {
+        "floor": 56,
+        "act": 4,
+        "room": "BOSS",
+        "event": "",
+        "fought": true,
+        "encounter": "The Heart",
+        "hp_before": 45,
+        "hp_after": 0,
+        "max_hp": 89,
+        "turns": 4
+      },
+      "act": 4,
+      "won": false
+    },
+    "first_different_move": {
+      "decision": 89,
+      "floor": 16,
+      "hp": 60,
+      "enemies": [
+        "HEXAGHOST \u00b7 264/264 HP \u00b7 0 block"
+      ],
+      "hand": [
+        "Impervious",
+        "Armaments",
+        "Impervious+",
+        "Second Wind"
+      ],
+      "parent": "Drink Distilled Chaos",
+      "belief": "Drink Skill Potion"
+    },
+    "seed": 192006772
+  }
+}
