@@ -76,6 +76,8 @@ def main():
         print("epoch",epoch,"validation Huber",error,flush=True)
     best_score=-np.inf
     trials=[]
+    # A smaller prediction error can still give a worse move ranking. Choose the correction's
+    # influence by playing full runs on matched seeds. A scale of zero measures the base scorer.
     for scale in (0.,1.,3.,6.,10.):
         engine.set_head(*head,scale)
         rows=rollouts(w,8500000,4096,args.threads)

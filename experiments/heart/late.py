@@ -39,6 +39,7 @@ def main():
             if len(rows)==0:
                 raise RuntimeError("No naturally reached curriculum states")
             floor=rows[:,0]
+            # Each act contributes its own mean, so the larger Act 2 bank cannot outweigh Act 3 by size alone.
             score+=np.mean(floor/12 + .9*(rows[:,1]>act) + .55*(floor>=49) +
                            .8*(floor>=51) + 3*(rows[:,1]==4) + 18*rows[:,4] - rows[:,5])
         return float(score)

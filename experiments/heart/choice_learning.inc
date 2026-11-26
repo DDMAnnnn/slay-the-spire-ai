@@ -40,6 +40,7 @@ std::vector<Example> practice(const Weights& w,uint64_t seed,int episodes,int th
                             auto r=advance(branch,w);
                             returns.push_back(r.floor + 6*r.act + 2*r.keys + 100*r.heart - 8*r.truncated);
                         }
+                        // Skipping keeps the current deck. For event buttons, use the mean of the offered outcomes.
                         double ref=skip>=0?returns.back():std::accumulate(returns.begin(),returns.end(),0.)/returns.size();
                         for(size_t k=0;k<actions.size();++k) {
                             int f=v.feature(actions[k]-ACT_CHOOSE);

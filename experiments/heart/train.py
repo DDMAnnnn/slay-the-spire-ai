@@ -96,6 +96,7 @@ def train(args):
     print("Prior", history[-1], flush=True)
     for gen in range(args.generations):
         seed = 3000000 + gen*2048
+        # Test opposite weight changes on the same seeds so both directions face the same starting conditions.
         noise = rng.normal(size=(args.population//2, len(BASE)))
         candidates = np.maximum(.02,center + SCALE*np.vstack([noise,-noise])*(.9**gen))
         scores = [objective(rollouts(w, seed, args.batch, args.threads)) + late(w, train_bank) for w in candidates]

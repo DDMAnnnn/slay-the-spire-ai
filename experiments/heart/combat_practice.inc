@@ -54,6 +54,8 @@ std::vector<CombatSample> combat_practice(const Weights& w,uint64_t seed,int n,i
                     group.push_back(row);
                 }
                 if(group.size()>1) {
+                    // An easy fight can give every move a high return. Center the labels within this decision.
+                    // A positive label means this move beat the average alternative under the continuation policy.
                     double average=std::accumulate(returns.begin(),returns.end(),0.)/returns.size();
                     for(size_t i=0;i<group.size();++i) {
                         group[i].back()=float(returns[i]-average);

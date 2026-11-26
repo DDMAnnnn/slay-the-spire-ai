@@ -211,6 +211,7 @@ struct View {
         return (score+.04)/(1+w[CostPenalty]*std::max(0,cost-1)) + (cost==0?1.2:0);
     }
     double map_score(int x) const {
+        // Work backward along the visible map edges. Each room gets credit for the best route it leaves open.
         double next[7]{}, now[7]{};
         for (int y=14; y>int(o[11]); --y) {
             for (int col=0; col<7; ++col) {

@@ -33,7 +33,8 @@ def main():
             np.add.at(counts, idx, 1)
         if offset % 2048 == 0:
             print(offset+n, int(counts.sum()), "paired observations", flush=True)
-    # Partial pooling across acts supports rare Act 3 offers.
+    # Give the pooled estimate the weight of 40 observations in each act.
+    # An option seen only twice in Act 3 then borrows most of its estimate from the other acts.
     common = sums.sum(axis=0)/(counts.sum(axis=0)+30)
     effects = (sums + 40*common)/(counts+40)
     best = -np.inf
