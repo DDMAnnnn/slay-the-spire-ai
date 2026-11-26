@@ -23,7 +23,7 @@ using R = RelicId;
 
 enum Weight { Defense, Kill, Focus, Scaling, Draw, Debuff, Elite, Rest, ShopVisit, Hall,
               Draft, Duplicate, Heal, PotionUse, CostPenalty, KeyRoute,
-              Swap, EndgameDraft, EnergyRelic, Finisher, Count };
+              Swap, EndgameDraft, EnergyRelic, Finisher, Lookahead, Count };
 using Weights = std::array<double, Count>;
 using EventTable = std::array<std::array<double,16>,std::size(eventGameNames)>;
 static EventTable event_values{};
@@ -148,7 +148,7 @@ struct View {
         double need=std::max(0.,incoming-p[2]);
         score+=w[Defense]*std::min(blk,need)+.09*blk;
         score+=w[Draw]*std::min(3,int(f[4]))*(energy>cost?1:.25);
-        score+=w[Debuff]*(f[31] && !m[MONSTER_BASE+int(MonsterStatus::VULNERABLE)]?1.:0.);
+        score+=w[Debuff]*(f[32] && !m[MONSTER_BASE+int(MonsterStatus::VULNERABLE)]?1.:0.);
         if (id==C::BASH && !m[MONSTER_BASE+int(MonsterStatus::VULNERABLE)])
             score+=w[Debuff]*(energy>=3?1.6:1);
         if (id==C::SHOCKWAVE || id==C::DISARM) score+=w[Debuff]*2.5;
@@ -198,7 +198,7 @@ struct View {
                 default: value=.3; break;
                 }
                 if (!o[13] && col==o[24] && y==o[25])
-                    value+=w[KeyRoute]*(o[4]==3?5.:o[4]==2?.9:.15);
+                    value+=(o[4]==3?100.:w[KeyRoute]*(o[4]==2?.9:.15));
                 for(int delta=-1;delta<=1;++delta) {
                     int dest=col+delta;
                     if(dest>=0 && dest<7 && (int(node[1]) & (1<<(delta+1)))) tail=std::max(tail,next[dest]);
@@ -211,7 +211,9 @@ struct View {
     }
     double relic_value(R id) const {
         switch(id) {
-        case R::SNECKO_EYE: case R::PANDORAS_BOX: case R::RUNIC_PYRAMID: return 13;
+        case R::PANDORAS_BOX: return 20;
+        case R::SNECKO_EYE: return 15;
+        case R::RUNIC_PYRAMID: return 8;
         case R::COFFEE_DRIPPER: return 4;
         case R::SOZU: case R::FUSION_HAMMER: case R::CURSED_KEY: return w[EnergyRelic];
         case R::VELVET_CHOKER: case R::ECTOPLASM: return 7;
@@ -219,6 +221,7 @@ struct View {
         case R::DEAD_BRANCH: case R::TORII: case R::TUNGSTEN_ROD: case R::FOSSILIZED_HELIX: return 13;
         case R::BRIMSTONE: return -8;
         case R::PRISMATIC_SHARD: return -15;
+        case R::RUNIC_DOME: return -18;
         default: return 6;
         }
     }
@@ -294,6 +297,7 @@ struct View {
         default: return -i*.001;
         }
     }
+#include "turn_plan.inc"
 };
 
 struct Result { int floor=0, act=0, keys=0, steps=0; bool heart=false, truncated=false; };
@@ -306,9 +310,11 @@ Result advance(Env &e,const Weights &w,std::vector<int>* trace=nullptr,int stopA
         if(stopAct && obs[4]>=stopAct) break;
         e.mask(mask.data());
         View v(obs.data(),w);
+        std::array<double,N_ACTIONS> utilities;
+        v.all_scores(mask.data(),utilities.data());
         double best=-1e30; int choice=-1;
         for(int i=0;i<N_ACTIONS;++i) if(mask[i]) {
-            double s=v.score(i);
+            double s=utilities[i];
             if(s>best) {best=s;choice=i;}
         }
         if(choice<0 || !e.step(choice)) throw std::runtime_error("invalid policy action");
@@ -368,7 +374,7 @@ PYBIND11_MODULE(heart_native,m) {
         if(obs.size()!=OBS_SIZE || mask.size()!=N_ACTIONS) throw std::invalid_argument("observation or mask size");
         View v(obs.data(),w);
         std::vector<double> out(N_ACTIONS,-1e30);
-        for(int i=0;i<N_ACTIONS;++i) if(mask.data()[i]) out[i]=v.score(i);
+        v.all_scores(mask.data(),out.data());
         return out;
     });
 }

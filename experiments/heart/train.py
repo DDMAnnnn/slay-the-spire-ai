@@ -9,9 +9,9 @@ import heart_native as engine
 import sts_env as sts
 
 # Prior centres and perturbation scales, in the same order as the native Weight enum.
-NAMES = "defense kill focus scaling draw debuff elite rest shop hall draft duplicate heal potion cost keyroute swap endgame_draft energy_relic finisher".split()
-BASE = np.array([1.87,18.4,1,1.27,4,8.35,2.15,1.95,1.89,.6,3.2,1.65,28.2,1.,.47,9.3,1.1,.36,12,8])
-SCALE = np.array([.55,6,2,.55,2,3,2,.8,1,.7,1.5,.8,7,.6,.3,5,.8,.17,4,4])
+NAMES = "defense kill focus scaling draw debuff elite rest shop hall draft duplicate heal potion cost keyroute swap endgame_draft energy_relic finisher lookahead".split()
+BASE = np.array([2.24,17.87,.03,1.31,6.70,10.12,2.24,3.44,2.38,.06,2.52,1.93,30.9,1.,.57,4,2.42,.396,12.03,3.97,2])
+SCALE = np.array([.55,6,2,.55,2,3,2,.8,1,.7,1.5,.8,7,.6,.3,5,.8,.17,4,4,1.5])
 
 
 def write(path, obj):
@@ -58,7 +58,7 @@ def verify(w, seed, destination):
         raise AssertionError("Run did not meet the A20 Heart victory conditions")
     write(destination, dict(episode=episode, keys=keys, weights=w.tolist(),
                             event_table=json.loads((destination.parent/"event-table.json").read_text()),
-                            policy_source_sha256=sha256(Path(__file__).with_name("policy.cpp").read_bytes()).hexdigest()))
+                            policy_source_sha256=sha256(b"".join(Path(__file__).with_name(f).read_bytes() for f in ("policy.cpp","turn_plan.inc"))).hexdigest()))
     print(f"Verified Heart victory: seed {seed}, {len(actions)} actions, {fights[-1]['hp_after']} HP", flush=True)
 
 
