@@ -20,6 +20,22 @@ def write(path, obj):
     tmp.replace(path)
 
 
+def configure(source, destination):
+    """Restore every fitted component before evaluating a checkpoint directory."""
+    for filename, setter in (
+        ("event-table", engine.set_event_table), ("choice-table", engine.set_choice_table),
+        ("combat-head", lambda head: engine.set_head(*head)),
+        ("late", lambda late: engine.set_late(late["act"], late["weights"])),
+        ("synergies", engine.set_synergies),
+    ):
+        path = source / (filename + ".json")
+        if path.exists():
+            data = json.loads(path.read_text())
+            setter(data)
+            if source.resolve() != destination.resolve():
+                write(destination/path.name, data)
+
+
 def rollouts(w, seed, n, threads):
     return np.asarray(engine.batch(w.tolist(), seed, n, threads))
 
@@ -51,14 +67,18 @@ def verify(w, seed, destination):
         keys = [k or bool(v) for k, v in zip(keys, obs[12:15])]
     episode = env.episode()
     fights = [f for f in episode["path"] if f["fought"]]
-    if not (env.done and env.won and all(keys) and episode["act"] == 4 and
+    if not (episode["character"].lower()=="ironclad" and episode["final_act"] and env.done and env.won and all(keys) and episode["act"] == 4 and
             fights[-1]["encounter"] == "The Heart" and fights[-1]["hp_after"] > 0 and
             actions == episode["actions"] and episode["ascension"] == 20 and
             not episode.get("start_cards") and not episode.get("start_thin")):
         raise AssertionError("Run did not meet the A20 Heart victory conditions")
-    write(destination, dict(episode=episode, keys=keys, weights=w.tolist(),
-                            event_table=json.loads((destination.parent/"event-table.json").read_text()),
-                            policy_source_sha256=sha256(b"".join(Path(__file__).with_name(f).read_bytes() for f in ("policy.cpp","turn_plan.inc"))).hexdigest()))
+    components = {}
+    for name in ("event-table", "choice-table", "combat-head", "late", "synergies"):
+        component = destination.parent / (name + ".json")
+        if component.exists():
+            components[name] = json.loads(component.read_text())
+    write(destination, dict(episode=episode, keys=keys, weights=w.tolist(), components=components,
+                            native_binary_sha256=sha256(Path(engine.__file__).read_bytes()).hexdigest()))
     print(f"Verified Heart victory: seed {seed}, {len(actions)} actions, {fights[-1]['hp_after']} HP", flush=True)
 
 
@@ -127,7 +147,12 @@ def main():
         table = (values / counts.clip(min=1)).tolist()
     write(args.out/"event-table.json", table)
     engine.set_event_table(table)
-    w = np.asarray(json.loads(args.load.read_text())["weights"]) if args.load else train(args)
+    if args.load:
+        configure(args.load.parent, args.out)
+        w = np.asarray(json.loads(args.load.read_text())["weights"])
+        write(args.out/"policy.json", json.loads(args.load.read_text()))
+    else:
+        w = train(args)
     all_rows = []
     win_seed = None
     for offset in range(0,args.eval_count,128):

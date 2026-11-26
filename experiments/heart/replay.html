@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ironclad run replay</title>
+<style>*{box-sizing:border-box}body{color:#f4efdf;background:#1d2427;font:16px/1.5 system-ui,sans-serif;margin:2rem auto;padding:0 1.2rem;max-width:56rem}h1,h2{font-family:Georgia,serif;line-height:1.2}header{border-bottom:1px solid #61716c}button,input{accent-color:#efbd76}button{color:inherit;background:#313c40;padding:.55rem .85rem;border:1px solid #77817d;border-radius:4px;cursor:pointer}button:disabled{opacity:.45}input{width:100%;margin:1rem 0}section{padding:.5rem 1.2rem;background:#263033;border-radius:7px;margin-top:1rem}p{margin:.7rem 0}small{color:#e4cda4}nav{display:flex;gap:.5rem;flex-wrap:wrap}ol{padding-left:1.4rem}li{margin:.3rem 0}b{color:#ffd49c}</style>
+<header><h1>Ironclad · Ascension 20</h1><p id="result"></p></header>
+<p><label for="timeline" id="location"></label><input type="range" id="timeline" min="0" value="0"></p>
+<nav><button id="prev">Previous</button><button id="next">Next</button><button id="play">Play</button><button id="heart">Jump to the Heart</button></nav>
+<section aria-live="polite"><small id="where"></small><h2 id="action"></h2><p id="state"></p><p id="enemies"></p><p id="hand"></p><h3>Highest-scoring legal actions</h3><ol id="options"></ol></section>
+<script>
+const run=/*REPLAY_DATA*/null, el=id=>document.getElementById(id), timeline=el('timeline'), frames=run.frames;
+let timer=null;const boss=frames.findIndex(f=>f.act===4&&f.enemies?.some(e=>e.includes('Heart')||e.includes('HEART')));
+timeline.max=frames.length-1;el('heart').disabled=boss<0;
+el('result').textContent=(run.won?'Heart defeated':'Run ended')+' · Seed '+run.seed+' · Final HP '+run.hp+'/'+run.max_hp;
+function show(n){n=Math.min(frames.length-1,Math.max(0,n));timeline.value=n;const f=frames[n];el('location').textContent='Decision '+(n+1)+' of '+frames.length;
+el('where').textContent='Act '+f.act+' · Floor '+f.floor+' · '+f.screen+(f.turn?' · Turn '+f.turn:'');
+el('action').textContent=f.action;el('state').textContent=f.hp+'/'+f.max_hp+' HP · '+f.gold+' gold'+(f.turn?' · '+f.block+' block · '+f.energy+' energy':'')+' · Keys '+(f.keys.map((v,i)=>v?['Ruby','Emerald','Sapphire'][i]:null).filter(Boolean).join(', ')||'none');
+el('enemies').textContent=(f.enemies||[]).join(' | ');el('hand').textContent=f.hand?'Hand · '+f.hand.join(', '):'';
+el('options').replaceChildren(...f.options.map(([name,score])=>{const li=document.createElement('li');li.textContent=name+' · '+score;return li}));el('prev').disabled=n===0;el('next').disabled=n===frames.length-1;if(n===frames.length-1)stop();}
+function stop(){clearInterval(timer);timer=null;el('play').textContent='Play'}
+el('prev').onclick=()=>show(+timeline.value-1);el('next').onclick=()=>show(+timeline.value+1);el('heart').onclick=()=>show(boss);timeline.oninput=()=>show(+timeline.value);
+el('play').onclick=()=>{if(timer)stop();else{if(+timeline.value===frames.length-1)show(0);timer=setInterval(()=>show(+timeline.value+1),700);el('play').textContent='Pause'}};show(0);
+</script></html>

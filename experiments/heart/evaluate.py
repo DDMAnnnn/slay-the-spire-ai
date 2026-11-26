@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import heart_native as engine
-from .train import verify, write
+from .train import configure, verify, write
 
 
 def main():
@@ -14,15 +14,25 @@ def main():
     p.add_argument("start",type=int)
     p.add_argument("count",type=int)
     p.add_argument("--threads",type=int,default=6)
+    p.add_argument("--variant",choices=("first","synergies"),default="first",help="variant for a packaged checkpoint")
+    p.add_argument("--out",type=Path,help="output directory for batch logs")
     args=p.parse_args()
     if args.count<=0 or args.threads<=0:
         p.error("count and threads must be positive")
-    out=args.model.parent / f"panel-{args.start}-{args.count}"
+    out=args.out or (Path("build") / f"heart-{args.variant}-{args.start}-{args.count}" if args.model.suffix==".gz" else args.model.parent / f"panel-{args.start}-{args.count}")
     out.mkdir(parents=True,exist_ok=True)
-    table=json.loads((args.model.parent/"event-table.json").read_text())
-    write(out/"event-table.json",table)
-    engine.set_event_table(table)
-    w=np.array(json.loads(args.model.read_text())["weights"])
+    if args.model.suffix == ".gz":
+        import gzip
+        with gzip.open(args.model,"rt",encoding="utf8") as f:
+            model=json.load(f)
+        w=np.asarray(model["weights"])
+        for name, key in (("event-table","events"),("choice-table","choices"),("combat-head","combat"),("late","late")):
+            write(out/(name+".json"),model[key])
+        write(out/"synergies.json",args.variant=="synergies")
+        configure(out,out)
+    else:
+        configure(args.model.parent,out)
+        w=np.asarray(json.loads(args.model.read_text())["weights"])
     counts=np.zeros(6,dtype=np.int64)
     max_floor=0
     with (out/"batches.jsonl").open("w",encoding="utf8") as log:

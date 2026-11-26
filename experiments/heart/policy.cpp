@@ -4,6 +4,8 @@
 #include <array>
 #include <cmath>
 #include <iterator>
+#include <numeric>
+#include <random>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -25,8 +27,25 @@ enum Weight { Defense, Kill, Focus, Scaling, Draw, Debuff, Elite, Rest, ShopVisi
               Draft, Duplicate, Heal, PotionUse, CostPenalty, KeyRoute,
               Swap, EndgameDraft, EnergyRelic, Finisher, Lookahead, Count };
 using Weights = std::array<double, Count>;
+static Weights late_weights{};
+static int late_from=5;
 using EventTable = std::array<std::array<double,16>,std::size(eventGameNames)>;
 static EventTable event_values{};
+constexpr int CARD_COUNT=std::size(cardNames);
+constexpr int CHOICE_FEATURES=CARD_COUNT+16*std::size(eventGameNames);
+using ChoiceTable=std::array<std::array<double,CHOICE_FEATURES>,3>;
+static ChoiceTable learned_values{};
+constexpr int UNITS=16;
+using Hidden=std::array<float,UNITS>;
+using Cards=std::array<Hidden,CARD_COUNT+1>;
+using Enemies=std::array<Hidden,std::size(monsterIdStrings)+1>;
+using Matrix=std::array<std::array<float,22>,UNITS>;
+static Cards head_cards{};
+static Enemies head_enemies{};
+static Matrix head_weights{};
+static Hidden head_bias{},head_out{};
+static double head_scale=0;
+static bool synergy_enabled=true;
 
 double card_prior(C id) {
     switch (id) {
@@ -55,7 +74,7 @@ struct View {
     double missing, incoming = 0;
     int live = 0;
     const Weights &w;
-    View(const float *obs, const Weights &weights): o(obs), p(obs+OBS_PLAYER), w(weights) {
+    View(const float *obs, const Weights &weights): o(obs), p(obs+OBS_PLAYER), w(int(obs[4])>=late_from?late_weights:weights) {
         missing = 1. - o[0] / std::max(1.f, o[1]);
         for (int i=0; i<MAX_DECK; ++i) {
             int id = int(o[OBS_DECK + i*CARD_W])-1;
@@ -77,9 +96,16 @@ struct View {
         }
         return false;
     }
+#include "synergies.inc"
     double draft(C id,bool up) const {
-        double score=card_prior(id)+1.5*up;
+        double score=card_prior(id)+1.5*up+(synergy_enabled?synergy(id,up):0.);
         int scaling=num(C::DEMON_FORM)+num(C::INFLAME)+num(C::SPOT_WEAKNESS);
+        if (id==C::REAPER) score+=5+3*(scaling>0);
+        if (id==C::BARRICADE && (num(C::ENTRENCH)||num(C::BODY_SLAM))) score+=6;
+        if (id==C::POWER_THROUGH || id==C::FLAME_BARRIER) score+=2;
+        if (id==C::CORRUPTION && (relic(R::DEAD_BRANCH)||num(C::DARK_EMBRACE))) score+=10;
+        if (id==C::ANGER && o[4]>1) score-=5;
+        if (id==C::SPOT_WEAKNESS && scaling==0) score+=3;
         if (o[4]>1) {
             if (id==C::DEMON_FORM && !scaling) score+=8;
             if (id==C::SPOT_WEAKNESS && !num(id)) score+=5;
@@ -105,6 +131,7 @@ struct View {
         if (id==C::DEMON_FORM && o[4]>1) score+=3;
         return score-w[Duplicate]*num(id);
     }
+#include "horizon.inc"
     double play(int a) const {
         const float *h=o+OBS_HAND+HAND_W*(a/5), *m=enemy(a%5);
         C id=C(int(h[0])-1);
@@ -113,7 +140,7 @@ struct View {
         double str=p[N_PLAYER_BASE+int(PlayerStatus::STRENGTH)];
         double dex=p[N_PLAYER_BASE+int(PlayerStatus::DEXTERITY)];
         int energy=int(p[3]), cost=std::max(0,int(h[2]));
-        double hits=std::max(1,int(f[0])), base=std::max(0,getBaseDamage(id,up));
+        double hits=std::max(1,int(f[0])), base=scaling_attack(id,up);
         if (id==C::WHIRLWIND) hits=energy;
         if (id==C::HEAVY_BLADE) str*=up?5:3;
         if (id==C::BODY_SLAM) base=p[2];
@@ -191,10 +218,11 @@ struct View {
                 Room room=Room(int(node[0])-1);
                 double value=0, tail=-1e8;
                 switch(room) {
-                case Room::REST: value=w[Rest]*(1+missing); break;
+                case Room::REST: value=w[Rest]*(1+missing)+(synergy_enabled && num(C::SEARING_BLOW)?7.:0.); break;
                 case Room::SHOP: value=o[2]>130?w[ShopVisit]:-.8; break;
                 case Room::ELITE: value=w[Elite]*(1.-2.2*missing)-(o[4]==1?5.:2.5); break;
                 case Room::MONSTER: value=w[Hall]*(o[3]<5?1.8:1.); break;
+                case Room::EVENT: value=o[4]>=2?2.2:.8; break;
                 default: value=.3; break;
                 }
                 if (!o[13] && col==o[24] && y==o[25])
@@ -219,7 +247,12 @@ struct View {
         case R::VELVET_CHOKER: case R::ECTOPLASM: return 7;
         case R::MARK_OF_PAIN: case R::BUSTED_CROWN: return 5;
         case R::DEAD_BRANCH: case R::TORII: case R::TUNGSTEN_ROD: case R::FOSSILIZED_HELIX: return 13;
-        case R::BRIMSTONE: return -8;
+        case R::BRIMSTONE: return num(C::DEMON_FORM)?13:28;
+        case R::PANTOGRAPH: case R::MEAT_ON_THE_BONE: case R::INCENSE_BURNER: return 16;
+        case R::SACRED_BARK: return 8;
+        case R::ASTROLABE: return (num(C::STRIKE_RED)+num(C::DEFEND_RED)>4)?12:6;
+        case R::BLACK_BLOOD: return 11;
+        case R::PHILOSOPHERS_STONE: return 8;
         case R::PRISMATIC_SHARD: return -15;
         case R::RUNIC_DOME: return -18;
         default: return 6;
@@ -230,11 +263,16 @@ struct View {
         int slot=(a-ACT_POTION)/5;
         auto id=Potion(int(o[17+slot])-1);
         if(id==Potion::FRUIT_JUICE) return 60;
-        if(!o[7] || id==Potion::SMOKE_BOMB) return -65;
+        if(id==Potion::BLOOD_POTION) return missing>.27?80:-65;
+        if(!o[7]) return -65;
+        if(id==Potion::SMOKE_BOMB) return incoming-p[2]>p[0]*.85 && o[4]!=4?55:-65;
         bool boss=Room(int(o[8])-1)==Room::BOSS || o[4]==4;
         bool elite=Room(int(o[8])-1)==Room::ELITE;
         double risk=std::max(0.,incoming-p[2]);
         double urgency=w[PotionUse]*(double(boss)*19+double(elite)*15+12*missing+risk*.35)-11;
+        if(id==Potion::REGEN_POTION && missing>.28) return 50;
+        if(id==Potion::LIQUID_BRONZE && (o[4]==4 || boss)) return 60;
+        if(id==Potion::CULTIST_POTION && boss) return 90;
         if(id==Potion::BLOCK_POTION) return p[3]==0 && risk>3?urgency+risk:-20;
         if(id==Potion::FIRE_POTION || id==Potion::EXPLOSIVE_POTION || id==Potion::POISON_POTION) {
             auto m=enemy((a-ACT_POTION)%5);
@@ -242,6 +280,17 @@ struct View {
         }
         if(id==Potion::ENERGY_POTION || id==Potion::SWIFT_POTION) return p[3]==0?urgency:-15;
         return urgency+(p[4]<=1?4.:0.);
+    }
+    int feature(int i) const {
+        const float *c=o+OBS_CHOICES+i*CHOICE_W;
+        auto kind=ChoiceKind(int(c[0]));
+        if(kind==ChoiceKind::CARD) return int(c[1])-1;
+        if(kind==ChoiceKind::EVENT_OPTION && i<16) return CARD_COUNT+16*(int(o[9])-1)+i;
+        return -1;
+    }
+    double learned(int i) const {
+        int f=feature(i);
+        return f>=0?learned_values[std::min(3,int(o[4]))-1][f]:0.;
     }
     double score(int a) const {
         if(a<ACT_POTION) return play(a);
@@ -257,6 +306,8 @@ struct View {
             auto task=CardSelectTask(int(o[26]));
             if(c[3]) return -1000;
             double rank=card_prior(id)+c[2];
+            if(synergy_enabled && id==C::SEARING_BLOW && c[2]) rank+=20;
+            if(synergy_enabled && id==C::REAPER && missing>.3) rank+=12;
             if(task==CardSelectTask::EXHAUST_ONE || task==CardSelectTask::EXHAUST_MANY ||
                task==CardSelectTask::DISCARD || task==CardSelectTask::GAMBLE) return 3-rank;
             return 6+rank;
@@ -266,30 +317,44 @@ struct View {
         case ScreenState::EVENT_SCREEN:
             if(kind==ChoiceKind::NEOW_OPTION) return i==3 ? w[Swap]-1 : -.001*i;
             if(kind==ChoiceKind::EVENT_OPTION && i<16)
-                return event_values.at(int(o[9])-1)[i] - .0001*i;
+                return learned(i)+event_values.at(int(o[9])-1)[i] - .0001*i;
             return -.001*i;
         case ScreenState::MAP_SCREEN: return map_score(i);
         case ScreenState::REST_ROOM:
             if(i==2) return !o[12] && (o[4]>=3 || (o[4]>=2 && missing<.18))?45:-4;
             if(i==0) return missing*w[Heal];
+            if(synergy_enabled && i==1 && num(C::SEARING_BLOW) && missing<.68 && !relic(R::FUSION_HAMMER)) return 42;
             return i==1?8.:i==3?8.5:2.;
         case ScreenState::TREASURE_ROOM: return 4-i;
         case ScreenState::BOSS_RELIC_REWARDS: return kind==ChoiceKind::RELIC?relic_value(R(int(c[1])-1)):0.;
         case ScreenState::CARD_SELECT: {
             C id=C(int(c[1])-1);
             bool remove=int(o[26])==1 || int(o[26])==2 || int(o[26])==4 || int(o[26])==8;
+            if(synergy_enabled && !remove && id==C::SEARING_BLOW && int(o[26])==int(CardSelectScreenType::UPGRADE)) return 70;
             return remove?-card_prior(id):card_prior(id)+(id==C::BASH && o[4]==1?9:0);
         }
         case ScreenState::SHOP_ROOM:
         case ScreenState::REWARDS: {
             bool shop=screen==ScreenState::SHOP_ROOM;
             switch(kind) {
-            case ChoiceKind::KEY: return 90;
+            case ChoiceKind::KEY:
+                if(c[1]==2 && o[4]<3) {
+                    for(int j=0;j<N_CHOICES;++j) {
+                        auto item=o+OBS_CHOICES+j*CHOICE_W;
+                        if(int(item[0])==int(ChoiceKind::RELIC) && relic_value(R(int(item[1])-1))>=13) return 15;
+                    }
+                }
+                return 90;
             case ChoiceKind::GOLD: return 60;
             case ChoiceKind::RELIC: return shop?relic_value(R(int(c[1])-1))-.027*c[3]:50;
-            case ChoiceKind::POTION: return shop?(o[4]>=3?3.:0.)-.03*c[3]:35;
+            case ChoiceKind::POTION: {
+                auto id=Potion(int(c[1])-1);
+                double priority=o[4]==4?14.:o[4]>=2?6.:3.;
+                if(id==Potion::FAIRY_POTION || id==Potion::CULTIST_POTION || id==Potion::GHOST_IN_A_JAR) priority+=6;
+                return shop?priority-.03*c[3]:35;
+            }
             case ChoiceKind::CARD_REMOVE: return 3.;
-            case ChoiceKind::CARD: return draft(C(int(c[1])-1),c[2])-w[Draft]-
+            case ChoiceKind::CARD: return learned(i)+draft(C(int(c[1])-1),c[2])-w[Draft]-
                 w[EndgameDraft]*std::max(0.,double(o[22])-16) - (shop?.035*c[3]:0.);
             default: return 0;
             }
@@ -297,6 +362,7 @@ struct View {
         default: return -i*.001;
         }
     }
+#include "combat_head.inc"
 #include "turn_plan.inc"
 };
 
@@ -354,7 +420,21 @@ struct Bank {
     }
 };
 
+#include "choice_learning.inc"
+#include "combat_practice.inc"
+
 PYBIND11_MODULE(heart_native,m) {
+    m.def("set_choice_table",[](const ChoiceTable &t){learned_values=t;});
+    m.def("set_synergies",[](bool enabled){synergy_enabled=enabled;});
+    m.attr("feature_count")=CHOICE_FEATURES;
+    m.attr("card_count")=CARD_COUNT;
+    m.def("practice",&practice);
+    m.def("combat_practice",&combat_practice);
+    m.def("set_late",[](int act,const Weights &weights){late_from=act;late_weights=weights;});
+    m.attr("enemy_count")=head_enemies.size();
+    m.def("set_head",[](const Cards &cards,const Enemies &enemies,const Matrix &weights,const Hidden &bias,const Hidden &out,double scale){
+        head_cards=cards; head_enemies=enemies; head_weights=weights; head_bias=bias; head_out=out; head_scale=scale;
+    });
     py::class_<Bank>(m,"Bank").def(py::init<const Weights&,uint64_t,int,int,int>())
         .def("batch",&Bank::evaluate).def("__len__",[](const Bank &b){return b.states.size();});
     m.def("set_event_table",[](const EventTable &table){event_values=table;});

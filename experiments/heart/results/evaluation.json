@@ -1,0 +1,33 @@
+{
+  "first": {
+    "start": 40000000,
+    "count": 262144,
+    "planned": 262144,
+    "mean_floor": 21.81207275390625,
+    "max_floor": 56,
+    "act2": 155372,
+    "act3": 6525,
+    "act4": 29,
+    "hearts": 1,
+    "truncated": 9,
+    "winning_seeds": [
+      40150942
+    ]
+  },
+  "synergies": {
+    "start": 41000000,
+    "count": 262144,
+    "planned": 262144,
+    "mean_floor": 21.22762680053711,
+    "max_floor": 56,
+    "act2": 144218,
+    "act3": 5883,
+    "act4": 36,
+    "hearts": 2,
+    "truncated": 7,
+    "winning_seeds": [
+      41105607,
+      41207418
+    ]
+  }
+}

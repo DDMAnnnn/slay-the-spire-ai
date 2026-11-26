@@ -26,7 +26,7 @@ double resolve(Position &s,int a) const {
     int repeats=id==C::WHIRLWIND?s.energy:std::max(1,int(f[0]));
     s.energy-=h[2]==-1?s.energy:cost;
     s.used|=1<<j;
-    double raw=std::max(0,getBaseDamage(id,u));
+    double raw=scaling_attack(id,u);
     if(id==C::BODY_SLAM) raw=s.block;
     if(id==C::PERFECTED_STRIKE) raw+=(u?3:2)*(num(id)+num(C::STRIKE_RED)+num(C::TWIN_STRIKE)+num(C::POMMEL_STRIKE)+num(C::WILD_STRIKE));
     if(id==C::FIEND_FIRE) repeats=std::max(1,int(p[5])-1);
@@ -109,5 +109,6 @@ void all_scores(const uint8_t *mask,double *out) const {
         out[i]+=w[Lookahead]*(now+.94*continuation(next,mask,1));
     }
     double after=*std::max_element(out,out+ACT_POTION);
-    for(int i=0;i<ACT_POTION;++i) if(mask[i]) out[i]-=after-before;
+    for(int i=0;i<ACT_POTION;++i) if(mask[i]) out[i]+=reaction(i)-(after-before);
+    apply_combat_head(mask,out);
 }
